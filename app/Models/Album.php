@@ -10,6 +10,8 @@ class Album extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public $directory = 'cover/';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -55,5 +57,13 @@ class Album extends Model
     public function albumAccesses()
     {
         return $this->hasMany('App\Models\Access');
+    }
+
+    /**
+     * Accessor for cover image
+     */
+    public function getCoverAttribute($value)
+    {
+        return $this->directory . $value;
     }
 }

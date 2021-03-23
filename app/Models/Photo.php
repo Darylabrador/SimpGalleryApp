@@ -10,6 +10,8 @@ class Photo extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public $directory = 'albums/';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -45,5 +47,14 @@ class Photo extends Model
     public function comments()
     {
         return $this->hasMany('App\Models\Comment');
+    }
+
+
+    /**
+     * Accessor for cover image
+     */
+    public function getLabelAttribute($value)
+    {
+        return $this->directory . $value;
     }
 }
