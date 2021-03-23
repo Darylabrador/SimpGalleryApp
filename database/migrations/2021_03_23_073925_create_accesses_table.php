@@ -15,6 +15,9 @@ class CreateAccessesTable extends Migration
     {
         Schema::create('accesses', function (Blueprint $table) {
             $table->id();
+            $table->integer('album_id');
+            $table->integer('user_id');
+            $table->text('share_token');
             $table->timestamps();
         });
     }

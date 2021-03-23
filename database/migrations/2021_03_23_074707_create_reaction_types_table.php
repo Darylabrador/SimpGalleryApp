@@ -15,7 +15,8 @@ class CreateReactionTypesTable extends Migration
     {
         Schema::create('reaction_types', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('label');
+            $table->string('icone');
         });
     }
 
