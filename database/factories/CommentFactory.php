@@ -20,9 +20,14 @@ class CommentFactory extends Factory
      * @return array
      */
     public function definition()
-    {
+    {   
+        $users =\App\Models\User::pluck('id')->toArray();
+        $photos =\App\Models\Photo::pluck('id')->toArray();
         return [
             //
+            'user_id' => $this->faker->randomElement($users),
+            'photo_id' => $this->faker->randomElement($photos),
+            'comment' => $this->faker->text(),
         ];
     }
 }

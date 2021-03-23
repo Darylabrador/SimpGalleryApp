@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('pseudo');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('profilPic')->nullable();
+            $table->string('profilPic')->default('profil/default.png');
             $table->text('resetToken')->nullable();
             $table->text('verifyToken')->nullable();
             $table->datetime('verify_at')->nullable();

@@ -21,8 +21,11 @@ class InvitationFactory extends Factory
      */
     public function definition()
     {
+        $albums =\App\Models\Album::pluck('id')->toArray();
         return [
             //
+            'email' => $this->faker->safeEmail,
+            'album_id' => $this->faker->randomElement($albums),
         ];
     }
 }

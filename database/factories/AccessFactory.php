@@ -21,8 +21,13 @@ class AccessFactory extends Factory
      */
     public function definition()
     {
+        $users =\App\Models\User::pluck('id')->toArray();
+        $albums =\App\Models\Album::pluck('id')->toArray();
+        
         return [
             //
+            'user_id' => $this->faker->randomElement($users),
+            'album_id' => $this->faker->randomElement($albums),
         ];
     }
 }
