@@ -30,6 +30,8 @@ Vous devez éditer les informations suivantes dans votre .env :
 
 Les valeurs des variables DB_ dépendent de votre environnement.
 
+- APP_NAME=SimpGalleryApp
+- APP_DEBUG=false
 - DB_DATABASE=simpgalleryapp
 - DB_USERNAME=root
 - DB_PASSWORD=
