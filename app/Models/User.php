@@ -12,6 +12,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public $directory = 'profils/';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -79,5 +81,13 @@ class User extends Authenticatable
     public function reactions()
     {
         return $this->hasMany('App\Models\Reaction');
+    }
+
+    /**
+     * Accessor for cover image
+     */
+    public function getProfilPicAttribute($value)
+    {
+        return $this->directory . $value;
     }
 }

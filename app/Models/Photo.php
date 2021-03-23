@@ -51,7 +51,7 @@ class Photo extends Model
 
 
     /**
-     * Accessor for cover image
+     * Accessor for image
      */
     public function getLabelAttribute($value)
     {
