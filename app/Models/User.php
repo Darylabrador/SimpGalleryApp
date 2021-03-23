@@ -33,7 +33,51 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password',
+        'password'
     ];
 
+
+    /**
+     * user has many notifications
+     */
+    public function notifications() 
+    {
+        return $this->hasMany('App\Models\Notification');
+    }
+
+
+    /**
+     * user can access to many shared albums
+     */
+    public function albumAccesses()
+    {
+        return $this->hasMany('App\Models\Access');
+    }
+
+
+    /**
+     * user has many albums
+     */
+    public function albums()
+    {
+        return $this->hasMany('App\Models\Album');
+    }
+
+
+    /**
+     * user has many comments
+     */
+    public function comments()
+    {
+        return $this->hasMany('App\Models\Comment');
+    }
+
+
+    /**
+     * user has many reactions
+     */
+    public function reactions()
+    {
+        return $this->hasMany('App\Models\Reaction');
+    }
 }

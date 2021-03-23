@@ -19,4 +19,12 @@ class Notification extends Model
         'label',
         'isRead'
     ];
+
+    /**
+     * Notification belong to an user
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
 }

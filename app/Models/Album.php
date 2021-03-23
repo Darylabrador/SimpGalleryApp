@@ -16,10 +16,44 @@ class Album extends Model
      * @var array
      */
     protected $fillable = [
-        'album_id',
+        'user_id',
         'label',
         'cover',
         'shareToken',
         'share_at'
     ];
+
+    /**
+     * An album belong to an user
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
+
+    /**
+     * An album has many photos
+     */
+    public function photos()
+    {
+        return $this->hasMany('App\Models\Photo');
+    }
+
+
+    /**
+     * An album has many invitations
+     */
+    public function invitations()
+    {
+        return $this->hasMany('App\Models\Invitation');
+    }
+
+
+    /**
+     * An album has many access to other user
+     */
+    public function albumAccesses()
+    {
+        return $this->hasMany('App\Models\Access');
+    }
 }

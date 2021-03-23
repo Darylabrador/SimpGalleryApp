@@ -18,4 +18,13 @@ class Invitation extends Model
         'email',
         'album_id'
     ];
+
+
+    /**
+     * An invitation belong to many album
+     */
+    public function album()
+    {
+        return $this->belongsTo('App\Models\Album', 'album_id', 'id');
+    }
 }

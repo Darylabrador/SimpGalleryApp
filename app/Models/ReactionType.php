@@ -18,4 +18,13 @@ class ReactionType extends Model
         'label',
         'icone'
     ];
+
+
+    /**
+     * reaction types has many reactions
+     */
+    public function reactions()
+    {
+        return $this->hasMany('App\Models\Reaction');
+    }
 }

@@ -19,4 +19,31 @@ class Photo extends Model
         'album_id',
         'label'
     ];
+
+
+    /**
+     * A photo belong to an album
+     */
+    public function album()
+    {
+        return $this->belongsTo('App\Models\Album', 'album_id', 'id');
+    }
+
+
+    /**
+     * a photo has many reactions
+     */
+    public function reactions()
+    {
+        return $this->hasMany('App\Models\Reaction');
+    }
+
+
+    /**
+     * a photo has many comments
+     */
+    public function comments()
+    {
+        return $this->hasMany('App\Models\Comment');
+    }
 }

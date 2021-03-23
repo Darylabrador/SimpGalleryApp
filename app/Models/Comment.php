@@ -19,4 +19,22 @@ class Comment extends Model
         'photo_id',
         'comment'
     ];
+
+
+    /**
+     * a comment belong to an user
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
+
+
+    /**
+     * a comment belong to a photo
+     */
+    public function photo()
+    {
+        return $this->belongsTo('App\Models\Photo', 'photo_id', 'id');
+    }
 }
