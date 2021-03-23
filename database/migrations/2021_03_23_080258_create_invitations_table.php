@@ -16,7 +16,7 @@ class CreateInvitationsTable extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
             $table->string('email');
-            $table->integer('album_id');
+            $table->foreignId('album_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
