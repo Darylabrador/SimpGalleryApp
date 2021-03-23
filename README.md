@@ -23,6 +23,11 @@ On utilise ici les technologies suivantes :
 Après avoir fait un git clone de ce projet, vous devez effectué les actions suivantes : 
 
 - composer install
+- php artisan passport:install --force
+
+Pour lancer les seeders
+
+- php artisan migrate:fresh --seed
 
 ## Contenu du .env
 
