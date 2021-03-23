@@ -1,16 +1,30 @@
-# client
+# Client mobile
 
-A new Flutter project.
+La conception et le développement de ce projet s'est effectué dans le cadre de la formation de Simplon. Celui-ci s'est effectué en groupe de 4 :
 
-## Getting Started
+- Daryl ABRADOR
+- Abel BARET
+- Fredy INCHATI DAOU
+- Loganarden NAMINZO
 
-This project is a starting point for a Flutter application.
+## Objectif
 
-A few resources to get you started if this is your first Flutter project:
+Le but est la création et le partage d'album photo sur invitation sécurisé envoyé par mail (ou par notification pour des utilisateurs ayant déjà un compte).
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Technologie
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+On utilise ici la technologie suivante :
+
+- Flutter
+
+## Initialisation du projet
+
+Après avoir fait un git clone de ce projet, vous devez effectué l'action suivante afin d'avoir l'application mobile en mode debug : 
+
+- flutter run
+
+## Liens utiles
+
+- <a href="https://github.com/Darylabrador/SimpGalleryApp"> Application mobile flutter </a>
+- <a href="https://github.com/Darylabrador/SimpGalleryApp/tree/ressource"> Conception du projet </a>
+- <a href="https://github.com/Darylabrador/SimpGalleryApp/tree/server"> Backend </a>
