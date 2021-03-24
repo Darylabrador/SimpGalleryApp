@@ -17,16 +17,33 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-/**
- * Authentication routes
- */
+
+/*
+|--------------------------------------------------------------------------
+| Authentication routes
+|--------------------------------------------------------------------------
+*/
 
 Route::post('/connexion', [AuthController::class, 'connection'])->name('api.connexion');
 Route::post('/inscription', [AuthController::class, 'register'])->name('api.inscription');
-Route::post('/email/verification', [AuthController::class, "verifymail"])->name('api.verify.email');
 Route::get('/deconnexion', [AuthController::class, 'logout'])->middleware('auth:api')->name('api.deconnexion');
+Route::post('/email/verification', [AuthController::class, "verifymail"])->name('api.verify.email');
 
+/*
+|--------------------------------------------------------------------------
+| Account routes
+|--------------------------------------------------------------------------
+*/
 
-/**
- * Profil gestion's
- */
+Route::prefix("reset")->group(function() {
+    Route::post("/request", [AccountController::class, 'forgottenPassRequest'])->name("api.reset.request");
+    Route::post("/password", [AccountController::class, 'resetPassword'])->name("api.reset.password");
+});
+
+/*
+|--------------------------------------------------------------------------
+| Profil gestion's
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/update/profil', [AccountController::class, 'updateProfil'])->middleware('auth:api')->name('api.update.profil');
