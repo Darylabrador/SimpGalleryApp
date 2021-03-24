@@ -9,6 +9,7 @@ use App\Models\Invitation;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\Access;
+use App\Http\Resource\AlbumResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -40,7 +41,7 @@ class AlbumController extends Controller
 
         $albums = Album::where('user_id', $userId)->get();
 
-        return AlbumRessources::collection($albums);
+        return AlbumResource::collection($albums);
     }
 
 
@@ -57,7 +58,7 @@ class AlbumController extends Controller
 
         $albums = Album::where('user_id', $userId)->limit(2)->get();
 
-        return AlbumRessources::collection($albums);
+        return AlbumResource::collection($albums);
     }
 
 
@@ -77,12 +78,12 @@ class AlbumController extends Controller
         }
         $albums = Album::whereIn('id', $albumIds)->get();
 
-        return AlbumRessources::collection($albums);
+        return AlbumResource::collection($albums);
     }
 
 
     /**
-     * User Album  limit to two Album
+     * Album share to user limit to two Album
      *
      * @return \Illuminate\Http\Response
      */
@@ -97,7 +98,7 @@ class AlbumController extends Controller
         }
         $albums = Album::whereIn('id', $albumIds)->limit(2)->get();
 
-        return AlbumRessources::collection($albums);
+        return AlbumResource::collection($albums);
     }
 
 
@@ -377,5 +378,20 @@ class AlbumController extends Controller
             'success' => false,
             'message' => "Introuvable"
         ]);
+    }
+    /**
+     * Destroy an Album 
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id){
+        $album = Album::where('id',$id)->first;
+        $album->destroy(); 
+        
+            return response()->json([
+                'success' => true,
+                'message' => "Album supprimé"
+            ]);
+        
     }
 }

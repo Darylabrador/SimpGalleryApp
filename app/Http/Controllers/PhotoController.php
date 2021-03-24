@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Photo;
+use App\Http\Resources\PhotoResource;
 use App\Models\Album;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -52,5 +53,46 @@ class PhotoController extends Controller
                 'message' => "Photo(s) ajoutée(s)"
             ]);
         }
+    }
+    /**
+     * Pic list on an album
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function photoList($albumId)
+    {
+
+        $photos = Photo::where('album_id', $albumId)->get();
+
+        return PhotoResource::collection($photos);
+    }
+
+    /**
+     * get a pic
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showOne($photoId)
+    {
+
+        $photo = Photo::where('id', $photoId)->first();
+
+        return PhotoResource::collection($photos);
+    }
+
+    /**
+     * Destroy a pic 
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id){
+        $photo = Photo::where('id',$id)->first();
+        $photo->destroy(); 
+
+        return response()->json([
+            'success' => true,
+            'message' => "Photo supprimés"
+        ]);
+        
     }
 }
