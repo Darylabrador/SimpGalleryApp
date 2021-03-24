@@ -40,6 +40,8 @@ Route::prefix("reset")->group(function() {
     Route::post("/password", [AccountController::class, 'resetPassword'])->name("api.reset.password");
 });
 
+Route::post('/delete/account', [AccountController::class, 'deleteAccount'])->middleware('auth:api')->name("api.delete.account");
+
 /*
 |--------------------------------------------------------------------------
 | Profil gestion's

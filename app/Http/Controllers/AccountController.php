@@ -196,4 +196,48 @@ class AccountController extends Controller
             'message' => "Mise à jour effectuée"
         ]);
     }
+
+
+    /**
+     * Handle delete account request.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteAccount(Request $request) {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'password'          => 'required',
+                'passwordConfirm'   => 'required',
+            ],
+            [
+                'required' => 'Le champ :attribute est requis',
+            ]
+        );
+
+        $errors = $validator->errors();
+        if (count($errors) != 0) {
+            return response()->json([
+                'success' => false,
+                'message' => $errors->first()
+            ]);
+        }
+
+        $password         = $validator->validated()['password'];
+        $passwordConfirm  = $validator->validated()['passwordConfirm'];
+        $userId = Auth::id();
+
+        if ($password != $passwordConfirm) {
+            return response()->json([
+                'success' => false,
+                'message' => "Les mots de passe ne sont pas identique"
+            ]);
+        }
+
+        User::destroy($userId);
+        return response()->json([
+            'success' => true,
+            'message' => "Compte supprimer"
+        ]);
+    }
 }
