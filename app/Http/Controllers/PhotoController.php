@@ -63,7 +63,6 @@ class PhotoController extends Controller
     {
 
         $photos = Photo::where('album_id', $albumId)->get();
-
         return PhotoResource::collection($photos);
     }
 
@@ -74,11 +73,10 @@ class PhotoController extends Controller
      */
     public function showOne($photoId)
     {
-
         $photo = Photo::where('id', $photoId)->first();
-
-        return PhotoResource::collection($photos);
+        return new PhotoResource($photo);
     }
+
 
     /**
      * Destroy a pic 
@@ -87,7 +85,7 @@ class PhotoController extends Controller
      */
     public function destroy($id){
         $photo = Photo::where('id',$id)->first();
-        $photo->destroy(); 
+        $photo->delete(); 
 
         return response()->json([
             'success' => true,

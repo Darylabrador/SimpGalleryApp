@@ -9,7 +9,7 @@ use App\Models\Invitation;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\Access;
-use App\Http\Resource\AlbumResource;
+use App\Http\Resources\AlbumResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -38,9 +38,7 @@ class AlbumController extends Controller
     {
         $loggedUser = Auth::user();
         $userId = $loggedUser->id;
-
         $albums = Album::where('user_id', $userId)->get();
-
         return AlbumResource::collection($albums);
     }
 
@@ -55,9 +53,7 @@ class AlbumController extends Controller
     {
         $loggedUser = Auth::user();
         $userId = $loggedUser->id;
-
         $albums = Album::where('user_id', $userId)->limit(2)->get();
-
         return AlbumResource::collection($albums);
     }
 
@@ -73,11 +69,10 @@ class AlbumController extends Controller
         $userId     = $loggedUser->id;
         $accesses   = Access::where('user_id', $userId)->get();
         $albumIds    = [];
-        foreach ($accesses as $key => $access) {
+        foreach ($accesses as $access) {
             array_push($albumId,$access->id);
         }
         $albums = Album::whereIn('id', $albumIds)->get();
-
         return AlbumResource::collection($albums);
     }
 
@@ -93,7 +88,7 @@ class AlbumController extends Controller
         $userId     = $loggedUser->id;
         $accesses   = Access::where('user_id', $userId)->get();
         $albumIds    = [];
-        foreach ($accesses as $key => $access) {
+        foreach ($accesses as $access) {
             array_push($albumId,$access->id);
         }
         $albums = Album::whereIn('id', $albumIds)->limit(2)->get();
@@ -101,6 +96,12 @@ class AlbumController extends Controller
         return AlbumResource::collection($albums);
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Autocomplete mail to invite people
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * Auto complete
@@ -379,6 +380,8 @@ class AlbumController extends Controller
             'message' => "Introuvable"
         ]);
     }
+
+
     /**
      * Destroy an Album 
      *
@@ -386,12 +389,10 @@ class AlbumController extends Controller
      */
     public function destroy($id){
         $album = Album::where('id',$id)->first;
-        $album->destroy(); 
-        
-            return response()->json([
-                'success' => true,
-                'message' => "Album supprimé"
-            ]);
-        
+        $album->delete(); 
+        return response()->json([
+            'success' => true,
+            'message' => "Album supprimé"
+        ]);
     }
 }
