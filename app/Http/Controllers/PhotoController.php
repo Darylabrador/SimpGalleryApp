@@ -45,16 +45,11 @@ class PhotoController extends Controller
                 $album->album_id    = $albumId;
                 $album->label       = $image;
                 $album->save();
-
-                return response()->json([
-                    'success' => true,
-                    'message' => "Photo(s) ajoutée(s)"
-                ]);
             }
-            
+
             return response()->json([
                 'success' => true,
-                'message' => "Photo ajoutée"
+                'message' => "Photo(s) ajoutée(s)"
             ]);
         }
     }

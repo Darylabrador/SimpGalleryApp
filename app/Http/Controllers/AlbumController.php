@@ -169,23 +169,39 @@ class AlbumController extends Controller
         );
 
         $errors = $validator->errors();
+        if (count($errors) != 0) {
+            return response()->json([
+                'success' => false,
+                'message' => $errors->first()
+            ]);
+        }
 
-        // todo delete old cover
-        $cover    = $validator->validated()['cover'];
-        $extension      = $cover->getClientOriginalExtension();
-        $image          = time() . rand() . '.' . $extension;
-        $cover->move(public_path('img/cover'), $image);
-        $album->cover = $image;
+        $albumId    = $validator->validated()['albumId'];
+
+        $album = Album::where(['id' => $albumId])->first();
+
+        if ($request->hasFile('cover')) {
+            $oldImage = $album->cover;
+
+            if ($oldImage != null) {
+                $oldFilePath = public_path('img/cover') . '/' . $oldImage;
+                unlink($oldFilePath);
+            }
+
+            $cover          = $validator->validated()['cover'];
+            $extension      = $cover->getClientOriginalExtension();
+            $image          = time() . rand() . '.' . $extension;
+            $cover->move(public_path('img/cover'), $image);
+            $album->cover = $image;
+        }
+
         $album->save();
-
         return response()->json([
             'success' => true,
             'message' => "Mise à jour effectuée"
         ]);
     }
-    
-    
-   
+
 
     /**
      * Share album to users or futur users.
