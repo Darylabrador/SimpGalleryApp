@@ -69,6 +69,7 @@ Route::middleware(['auth:api'])->prefix('/album')->group(function() {
     Route::delete('/delete', [AlbumController::class, 'destroy'])->name('api.delete.album');
     Route::post('/cover', [AlbumController::class, 'editCover'])->name('api.editcover.album');
     Route::post('/share', [AlbumController::class, 'share'])->name('api.share.album');
+    Route::post('/share/delete', [AlbumController::class, 'deleteShare'])->name('api.share.delete');
     Route::get('/share/list', [AlbumController::class, 'shareAlbumList'])->name('api.share.list.album');
     Route::get('/share/limit', [AlbumController::class, 'shareAlbumLimit'])->name('api.share.limit.album');
     Route::get('/list', [AlbumController::class, 'myAlbumList'])->name('api.list.album');
