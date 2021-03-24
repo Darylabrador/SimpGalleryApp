@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Access;
 use App\Models\Album;
 use App\Models\Invitation;
 use App\Models\Notification;
 use App\Models\User;
+use App\Models\Access;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +16,91 @@ use Illuminate\Support\Str;
 
 class AlbumController extends Controller
 {
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Get infos
+    |--------------------------------------------------------------------------
+    */
+
+
+
+    /**
+     * User Album list
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function myAlbumList()
+    {
+        $loggedUser = Auth::user();
+        $userId = $loggedUser->id;
+
+        $albums = Album::where('user_id', $userId)->get();
+
+        return AlbumRessources::collection($albums);
+    }
+
+
+
+    /**
+     * User Album  limit to two Album
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function myAlbumLimit()
+    {
+        $loggedUser = Auth::user();
+        $userId = $loggedUser->id;
+
+        $albums = Album::where('user_id', $userId)->limit(2)->get();
+
+        return AlbumRessources::collection($albums);
+    }
+
+
+    /**
+     * Album share to user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function shareAlbumList()
+    {
+        $loggedUser = Auth::user();
+        $userId     = $loggedUser->id;
+        $accesses     = Access::where('user_id', $userId)->get();
+        $albumId    = [];
+        foreach ($accesses as $key => $access) {
+            # code...
+        }
+        $albums = Album::where('user_id', $userId)->get();
+
+        return AlbumRessources::collection($albums);
+    }
+
+
+    /**
+     * User Album  limit to two Album
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function myAlbumLimit()
+    {
+        $loggedUser = Auth::user();
+        $userId = $loggedUser->id;
+
+        $albums = Album::where('user_id', $userId)->limit(2)->get();
+
+        return AlbumRessources::collection($albums);
+    }
+
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Actions
+    |--------------------------------------------------------------------------
+    */
+
     /**
      * Create an album
      * @return \Illuminate\Http\Response
@@ -84,26 +169,12 @@ class AlbumController extends Controller
         );
 
         $errors = $validator->errors();
-        if (count($errors) != 0) {
-            return response()->json([
-                'success' => false,
-                'message' => $errors->first()
-            ]);
-        }
 
-        $albumId          = $validator->validated()['albumId'];
-        $album     = Album::whereId($albumId)->first();
-        $oldImage = $album->cover;
-
-
-        $oldFilePath = public_path('images') . '/' . $oldImage;
-        unlink($oldFilePath);
-
-
+        // todo delete old cover
         $cover    = $validator->validated()['cover'];
         $extension      = $cover->getClientOriginalExtension();
         $image          = time() . rand() . '.' . $extension;
-        $cover->move(public_path('images/profils'), $image);
+        $cover->move(public_path('img/cover'), $image);
         $album->cover = $image;
         $album->save();
 
@@ -112,7 +183,9 @@ class AlbumController extends Controller
             'message' => "Mise à jour effectuée"
         ]);
     }
-
+    
+    
+   
 
     /**
      * Share album to users or futur users.
@@ -183,7 +256,5 @@ class AlbumController extends Controller
 
             }
         }
-
     }
-    
 }
