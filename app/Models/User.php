@@ -21,9 +21,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'pseudo',
-        'email',
+        'identifiant',
         'password',
         'profilPic',
+        'isMobile',
         'resetToken',
         'verifyToken',
         'verify_at'

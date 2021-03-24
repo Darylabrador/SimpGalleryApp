@@ -15,7 +15,8 @@ class Invitation extends Model
      * @var array
      */
     protected $fillable = [
-        'email',
+        'target',
+        'isMobile',
         'album_id'
     ];
 

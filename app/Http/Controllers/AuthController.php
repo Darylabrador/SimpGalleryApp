@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Mail\RegisterMail;
+use App\Models\Access;
 use App\Models\Invitation;
 
 class AuthController extends Controller
@@ -26,8 +27,8 @@ class AuthController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'email'    => 'required',
-                'password' => 'required',
+                'identifiant' => 'required',
+                'password'    => 'required',
             ],
             [
                 'required' => 'Le champ :attribute est requis',
@@ -42,14 +43,14 @@ class AuthController extends Controller
             ]);
         }
 
-        $email      = $validator->validated()['email'];
-        $password   = $validator->validated()['password'];
-        $userExist  = User::where(["email" => $email])->first();
+        $identifiant   = $validator->validated()['identifiant'];
+        $password      = $validator->validated()['password'];
+        $userExist     = User::where(["identifiant" => $identifiant])->first();
 
         if (!$userExist || !Hash::check($password, $userExist->password)) {
             return response()->json([
                 'success' => false,
-                'message' => "Adresse email ou mot de passe incorrecte"
+                'message' => "Identifiant ou mot de passe incorrecte"
             ]);
         }
 
@@ -72,13 +73,13 @@ class AuthController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'email'           => 'required|unique:users',
+                'identifiant'     => 'required|unique:users',
                 'password'        => 'required',
                 'passwordConfirm' => 'required',
             ],
             [
                 'required' => 'Le champ :attribute est requis',
-                'unique'   => 'Adresse email existe déjà'
+                'unique'   => 'Identifiant existe déjà'
             ]
         );
 
@@ -91,7 +92,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $email             = $validator->validated()['email'];
+        $identifiant       = $validator->validated()['identifiant'];
         $password          = $validator->validated()['password'];
         $passwordConfirm   = $validator->validated()['passwordConfirm'];
 
@@ -106,18 +107,17 @@ class AuthController extends Controller
         $part1             = Str::random(4);
         $part2             = Str::random(4);
     
-        
-        $invitationList = Invitation::where(['email' => $email])->get();
+        $invitationList = Invitation::where(['target' => $identifiant])->get();
         
         if(count($invitationList) == 0) {
             $user              = new User();
             $user->pseudo      = "user" . $part1 . "X" . $part2;
-            $user->email       = $email;
+            $user->identifiant = $identifiant;
             $user->password    = Hash::make($password);
             $user->verifyToken = $verifyToken;
             $user->save();
 
-            Mail::to($email)->send(new RegisterMail($email, $verifyToken));
+            Mail::to($identifiant)->send(new RegisterMail($identifiant, $verifyToken));
             return response()->json([
                 "success" => true,
                 "message" => "Vous devez confirmer votre adresse mail"
@@ -126,17 +126,18 @@ class AuthController extends Controller
 
         $createdUser = User::create([
             "pseudo"      => "user" . $part1 . "X" . $part2,
-            "email"       => $email,
+            "identifiant" => $identifiant,
             "password"    => Hash::make($password),
             "verifyToken" => $verifyToken,
+            "isMobile"    => $invitationList[0]->isMobile,
             "verify_at"   => now(),
         ]);
 
         foreach ($invitationList as $invitation) {
-            $newInvitation = new Invitation();
-            $newInvitation->album_id = $invitation->album_id;
-            $newInvitation->user_id  = $createdUser->id;
-            $newInvitation->save();
+            $newAccess = new Access();
+            $newAccess->album_id = $invitation->album_id;
+            $newAccess->user_id  = $createdUser->id;
+            $newAccess->save();
         }
 
         return response()->json([

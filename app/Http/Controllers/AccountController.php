@@ -27,7 +27,6 @@ class AccountController extends Controller
             $request->all(),
             [
                 'pseudo'          => 'required',
-                'email'           => 'required',
                 'password'        => 'nullable',
                 'passwordConfirm' => 'nullable',
                 'profilPic'       => 'nullable',
@@ -45,11 +44,13 @@ class AccountController extends Controller
             ]);
         }
 
+
         $pseudo             = $validator->validated()['pseudo'];
-        $email              = $validator->validated()['email'];
         $password           = $validator->validated()['password'];
         $passwordConfirm    = $validator->validated()['passwordConfirm'];
-        $userExist          = User::where(["email" => $email])->first();
+
+        $userId     = Auth::id();
+        $userExist  = User::where(["id" => $userId])->first();
 
         if(!$userExist) {
             return response()->json([
@@ -68,7 +69,6 @@ class AccountController extends Controller
         }
 
         $userExist->pseudo      = $pseudo;
-        $userExist->email       = $email;
         $userExist->password    = Hash::make($password);
 
         if ($request->hasFile('profilPic')) {
@@ -103,7 +103,7 @@ class AccountController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'email'           => 'required',
+                'identifiant'           => 'required',
             ],
             [
                 'required' => 'Le champ :attribute est requis',
@@ -118,8 +118,8 @@ class AccountController extends Controller
             ]);
         }
 
-        $email  = $validator->validated()['email'];
-        $user   = User::where(['email' => $email])->first();
+        $identifiant  = $validator->validated()['identifiant'];
+        $user   = User::where(['identifiant' => $identifiant])->first();
 
         if ($user) {
             $resetToken =  Str::random(20);
@@ -225,8 +225,6 @@ class AccountController extends Controller
 
         $password         = $validator->validated()['password'];
         $passwordConfirm  = $validator->validated()['passwordConfirm'];
-        $user = Auth::user();
-        $userId = Auth::id();
 
         if ($password != $passwordConfirm) {
             return response()->json([
@@ -234,14 +232,12 @@ class AccountController extends Controller
                 'message' => "Les mots de passe ne sont pas identique"
             ]);
         }
-
-        Mail::to($user->email)->send(new DeleteAccountMail($user->pseudo));
         
         Auth::user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
 
-        User::destroy($userId);
+        User::destroy(Auth::id());
         
         return response()->json([
             'success' => true,
