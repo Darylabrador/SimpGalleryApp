@@ -1,8 +1,10 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:flutter/material.dart';
 import 'screens/home/home.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
+  await DotEnv.load(fileName: ".env");
 }
 
 class MyApp extends StatelessWidget {

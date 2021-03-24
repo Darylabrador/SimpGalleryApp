@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // Create a Form widget.
 class Login extends StatefulWidget {
@@ -48,7 +49,7 @@ class LoginState extends State<Login> {
             // The validator receives the text that the user has entered.
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Entrez un mot de passe';
+                return env['ESCAPED_DOLLAR_SIGN'];
               }
               return null;
             },
