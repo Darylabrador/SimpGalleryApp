@@ -15,7 +15,13 @@ class CreateAlbumsTable extends Migration
     {
         Schema::create('albums', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('label');
+            $table->string('cover')->nullable();
+            $table->text('shareToken')->nullable()->nullable();
+            $table->datetime('share_at')->nullable()->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AccountController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+/**
+ * Authentication routes
+ */
+
+Route::post('/connexion', [AuthController::class, 'connection'])->name('api.connexion');
+Route::post('/inscription', [AuthController::class, 'register'])->name('api.inscription');
+Route::post('/email/verification', [AuthController::class, "verifymail"])->name('api.verify.email');
+Route::get('/deconnexion', [AuthController::class, 'logout'])->middleware('auth:api')->name('api.deconnexion');
+
+
+/**
+ * Profil gestion's
+ */

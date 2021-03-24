@@ -15,6 +15,9 @@ class CreateAccessesTable extends Migration
     {
         Schema::create('accesses', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('album_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            $table->text('share_token')->nullable();
             $table->timestamps();
         });
     }

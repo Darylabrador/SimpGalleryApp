@@ -1,62 +1,69 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Serveur de données
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+La conception et le développement de ce projet s'est effectué dans le cadre de la formation de Simplon. Celui-ci s'est effectué en groupe de 4 :
 
-## About Laravel
+- Daryl ABRADOR
+- Abel BARET
+- Fredy INCHATI DAOU
+- Loganarden NAMINZO
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Objectif
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Le but est la création et le partage d'album photo sur invitation sécurisé envoyé par mail (ou par notification pour des utilisateurs ayant déjà un compte).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Technologies
 
-## Learning Laravel
+On utilise ici les technologies suivantes :
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Laravel v8 (API)
+- Blade + Bootstrap + css (site vitrine)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Initialisation du projet
 
-## Laravel Sponsors
+Après avoir fait un git clone de ce projet, vous devez effectué les actions suivantes : 
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- composer install
+- php artisan passport:install --force
 
-### Premium Partners
+Pour lancer les seeders
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+- php artisan migrate:fresh --seed
 
-## Contributing
+## Contenu du .env
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Vous devez éditer les informations suivantes dans votre .env :
 
-## Code of Conduct
+Les valeurs des variables DB_ dépendent de votre environnement.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- APP_NAME=SimpGalleryApp
+- APP_DEBUG=false
+- DB_DATABASE=simpgalleryapp
+- DB_USERNAME=root
+- DB_PASSWORD=
 
-## Security Vulnerabilities
+Pour la suite, vous devez avoir un compte mailtrap (developpement) ou utiliser des informations d'un compte email réel (production) :
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- MAIL_MAILER=smtp
+- MAIL_HOST=smtp.mailtrap.io
+- MAIL_PORT=2525
+- MAIL_USERNAME=
+- MAIL_PASSWORD=
+- MAIL_ENCRYPTION=
+- MAIL_FROM_ADDRESS=contact@simpgalleryapp.com
 
-## License
+## Lancement du projet 
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+En mode développment vous devez utiliser les commandes suivantes : 
+
+- php artisan serve
+- php artisan queue:work (lancement des tâches de fond - jobs)
+
+En mode production la commande suivante doit être actif en permanence :
+
+- php artisan queue:work
+
+## Liens utiles
+
+- <a href="https://github.com/Darylabrador/SimpGalleryApp"> Application mobile flutter </a>
+- <a href="https://github.com/Darylabrador/SimpGalleryApp/tree/ressource"> Conception du projet </a>
+- <a href="https://github.com/Darylabrador/SimpGalleryApp/tree/server"> Backend </a>

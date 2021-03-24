@@ -13,8 +13,17 @@ class CreateReactionsTable extends Migration
      */
     public function up()
     {
+        Schema::create('reaction_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('label');
+            $table->string('icone');
+        });
+
         Schema::create('reactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('photo_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('reaction_types_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +35,7 @@ class CreateReactionsTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('reaction_types');
         Schema::dropIfExists('reactions');
     }
 }

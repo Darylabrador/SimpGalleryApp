@@ -21,8 +21,11 @@ class PhotoFactory extends Factory
      */
     public function definition()
     {
+        $photos =\App\Models\Photo::pluck('id')->toArray();
         return [
             //
+            'photo_id' => $this->faker->randomElement($photos),
+            'label'    =>'album/'.$this->faker->unique()->numberBetween(333, 777).'.png',
         ];
     }
 }

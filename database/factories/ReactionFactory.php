@@ -20,9 +20,15 @@ class ReactionFactory extends Factory
      * @return array
      */
     public function definition()
-    {
+    {   
+        $users =\App\Models\User::pluck('id')->toArray();
+        $photos =\App\Models\Photo::pluck('id')->toArray();
+        $reactionTypes =\App\Models\ReactionType::pluck('id')->toArray();
         return [
             //
+            'user_id' => $this->faker->randomElement($users),
+            'photo_id' => $this->faker->randomElement($photos),
+            'reaction_type_id' => $this->faker->randomElement($reactionTypes),
         ];
     }
 }

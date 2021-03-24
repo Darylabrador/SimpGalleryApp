@@ -21,8 +21,12 @@ class NotificationFactory extends Factory
      */
     public function definition()
     {
+        $users =\App\Models\User::pluck('id')->toArray();
         return [
             //
+            'user_id' => $this->faker->randomElement($users),
+            'label' => $this->faker->text(),
+            'isRead' =>$this->faker->boolean($chanceOfGettingTrue = 50),
         ];
     }
 }
