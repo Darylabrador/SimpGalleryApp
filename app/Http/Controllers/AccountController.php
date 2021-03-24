@@ -234,7 +234,12 @@ class AccountController extends Controller
             ]);
         }
 
+        Auth::user()->tokens->each(function ($token, $key) {
+            $token->delete();
+        });
+
         User::destroy($userId);
+        
         return response()->json([
             'success' => true,
             'message' => "Compte supprimer"
