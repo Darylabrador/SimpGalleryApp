@@ -19,9 +19,14 @@ On utilise ici la technologie suivante :
 
 ## Initialisation du projet
 
+Une fois que que le SDK est installé, cette ligne de commande permettra de s'assurrer que les dépendances nécessaires au bon fonctionnement de l'application sont bien installés
+
+- flutter pub get
+
 Après avoir fait un git clone de ce projet, vous devez effectué l'action suivante afin d'avoir l'application mobile en mode debug : 
 
 - flutter run
+
 
 ## Liens utiles
 

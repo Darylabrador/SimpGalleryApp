@@ -49,7 +49,7 @@ class LoginState extends State<Login> {
             // The validator receives the text that the user has entered.
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return env['ESCAPED_DOLLAR_SIGN'];
+                return 'Entrez un mot de passe';
               }
               return null;
             },
