@@ -62,7 +62,9 @@ Route::middleware(['auth:api'])->group(function(){
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth:api'])->prefixe('album')->group(function(){
+Route::get('/email/liste/{value}', [AlbumController::class, "autocomplete"])->name("api.autocomplete");
+
+Route::middleware(['auth:api'])->prefix('/album')->group(function() {
     Route::post('/create', [AlbumController::class, 'create'])->name('api.create.album');
     Route::delete('/delete', [AlbumController::class, 'destroy'])->name('api.delete.album');
     Route::post('/cover', [AlbumController::class, 'editCover'])->name('api.editcover.album');
@@ -71,8 +73,8 @@ Route::middleware(['auth:api'])->prefixe('album')->group(function(){
     Route::get('/share/limit', [AlbumController::class, 'shareAlbumLimit'])->name('api.share.limit.album');
     Route::get('/list', [AlbumController::class, 'myAlbumList'])->name('api.list.album');
     Route::get('/limit', [AlbumController::class, 'myAlbumLimit'])->name('api.limit.album');
-    Route::get('/email/liste/{value}', [AlbumController::class, "autocomplete"])->name("api.autocomplete");
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -80,7 +82,7 @@ Route::middleware(['auth:api'])->prefixe('album')->group(function(){
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth:api'])->prefixe('photo')->group(function(){
+Route::middleware(['auth:api'])->prefix('/photo')->group(function(){
     Route::post('/create', [PhotoController::class, 'create'])->name('api.create.photo');
     Route::delete('/delete', [PhotoController::class, 'destroy'])->name('api.delete.photo');
     Route::get('/list/{albumId}', [PhotoController::class, 'list'])->name('api.list.photo');
