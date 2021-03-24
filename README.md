@@ -54,6 +54,11 @@ Pour la suite, vous devez avoir un compte mailtrap (developpement) ou utiliser d
 - MAIL_ENCRYPTION=
 - MAIL_FROM_ADDRESS=contact@simpgalleryapp.com
 
+Pour le lancement des SMS :
+
+- NEXMO_ID=
+- NEXMO_PASSWORD=
+
 ## Lancement du projet 
 
 En mode développment vous devez utiliser les commandes suivantes : 
