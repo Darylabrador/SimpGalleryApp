@@ -48,8 +48,11 @@ Route::prefix("reset")->group(function() {
 |--------------------------------------------------------------------------
 */
 
-Route::post('/update/profil', [AccountController::class, 'updateProfil'])->middleware('auth:api')->name('api.update.profil');
-Route::post('/delete/account', [AccountController::class, 'deleteAccount'])->middleware('auth:api')->name("api.delete.account");
+Route::middleware(['auth:api'])->group(function(){
+    Route::post('/update/profil', [AccountController::class, 'updateProfil'])->name('api.update.profil');
+    Route::post('/delete/account', [AccountController::class, 'deleteAccount'])->name("api.delete.account");
+});
+
 
 
 /*
@@ -58,6 +61,8 @@ Route::post('/delete/account', [AccountController::class, 'deleteAccount'])->mid
 |--------------------------------------------------------------------------
 */
 
-Route::post('/album/create', [AlbumController::class, 'create'])->middleware('auth:api')->name('api.create.album');
-Route::post('/album/cover', [AlbumController::class, 'editCover'])->middleware('auth:api')->name('api.editcover.album');
-Route::post('/album/share', [AlbumController::class, 'share'])->middleware('auth:api')->name('api.share.album');
+Route::middleware(['auth:api'])->group(function(){
+    Route::post('/album/create', [AlbumController::class, 'create'])->name('api.create.album');
+    Route::post('/album/cover', [AlbumController::class, 'editCover'])->name('api.editcover.album');
+    Route::post('/album/share', [AlbumController::class, 'share'])->name('api.share.album');
+});

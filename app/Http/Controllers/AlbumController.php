@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Access;
 use App\Models\Album;
+use App\Models\Invitation;
+use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -119,6 +123,7 @@ class AlbumController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
+                'albumId' => 'required',
                 'mails'   => 'required|array',
                 'mails.*' => 'required|email',
                 'message' => 'nullable',
@@ -139,6 +144,8 @@ class AlbumController extends Controller
         }
 
         $sendingMessage = "";
+        $albumId = $validator->validated()['albumId'];
+        $mails   = $validator->validated()['mails'];
         $message = $validator->validated()['message'];
 
         $user         = Auth::user();
@@ -150,7 +157,33 @@ class AlbumController extends Controller
             $sendingMessage = "{$userIdentity} vous a invité à rejoindre un de ses albums !";
         }
 
+        $album = Album::where(['id' => $albumId, 'user_id' => $user->id])->first();
+
+        if(!$album) {
+            return response()->json([
+                'success' => false,
+                'message' => "Album inexistant"
+            ]);
+        }
+
         
+        foreach ($mails as $mail) {
+            $userExist = User::where(['email' => $mail])->first();
+            if($userExist) {
+                $accessAlbum = new Access();
+                $accessAlbum->user_id  = $userExist->id;
+                $accessAlbum->album_id = $album->id;
+                $accessAlbum->save();
+
+                $notif = new Notification();
+                $notif->label   = "{$userIdentity} vous a invité à rejoindre son album photo";
+                $notif->user_id = $userExist->id;
+                $notif->save();
+            } else {
+
+            }
+        }
+
     }
     
 }
