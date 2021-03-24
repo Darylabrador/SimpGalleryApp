@@ -35,7 +35,9 @@ class CreateReactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reaction_types');
+        
         Schema::dropIfExists('reactions');
+        
+        Schema::dropIfExists('reaction_types');
     }
 }

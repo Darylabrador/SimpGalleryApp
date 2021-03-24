@@ -24,6 +24,7 @@ class AlbumFactory extends Factory
         return [
             //
             'label' => $this->faker->sentence(),
+            'cover' => 'cover.jpg',
         ];
     }
 }
