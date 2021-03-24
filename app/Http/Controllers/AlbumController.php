@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InvitationMail;
 use App\Models\Album;
 use App\Models\Invitation;
 use App\Models\Notification;
@@ -255,22 +256,111 @@ class AlbumController extends Controller
             ]);
         }
 
-        
+        $shareToken        = Str::random(20);
+        $album->shareToken = $shareToken;
+        $album->share_at   = now();
+        $album->save();
+
         foreach ($mails as $mail) {
             $userExist = User::where(['email' => $mail])->first();
             if($userExist) {
-                $accessAlbum = new Access();
-                $accessAlbum->user_id  = $userExist->id;
-                $accessAlbum->album_id = $album->id;
-                $accessAlbum->save();
+                $accessAlbumExist = Access::where(['album_id' => $albumId, 'user_id' => $userExist->id])->first();
 
-                $notif = new Notification();
-                $notif->label   = "{$userIdentity} vous a invité à rejoindre son album photo";
-                $notif->user_id = $userExist->id;
-                $notif->save();
+                if(!$accessAlbumExist) {
+                    $accessAlbum = new Access();
+                    $accessAlbum->user_id  = $userExist->id;
+                    $accessAlbum->album_id = $album->id;
+                    $accessAlbum->save();
+    
+                    $notif = new Notification();
+                    $notif->label   = "{$userIdentity} vous a invité à rejoindre son album photo";
+                    $notif->user_id = $userExist->id;
+                    $notif->save();
+                }
             } else {
+                $invitation           = new Invitation();
+                $invitation->email    = $mail;
+                $invitation->album_id = $album->id;
+                $invitation->save();
 
+                Mail::to($mail)->send(new InvitationMail($mail, $sendingMessage, $shareToken));
             }
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Invitations envoyées !"
+        ]);
+    }
+
+
+    /**
+     * Permit our user to see.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function join(Request $request) {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'shareToken' => 'required',
+            ],
+            [
+                'required' => 'Le champ :attribute est requis',
+            ]
+        );
+
+        $errors = $validator->errors();
+        if (count($errors) != 0) {
+            return response()->json([
+                'success' => false,
+                'message' => $errors->first()
+            ]);
+        }
+
+        $userId = Auth::id();
+        $shareToken = $validator->validated()['shareToken'];
+        $album = Album::where(['shareToken' => $shareToken])->first();
+
+        if(!$album){
+            return response()->json([
+                'success' => false,
+                'message' => "Clé invalide"
+            ]);
+        }
+
+        if($shareToken == $album->shareToken) {
+            $access = Access::where(['album_id' => $album->id, "user_id" => $userId])->first();
+            $access->isAuthorize = true;
+            $access->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => "Vous avez rejoinds l'album"
+            ]);
+        }
+    }
+
+
+    /**
+     * Leave a shared album
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function leave($albumId) {
+        $userId = Auth::id();
+        $accessToAlbum = Access::where(['album_id' => $albumId, 'user_id' => $userId]);
+        if($accessToAlbum) {
+            $accessToAlbum->delete();
+            return response()->json([
+                'success' => true,
+                'message' => "Vous avez quitté l'album"
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => "Introuvable"
+        ]);
     }
 }

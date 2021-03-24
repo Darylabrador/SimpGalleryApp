@@ -7,21 +7,25 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class DeleteAccountMail extends Mailable implements ShouldQueue
+class InvitationMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public $identity;
+    public $sendingMessage;
+    public $shareToken;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($identity)
+    public function __construct($identity, $sendingMessage, $shareToken)
     {
-        $this->identity = $identity;
-        $this->subject("SimpGalleryApp - Suppresion de compte");
+        $this->identity        = $identity;
+        $this->sendingMessage  = $sendingMessage;
+        $this->shareToken      = $shareToken;
+        $this->subject("SimpGalleryApp - Invitation à un album");
     }
 
     /**
@@ -31,6 +35,6 @@ class DeleteAccountMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('mails.deleteAccount');
+        return $this->view('mails.invitation');
     }
 }

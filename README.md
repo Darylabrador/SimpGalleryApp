@@ -42,6 +42,7 @@ Les valeurs des variables DB_ dépendent de votre environnement.
 - DB_DATABASE=simpgalleryapp
 - DB_USERNAME=root
 - DB_PASSWORD=
+- QUEUE_CONNECTION=database
 
 Pour la suite, vous devez avoir un compte mailtrap (developpement) ou utiliser des informations d'un compte email réel (production) :
 

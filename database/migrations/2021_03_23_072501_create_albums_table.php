@@ -18,8 +18,8 @@ class CreateAlbumsTable extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('label');
             $table->string('cover')->nullable();
-            $table->text('shareToken')->nullable()->nullable();
-            $table->datetime('share_at')->nullable()->nullable();
+            $table->text('shareToken')->nullable();
+            $table->datetime('share_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

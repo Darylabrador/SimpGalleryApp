@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Mail\RegisterMail;
+use App\Models\Invitation;
 
 class AuthController extends Controller
 {
@@ -104,18 +105,43 @@ class AuthController extends Controller
         $verifyToken       = Str::random(20);
         $part1             = Str::random(4);
         $part2             = Str::random(4);
-        $user              = new User();
-        $user->pseudo      = "user" . $part1 . "X" . $part2;
-        $user->email       = $email;
-        $user->password    = Hash::make($password);
-        $user->verifyToken = $verifyToken;
-        $user->save();
+    
         
-        Mail::to($user->email)->send(new RegisterMail($user->email, $verifyToken));
+        $invitationList = Invitation::where(['email' => $email])->get();
+        
+        if(count($invitationList) == 0) {
+            $user              = new User();
+            $user->pseudo      = "user" . $part1 . "X" . $part2;
+            $user->email       = $email;
+            $user->password    = Hash::make($password);
+            $user->verifyToken = $verifyToken;
+            $user->save();
+
+            Mail::to($email)->send(new RegisterMail($email, $verifyToken));
+            return response()->json([
+                "success" => true,
+                "message" => "Vous devez confirmer votre adresse mail"
+            ]);
+        } 
+
+        $createdUser = User::create([
+            "pseudo"      => "user" . $part1 . "X" . $part2,
+            "email"       => $email,
+            "password"    => Hash::make($password),
+            "verifyToken" => $verifyToken,
+            "verify_at"   => now(),
+        ]);
+
+        foreach ($invitationList as $invitation) {
+            $newInvitation = new Invitation();
+            $newInvitation->album_id = $invitation->album_id;
+            $newInvitation->user_id  = $createdUser->id;
+            $newInvitation->save();
+        }
 
         return response()->json([
             "success" => true,
-            "message" => "Vous devez confirmer votre adresse mail"
+            "message" => "Bienvenue sur SimpGalleryApp"
         ]);
     }
 

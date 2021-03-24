@@ -32,8 +32,8 @@
                         Une application de partage photo !
                     </h1>
                     <p>
-                        partager vos meillieur moment avec vos amies graçe à l'applcation SimpGalleryApp,
-                        Vous pourrais aimer, comenter leur plus belle photo !
+                        partager vos meilleurs moment avec vos amies grâce à l'application SimpGalleryApp,
+                        Vous pourrais aimer, commenter leur plus belle photo !
                         Ne perdez plus de vue vos amies.
                     </p>
                 </div>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="col-md text text-center text-sm-center d-flex flex-column justify-content-center">
                         <p>
-                            Avec SimpGalleryApp vous pourez partager vos photos avec les amie quee vous choisissez.
+                            Avec SimpGalleryApp vous pouvez partager vos photos avec les amies que vous choisissez.
                         </p>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                 <div class="container row d1 my-5">
                     <div class="col-md text text-center text-sm-center d-flex flex-column justify-content-center">
                         <p>
-                            Vous pourrez aussi donnée votre avis sous leur photo et même liker leur photos. 
+                            Vous pouvez aussi donner votre avis sur leur photo et même liké leur photo. 
                         </p>
                     </div>
                     <div class="col-md telephone">
@@ -72,7 +72,7 @@
                     </div>
                     <div class="col-md text text-center text-sm-center d-flex flex-column justify-content-center">
                         <p>
-                            Grasse à SimpGalleryApp vous pourrez crée autant d'album que vous voudrez pour ne plus égarer vos photos.
+                            Grâce à SimpGalleryApp vous pouvez créé autant d'album que vous voulez pour ne plus égarer vos photos.
                         </p>
                     </div>
                     

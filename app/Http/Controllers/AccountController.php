@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ChangePassword;
 use DateTime;
 use Carbon\Carbon;
 use App\Models\User;
@@ -14,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Mail\DeleteAccountMail;
 use App\Mail\ForgottenPassword;
+use App\Mail\ChangePassword;
 
 class AccountController extends Controller
 {
@@ -225,6 +225,7 @@ class AccountController extends Controller
 
         $password         = $validator->validated()['password'];
         $passwordConfirm  = $validator->validated()['passwordConfirm'];
+        $user = Auth::user();
         $userId = Auth::id();
 
         if ($password != $passwordConfirm) {
@@ -234,6 +235,8 @@ class AccountController extends Controller
             ]);
         }
 
+        Mail::to($user->email)->send(new DeleteAccountMail($user->pseudo));
+        
         Auth::user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
