@@ -31,8 +31,13 @@ class AlbumController extends Controller
             ]
         );
 
-        $loggedUser = Auth::user();
-        $userId = $loggedUser->id;
+        $errors = $validator->errors();
+        if (count($errors) != 0) {
+            return response()->json([
+                'success' => false,
+                'message' => $errors->first()
+            ]);
+        }
 
         $cover          = $validator->validated()['cover'];
         $extension      = $cover->getClientOriginalExtension();
@@ -47,5 +52,47 @@ class AlbumController extends Controller
             'success' => true,
             'message' => "Mise à jour effectuée"
         ]);
+    }
+
+    /**
+     * Share album to users or futur users.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function share(Request $request) {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'mails'   => 'required|array',
+                'mails.*' => 'required|email',
+                'message' => 'nullable',
+            ],
+            [
+                'required' => 'Le champ :attribute est requis',
+                'array'    => 'Format invalide',
+                'email'    => 'Contenue invalide',
+            ]
+        );
+
+        $errors = $validator->errors();
+        if (count($errors) != 0) {
+            return response()->json([
+                'success' => false,
+                'message' => $errors->first()
+            ]);
+        }
+
+        $sendingMessage = "";
+        $message = $validator->validated()['message'];
+
+        $user         = Auth::user();
+        $userIdentity = $user->pseudo;
+
+        if($message != null) {
+            $sendingMessage = $message;
+        } else {
+            $sendingMessage = "{$userIdentity} vous a invité à rejoindre un de ses albums !";
+        }
+
     }
 }

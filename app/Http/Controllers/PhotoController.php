@@ -14,9 +14,10 @@ class PhotoController extends Controller
             $request->all(),
             [   
                 'images'   => "required",
-                'images.*' => 'file|mimes:jpg,jpeg,png|max:5000',
+                'images.*' => 'required|file|mimes:jpg,jpeg,png|max:5000',
             ],
             [
+                'required' => 'Le champ :attribute est requis',
                 'file'  => 'Image non fournis',
                 'mimes' => 'Extension invalide',
                 'max'   => '5Mb maximum'
@@ -47,10 +48,5 @@ class PhotoController extends Controller
                 'message' => "Mise à jour effectuée"
             ]);
         }
-
-        return response()->json([
-            'success' => true,
-            'message' => "Mise à jour effectuée"
-        ]);
     }
 }
