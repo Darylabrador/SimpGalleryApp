@@ -61,8 +61,12 @@ Route::middleware(['auth:api'])->group(function(){
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth:api'])->group(function(){
-    Route::post('/album/create', [AlbumController::class, 'create'])->name('api.create.album');
-    Route::post('/album/cover', [AlbumController::class, 'editCover'])->name('api.editcover.album');
-    Route::post('/album/share', [AlbumController::class, 'share'])->name('api.share.album');
+Route::middleware(['auth:api'])->prefixe('album')->group(function(){
+    Route::post('/create', [AlbumController::class, 'create'])->name('api.create.album');
+    Route::post('/cover', [AlbumController::class, 'editCover'])->name('api.editcover.album');
+    Route::post('/share', [AlbumController::class, 'share'])->name('api.share.album');
+    Route::get('/share/list', [AlbumController::class, 'shareAlbumList'])->name('api.share.list.album');
+    Route::get('/share/limit', [AlbumController::class, 'shareAlbumLimit'])->name('api.share.limit.album');
+    Route::get('/list', [AlbumController::class, 'myAlbumList'])->name('api.list.album');
+    Route::get('/limit', [AlbumController::class, 'myAlbumLimit'])->name('api.limit.album');
 });

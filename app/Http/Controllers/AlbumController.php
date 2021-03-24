@@ -69,12 +69,12 @@ class AlbumController extends Controller
     {
         $loggedUser = Auth::user();
         $userId     = $loggedUser->id;
-        $accesses     = Access::where('user_id', $userId)->get();
-        $albumId    = [];
+        $accesses   = Access::where('user_id', $userId)->get();
+        $albumIds    = [];
         foreach ($accesses as $key => $access) {
-            # code...
+            array_push($albumId,$access->id);
         }
-        $albums = Album::where('user_id', $userId)->get();
+        $albums = Album::whereIn('id', $albumIds)->get();
 
         return AlbumRessources::collection($albums);
     }
@@ -85,12 +85,16 @@ class AlbumController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function myAlbumLimit()
+    public function shareAlbumLimit()
     {
         $loggedUser = Auth::user();
-        $userId = $loggedUser->id;
-
-        $albums = Album::where('user_id', $userId)->limit(2)->get();
+        $userId     = $loggedUser->id;
+        $accesses   = Access::where('user_id', $userId)->get();
+        $albumIds    = [];
+        foreach ($accesses as $key => $access) {
+            array_push($albumId,$access->id);
+        }
+        $albums = Album::whereIn('id', $albumIds)->limit(2)->get();
 
         return AlbumRessources::collection($albums);
     }
