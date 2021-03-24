@@ -12,17 +12,17 @@ class RegisterMail extends Mailable
     use Queueable, SerializesModels;
 
     public $identity;
-    public $url;
+    public $verifyToken;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($identity, $url)
+    public function __construct($identity, $verifyToken)
     {
-        $this->identity = $identity;
-        $this->url      =  $url;
+        $this->identity     = $identity;
+        $this->verifyToken  = $verifyToken;
         $this->subject("SimpGalleryApp - Confirmation d'inscription");
     }
 

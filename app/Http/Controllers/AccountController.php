@@ -28,8 +28,8 @@ class AccountController extends Controller
             [
                 'pseudo'          => 'required',
                 'email'           => 'required',
-                'password'        => 'required',
-                'passwordConfirm' => 'required',
+                'password'        => 'nullable',
+                'passwordConfirm' => 'nullable',
                 'profilPic'       => 'nullable',
             ],
             [
@@ -58,11 +58,13 @@ class AccountController extends Controller
             ]);
         }
 
-        if ($password != $passwordConfirm) {
-            return response()->json([
-                "success" => false,
-                "message" => "Les mots de passe ne sont pas identique"
-            ]);
+        if($password != null) {
+            if ($password != $passwordConfirm) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Les mots de passe ne sont pas identique"
+                ]);
+            }
         }
 
         $userExist->pseudo      = $pseudo;
@@ -73,14 +75,14 @@ class AccountController extends Controller
             $oldImage = $userExist->profilPic;
 
             if ($oldImage != null && $oldImage != "profils/default.png") {
-                $oldFilePath = public_path('images') . '/' . $oldImage;
+                $oldFilePath = public_path('img') . '/' . $oldImage;
                 unlink($oldFilePath);
             }
 
             $imageUploaded  = $validator->validated()['profilPic'];
             $extension      = $imageUploaded->getClientOriginalExtension();
             $image          = time() . rand() . '.' . $extension;
-            $imageUploaded->move(public_path('images/profils'), $image);
+            $imageUploaded->move(public_path('img/profils'), $image);
             $userExist->profilPic = $image;
         }
 

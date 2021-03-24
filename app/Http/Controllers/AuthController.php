@@ -110,9 +110,8 @@ class AuthController extends Controller
         $user->password    = Hash::make($password);
         $user->verifyToken = $verifyToken;
         $user->save();
-
-        $url = request()->getSchemeAndHttpHost() . "/email/verification/" . $verifyToken;
-        Mail::to($user->email)->send(new RegisterMail($user->email, $url));
+        
+        Mail::to($user->email)->send(new RegisterMail($user->email, $verifyToken));
 
         return response()->json([
             "success" => true,

@@ -15,10 +15,12 @@
     </p>
 
     <p>
-        Avant de pouvoir vous connecter et voir les albums qui vous sont partager, il faut cliquer sur le lien ci-dessous afin de confirmer votre email ! <br>
-        <a href="{{ $url }}"> {{ $url }} </a>
+        Vous devez confirmer votre adresse mail afin de voir les albums qui vous sont partager, en copiant le jeton suivant :
     </p>
 
+    <p>
+        Jeton de vérification : <br> {{ $verifyToken }}
+    </p>
     <p> 
         Cordialement, <br>
         L'équipe de SimpGalleryApp
