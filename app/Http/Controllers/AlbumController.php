@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Mail\InvitationMail;
 use App\Models\Album;
 use App\Models\Invitation;
@@ -99,7 +100,17 @@ class AlbumController extends Controller
         return AlbumRessources::collection($albums);
     }
 
-    
+
+    /**
+     * Auto complete
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function autocomplete($value) {
+        $listMail = User::where("email", "LIKE", "%".$value."%")->get();
+        return UserResource::collection($listMail);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Actions
