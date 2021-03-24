@@ -1,0 +1,45 @@
+html
+body {
+    background-color: rgba(128, 128, 128, 0.514);
+}
+.telecharger {
+    border: 2px solid rgb(3, 175, 118);
+    background-color: aquamarine;
+    border-radius: 20px;
+    font-size: 20px;
+}
+
+.telecharge {
+    border: 2px solid rgb(3, 175, 118);
+    background-color: aquamarine;
+    border-radius: 20px;
+    font-size: 40px;
+}
+/* 
+.d1 {
+    margin-top: 150px;
+}
+
+.text {
+    margin-top: 150px;
+}
+
+.D2 {
+    margin-top: 20px;
+}
+
+.block {
+    background-color: grey;
+    height: 100px;
+    width: 350px;
+}
+ */
+
+.elem3 {
+    height: 15vh;
+}
+
+
+ footer {
+     color: honeydew;
+ }
