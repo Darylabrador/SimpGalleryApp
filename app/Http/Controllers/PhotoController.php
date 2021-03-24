@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Validator;
 class PhotoController extends Controller
 {
     /**
-    *Add pic to an album
-    *Illuminate\Http\Request
-    */
+     * Add pic to an album
+     * @return \Illuminate\Http\Response
+     */
     public function create(Request $request, $albumId){
         $validator = Validator::make(
             $request->all(),

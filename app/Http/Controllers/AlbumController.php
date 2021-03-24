@@ -12,6 +12,10 @@ use Illuminate\Support\Str;
 
 class AlbumController extends Controller
 {
+    /**
+     * Create an album
+     * @return \Illuminate\Http\Response
+     */
     public function create(Request $request){
         $validator = Validator::make(
             $request->all(),
@@ -58,14 +62,15 @@ class AlbumController extends Controller
 
 
     /**
-    *Edit cover
-    *Illuminate\Http\Request
-    */
-    public function editCover(Request $request,$albumId) {
+     * Edit cover
+     * @return \Illuminate\Http\Response
+     */
+    public function editCover(Request $request) {
         $validator = Validator::make(
             $request->all(),
             [
-                'cover' => 'required|file|mimes:jpg,jpeg,png|max:5000',
+                'albumId' => "required",
+                'cover'   => 'required|file|mimes:jpg,jpeg,png|max:5000',
             ],
             [
                 'file'  => 'Image non fournis',
@@ -82,6 +87,7 @@ class AlbumController extends Controller
             ]);
         }
 
+        $albumId          = $validator->validated()['albumId'];
         $album     = Album::whereId($albumId)->first();
         $oldImage = $album->cover;
 
@@ -102,6 +108,7 @@ class AlbumController extends Controller
             'message' => "Mise à jour effectuée"
         ]);
     }
+
 
     /**
      * Share album to users or futur users.
@@ -143,6 +150,7 @@ class AlbumController extends Controller
             $sendingMessage = "{$userIdentity} vous a invité à rejoindre un de ses albums !";
         }
 
+        
     }
     
 }

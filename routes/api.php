@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AlbumController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,7 +41,6 @@ Route::prefix("reset")->group(function() {
     Route::post("/password", [AccountController::class, 'resetPassword'])->name("api.reset.password");
 });
 
-Route::post('/delete/account', [AccountController::class, 'deleteAccount'])->middleware('auth:api')->name("api.delete.account");
 
 /*
 |--------------------------------------------------------------------------
@@ -49,3 +49,15 @@ Route::post('/delete/account', [AccountController::class, 'deleteAccount'])->mid
 */
 
 Route::post('/update/profil', [AccountController::class, 'updateProfil'])->middleware('auth:api')->name('api.update.profil');
+Route::post('/delete/account', [AccountController::class, 'deleteAccount'])->middleware('auth:api')->name("api.delete.account");
+
+
+/*
+|--------------------------------------------------------------------------
+| Albums gestion's
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/album/create', [AlbumController::class, 'create'])->middleware('auth:api')->name('api.create.album');
+Route::post('/album/cover', [AlbumController::class, 'editCover'])->middleware('auth:api')->name('api.editcover.album');
+Route::post('/album/share', [AlbumController::class, 'share'])->middleware('auth:api')->name('api.share.album');
