@@ -4,20 +4,22 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 // Create a Form widget.
 class Login extends StatefulWidget {
   @override
-  LoginState createState() {
-    return LoginState();
+  State<StatefulWidget> createState() {
+    return _LoginState();
   }
+}
+
+class User {
+  String email;
+  String password;
+  User({this.email, this.password});
 }
 
 // Create a corresponding State class.
 // This class holds data related to the form.
-class LoginState extends State<Login> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<LoginState>.
+class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
+  final _user = User();
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +36,12 @@ class LoginState extends State<Login> {
             ),
             // The validator receives the text that the user has entered.
             validator: (value) {
+              _user.email = value;
+
               if (value == null || value.isEmpty) {
                 return 'Veuillez entrer votre adresse email';
               }
-              return null;
+              return value = '';
             },
           ),
           TextFormField(
@@ -48,10 +52,12 @@ class LoginState extends State<Login> {
             ),
             // The validator receives the text that the user has entered.
             validator: (value) {
+              _user.password = value;
+
               if (value == null || value.isEmpty) {
                 return 'Entrez un mot de passe';
               }
-              return null;
+              return value = '';
             },
           ),
           TextFormField(
@@ -65,7 +71,12 @@ class LoginState extends State<Login> {
               if (value == null || value.isEmpty) {
                 return 'Please enter some text';
               }
-              return null;
+
+              if (value != _user.password) {
+                return 'Mot de passe invalide';
+              }
+
+              return value = '';
             },
           ),
           Padding(
@@ -78,6 +89,8 @@ class LoginState extends State<Login> {
                   // you'd often call a server or save the information in a database.
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('Processing Data')));
+                  print(_user.email);
+                  print(_user.password);
                 }
               },
               child: Text('Submit'),
