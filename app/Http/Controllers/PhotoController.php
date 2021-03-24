@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Validator;
 
 class PhotoController extends Controller
 {
+    /**
+    *Add pic to an album
+    *Illuminate\Http\Request
+    */
     public function create(Request $request, $albumId){
         $validator = Validator::make(
             $request->all(),
@@ -40,17 +44,19 @@ class PhotoController extends Controller
                 $album->album_id    = $albumId;
                 $album->label       = $image;
                 $album->save();
+
+                
             }
             
             return response()->json([
                 'success' => true,
-                'message' => "Mise à jour effectuée"
+                'message' => "Photo ajoutée"
             ]);
         }
 
         return response()->json([
             'success' => true,
-            'message' => "Mise à jour effectuée"
+            'message' => "Photo(s) ajoutée(s)"
         ]);
     }
 }
