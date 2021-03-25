@@ -66,7 +66,7 @@ Route::get('/email/liste/{value}', [AlbumController::class, "autocomplete"])->na
 
 Route::middleware(['auth:api'])->prefix('/album')->group(function() {
     Route::post('/create', [AlbumController::class, 'create'])->name('api.create.album');
-    Route::delete('/delete', [AlbumController::class, 'destroy'])->name('api.delete.album');
+    Route::delete('/delete/{id}', [AlbumController::class, 'destroy'])->name('api.delete.album');
     Route::post('/cover', [AlbumController::class, 'editCover'])->name('api.editcover.album');
     Route::post('/share', [AlbumController::class, 'share'])->name('api.share.album');
     Route::post('/share/delete', [AlbumController::class, 'deleteShare'])->name('api.share.delete');
@@ -85,7 +85,19 @@ Route::middleware(['auth:api'])->prefix('/album')->group(function() {
 
 Route::middleware(['auth:api'])->prefix('/photo')->group(function(){
     Route::post('/create', [PhotoController::class, 'create'])->name('api.create.photo');
-    Route::delete('/delete', [PhotoController::class, 'destroy'])->name('api.delete.photo');
+    Route::delete('/delete/{id}', [PhotoController::class, 'destroy'])->name('api.delete.photo');
     Route::get('/list/{albumId}', [PhotoController::class, 'list'])->name('api.list.photo');
     Route::get('/show/{photoId}', [AlbumController::class, 'showOne'])->name('api.show.photo');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Comments gestion's
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth:api'])->prefix('/comment')->group(function(){
+    Route::post('/create', [CommentController::class, 'create'])->name('api.create.comment');
+    Route::delete('/delete/{photoId}', [CommentController::class, 'delete'])->name('api.delete.comment');
+    Route::get('/list/{photoId}', [CommentController::class, 'list'])->name('api.list.comment');
 });
