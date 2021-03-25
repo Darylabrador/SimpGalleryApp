@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import './albums_widget.dart';
-import '../auth/login.dart';
 
 class Home extends StatelessWidget {
-  Home({Key key, this.title}) : super(key: key);
+  Home({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -32,15 +31,20 @@ class Home extends StatelessWidget {
                 icon: const Icon(Icons.menu),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute<void>(
-                  builder: (BuildContext context) {
-                    return Scaffold(
-                      appBar: AppBar(
-                        title: const Text('Next page'),
-                      ),
-                      body: Login(),
-                    );
-                  },
-                ));
+                    builder: (BuildContext context) {
+                      return Scaffold(
+                        appBar: AppBar(
+                          title: const Text('Next page'),
+                        ),
+                        body: const Center(
+                          child: Text(
+                            'This is the next page',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                        ),
+                      );
+                    },
+                  ));
                 },
                 tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
               );
