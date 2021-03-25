@@ -23,14 +23,13 @@ Une fois que que le SDK est installé, cette ligne de commande permettra de s'as
 
 - flutter pub get
 
-Après avoir fait un git clone de ce projet, vous devez effectué l'action suivante afin d'avoir l'application mobile en mode debug : 
+Après avoir fait un git clone de ce projet, vous devez effectué l'action suivante afin d'avoir l'application mobile en mode debug :
 
 - flutter run
 
 Dans un second terminal lancer la commande suivante pour tenir compte des changements pour chaque models :
 
 - flutter pub run build_runner watch
-
 
 ## Liens utiles
 
