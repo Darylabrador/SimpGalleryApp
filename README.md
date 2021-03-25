@@ -27,6 +27,10 @@ Après avoir fait un git clone de ce projet, vous devez effectué l'action suiva
 
 - flutter run
 
+Dans un second terminal lancer la commande suivante pour tenir compte des changements pour chaque models :
+
+- flutter pub run build_runner watch
+
 
 ## Liens utiles
 
