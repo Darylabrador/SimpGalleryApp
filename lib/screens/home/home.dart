@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './albums_widget.dart';
 import '../auth/login.dart';
+import './albums_partager_widget.dart';
 
 class Home extends StatelessWidget {
   Home({Key key, this.title}) : super(key: key);
@@ -32,15 +33,15 @@ class Home extends StatelessWidget {
                 icon: const Icon(Icons.menu),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute<void>(
-                  builder: (BuildContext context) {
-                    return Scaffold(
-                      appBar: AppBar(
-                        title: const Text('Next page'),
-                      ),
-                      body: Login(),
-                    );
-                  },
-                ));
+                    builder: (BuildContext context) {
+                      return Scaffold(
+                        appBar: AppBar(
+                          title: const Text('Next page'),
+                        ),
+                        body: Login(),
+                      );
+                    },
+                  ));
                 },
                 tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
               );
@@ -81,7 +82,7 @@ class Home extends StatelessWidget {
         ),
         body: Column(children: <Widget>[
           Container(child: AlbumsWidget()),
-          Container(child: AlbumsWidget()),
+          Container(child: AlbumsPartagerWidget()),
         ]));
   }
 }

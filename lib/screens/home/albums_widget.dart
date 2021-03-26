@@ -1,44 +1,76 @@
 import 'package:flutter/material.dart';
 
 class AlbumsWidget extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     print('[Products Widget] build()');
     return Column(
+      children: <Widget>[
+        Container(
+          alignment: Alignment.topLeft,
+          padding: EdgeInsets.all(15.0),
+          child: Text(
+            'Albums',
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+        Row(
           children: <Widget>[
-            Text('Albums'),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: FittedBox(
-                        fit: BoxFit.fill, // otherwise the logo will be tiny
-                        child: Image.asset('assets/sample-01.jpg'),
+            Expanded(
+              child: SizedBox(
+                child: Card(
+                  child: Column(
+                    children: <Widget>[
+                      Image.asset('assets/sample-01.jpg'),
+                      Container(
+                        padding: EdgeInsets.only(
+                          left: 20,
+                        ),
+                        alignment: Alignment.topLeft,
+                        child: Text('album 1'),
                       ),
-                    ),
+                      Container(
+                        padding: EdgeInsets.only(
+                          left: 20,
+                        ),
+                        alignment: Alignment.topLeft,
+                        child: Text('nb photo'),
+                      ),
+                    ],
                   ),
                 ),
-                Expanded(
-                  child: SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: FittedBox(
-                        fit: BoxFit.fill, // otherwise the logo will be tiny
-                        child: Image.asset('assets/sample-02.jpg'),
+              ),
+            ),
+            Expanded(
+              child: SizedBox(
+                child: Card(
+                  child: Column(
+                    children: <Widget>[
+                      Image.asset('assets/sample-02.jpg'),
+                      Container(
+                        padding: EdgeInsets.only(
+                          left: 20,
+                        ),
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'album 1',
+                        ),
                       ),
-                    ),
+                      Container(
+                        padding: EdgeInsets.only(
+                          left: 20,
+                        ),
+                        alignment: Alignment.topLeft,
+                        child: Text('nb photo'),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            )
+              ),
+            ),
           ],
-        );
+        )
+      ],
+    );
   }
 }
