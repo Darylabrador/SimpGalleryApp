@@ -31,10 +31,6 @@ Dans un second terminal lancer la commande suivante pour tenir compte des change
 
 - flutter pub run build_runner watch *(si besoin seulement)*
 
-### V1
-
-Dans la version actuelle il faut modifier le lien vers l'API laravel dans "lib/screens/auth/registration.dart" pour pouvoir faire le test de l'inscription
-
 ## Liens utiles
 
 - [Application mobile flutter]("https://github.com/Darylabrador/SimpGalleryApp")
