@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'screens/home/home.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+// import 'screens/home/home.dart';
+import 'screens/auth/registration.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
+  // await DotEnv.load(fileName: ".env");
 }
 
 class MyApp extends StatelessWidget {
@@ -14,7 +17,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
       ),
-      home: Home(title: 'SimpGalleryApp'),
+      home: Registration(
+        toggleView: () => {false},
+      ),
     );
   }
 }

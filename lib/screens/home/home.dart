@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import './albums_widget.dart';
+<<<<<<< HEAD
 import '../auth/login.dart';
 import './albums_partager_widget.dart';
+=======
+>>>>>>> 3e174425e974bae8d9669dc7cd750a065a737cf6
 
 class Home extends StatelessWidget {
-  Home({Key key, this.title}) : super(key: key);
+  Home({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -38,7 +41,16 @@ class Home extends StatelessWidget {
                         appBar: AppBar(
                           title: const Text('Next page'),
                         ),
+<<<<<<< HEAD
                         body: Login(),
+=======
+                        body: const Center(
+                          child: Text(
+                            'This is the next page',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                        ),
+>>>>>>> 3e174425e974bae8d9669dc7cd750a065a737cf6
                       );
                     },
                   ));
