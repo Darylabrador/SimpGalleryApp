@@ -115,6 +115,7 @@ class AuthController extends Controller
             $user->identifiant = $identifiant;
             $user->password    = Hash::make($password);
             $user->verifyToken = $verifyToken;
+            $user->isMobile    = 0;
             $user->save();
 
             Mail::to($identifiant)->send(new RegisterMail($identifiant, $verifyToken));

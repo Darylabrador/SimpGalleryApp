@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('identifiant')->unique();
             $table->string('password');
             $table->string('profilPic')->default('default.png');
-            $table->boolean('isMobile')->defaul(false);
+            $table->boolean('isMobile')->defaul(0);
             $table->text('resetToken')->nullable();
             $table->text('verifyToken')->nullable();
             $table->datetime('verify_at')->nullable();
