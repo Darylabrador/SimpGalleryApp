@@ -46,7 +46,7 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 10.0),
                 TextFormField(
                   decoration: InputDecoration(
-                      labelText: 'Email', border: OutlineInputBorder()),
+                      labelText: 'Email / N° téléphone', border: OutlineInputBorder()),
                   validator: (val) => val!.isEmpty ? 'Entrez un email' : null,
                   onChanged: (val) => email = val,
                 ),

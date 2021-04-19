@@ -26,6 +26,11 @@ class Home extends StatelessWidget {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    //
+    
+    // token for bearer token
+    var token = storage.getItem('SimpGalleryToken');
+
     return Scaffold(
         appBar: AppBar(
           leading: Builder(

@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 
 class AlbumsPartagerWidget extends StatelessWidget {
+  final LocalStorage storage = new LocalStorage('sharePhoto');
+
   @override
   Widget build(BuildContext context) {
     print('[Products Widget] build()');
+
+    // token for bearer token
+    var token = storage.getItem('SimpGalleryToken');
+
     return Column(
       children: <Widget>[
         Container(

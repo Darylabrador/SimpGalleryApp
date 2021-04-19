@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 
 class Shared extends StatefulWidget {
   @override
@@ -8,10 +9,14 @@ class Shared extends StatefulWidget {
 }
 
 class _SharedState extends State<Shared> {
+  final LocalStorage storage = new LocalStorage('sharePhoto');
   String _mainText = 'This is the first assignment!';
 
   @override
   Widget build(BuildContext context) {
+    // token for bearer token
+    var token = storage.getItem('SimpGalleryToken');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shared'),
