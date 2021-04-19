@@ -1,14 +1,14 @@
 import 'package:client/screens/auth/login.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 import 'screens/home/home.dart';
 import 'screens/auth/login.dart';
 import 'screens/auth/registration.dart';
 
 void main() async {
+  await DotEnv.load();
   runApp(MyApp());
-  // await DotEnv.load(fileName: ".env");
 }
 
 class MyApp extends StatelessWidget {

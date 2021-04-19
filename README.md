@@ -31,6 +31,13 @@ Dans un second terminal lancer la commande suivante pour tenir compte des change
 
 - flutter pub run build_runner watch *(si besoin seulement)*
 
+## Spécificité .env
+
+Pour que le .env soit pris en compte sans avoir d'erreur, on utilise flutter_dotenv. Nous avons deux possibilités d'ignorer l'erreur "safety" :
+
+- Dans android studio --> run > edit configurations > dans "additional run args" on rajoute "--no-sound-null-safety
+- Depuis votre IDE    --> flutter run --no-sound-null-safety
+
 ### V1
 
 Dans la version actuelle il faut modifier le lien vers l'API laravel dans "lib/screens/auth/registration.dart" pour pouvoir faire le test de l'inscription

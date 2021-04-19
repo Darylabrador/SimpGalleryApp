@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:client/models/user.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -75,8 +76,7 @@ class _RegistrationState extends State<Registration> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      url = Uri.parse(
-                          'http://7aa624de6429.ngrok.io/api/inscription');
+                      url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/inscription");
                       response = await http.post(url, body: {
                         'identifiant': email,
                         'password': password,
