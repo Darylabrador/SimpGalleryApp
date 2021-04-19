@@ -1,5 +1,7 @@
-import 'package:client/screens/auth/login.dart';
 import 'package:flutter/material.dart';
+import 'package:client/screens/albums/photos.dart';
+import 'package:client/screens/albums/shared.dart';
+import 'package:client/screens/auth/login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 import 'screens/home/home.dart';
@@ -16,20 +18,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
-      ),
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.deepOrange,
+        ),
         initialRoute: '/',
-      routes: {
-        '/': (context) => Login(),
-        '/register': (context) => Registration(),
-        '/home': (context) => Home(title: "Accueil"),
-      }
-      // home: Registration(
-      //   toggleView: () => {false},
-      // ),
-      //
-    );
+        routes: {
+          '/': (context) => Login(),
+          '/register': (context) => Registration(),
+          '/home': (context) => Home(title: "Accueil"),
+          '/photos': (context) => Photos(),
+          '/shared': (context) => Shared(),
+        }
+        // home: Registration(
+        //   toggleView: () => {false},
+        // ),
+        );
   }
 }
