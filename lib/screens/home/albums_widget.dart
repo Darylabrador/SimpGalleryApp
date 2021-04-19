@@ -21,21 +21,9 @@ class AlbumsWidget extends StatelessWidget {
                 child: Card(
                   child: Column(
                     children: <Widget>[
-                      Image.asset('assets/sample-01.jpg'),
-                      Container(
-                        padding: EdgeInsets.only(
-                          left: 20,
-                        ),
-                        alignment: Alignment.topLeft,
-                        child: Text('album 1'),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(
-                          left: 20,
-                        ),
-                        alignment: Alignment.topLeft,
-                        child: Text('nb photo'),
-                      ),
+                      Image.asset('assets/sample-01.jpg',
+                          height: 150, width: 150, fit: BoxFit.fill),
+                      Text('album 1'),
                     ],
                   ),
                 ),
@@ -46,22 +34,10 @@ class AlbumsWidget extends StatelessWidget {
                 child: Card(
                   child: Column(
                     children: <Widget>[
-                      Image.asset('assets/sample-02.jpg'),
-                      Container(
-                        padding: EdgeInsets.only(
-                          left: 20,
-                        ),
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'album 1',
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(
-                          left: 20,
-                        ),
-                        alignment: Alignment.topLeft,
-                        child: Text('nb photo'),
+                      Image.asset('assets/sample-02.jpg',
+                          height: 150, width: 150, fit: BoxFit.fill),
+                      Text(
+                        'album 1',
                       ),
                     ],
                   ),
