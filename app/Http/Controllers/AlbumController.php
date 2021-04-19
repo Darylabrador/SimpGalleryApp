@@ -295,15 +295,15 @@ class AlbumController extends Controller
             if ($type == 0) {
                 Mail::to($target)->send(new InvitationMail($target, $sendingMessage, $shareToken));
             } else {
-                $basic  = new \Nexmo\Client\Credentials\Basic(env('NEXMO_ID', ''), env('NEXMO_PASSWORD', ''));
-                $client = new \Nexmo\Client($basic);
+                // $basic  = new \Nexmo\Client\Credentials\Basic(env('NEXMO_ID', ''), env('NEXMO_PASSWORD', ''));
+                // $client = new \Nexmo\Client($basic);
 
-                $message = $client->message()->send([
-                    // 'to' => '262692023484',
-                    'to' => $target,
-                    'from' => env('APP_NAME', ''),
-                    'text' => $sendingMessage . " " . "Ci-dessous votre clé : \n {$shareToken}"
-                ]);
+                // $message = $client->message()->send([
+                //     // 'to' => '262692023484',
+                //     'to' => $target,
+                //     'from' => env('APP_NAME', ''),
+                //     'text' => $sendingMessage . " " . "Ci-dessous votre clé : \n {$shareToken}"
+                // ]);
                 
                 $invitation->isMobile = true;
             }
