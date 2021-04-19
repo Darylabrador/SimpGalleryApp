@@ -18,19 +18,29 @@ class AlbumsPartagerWidget extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: SizedBox(
+                  child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/shared');
+                },
                 child: Card(
                   child: Column(
                     children: <Widget>[
                       Image.asset('assets/sample-01.jpg',
                           height: 150, width: 150, fit: BoxFit.fill),
-                      Text('album 1'),
+                      Text(
+                        'album 1',
+                      ),
                     ],
                   ),
                 ),
-              ),
+              )),
             ),
             Expanded(
               child: SizedBox(
+                  child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/shared');
+                },
                 child: Card(
                   child: Column(
                     children: <Widget>[
@@ -42,7 +52,7 @@ class AlbumsPartagerWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
+              )),
             ),
           ],
         )
