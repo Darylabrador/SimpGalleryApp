@@ -79,17 +79,14 @@ class AuthController extends Controller
             ],
             [
                 'required' => 'Le champ :attribute est requis',
-                'unique'   => 'Identifiant existe déjà'
+                'unique'   => 'Identifiant existe deja'
             ]
         );
 
         $errors = $validator->errors();
 
         if (count($errors) != 0) {
-            return response()->json([
-                'success' => false,
-                'message' => $errors->first()
-            ]);
+            return $errors->first() ;
         }
 
         $identifiant       = $validator->validated()['identifiant'];
@@ -97,10 +94,7 @@ class AuthController extends Controller
         $passwordConfirm   = $validator->validated()['passwordConfirm'];
 
         if ($password != $passwordConfirm) {
-            return response()->json([
-                "success" => false,
-                "message" => "Les mots de passe ne sont pas identique"
-            ]);
+            return "Les mots de passe ne sont pas identique";
         }
 
         $verifyToken       = Str::random(20);
@@ -119,10 +113,7 @@ class AuthController extends Controller
             $user->save();
 
             Mail::to($identifiant)->send(new RegisterMail($identifiant, $verifyToken));
-            return response()->json([
-                "success" => true,
-                "message" => "Vous devez confirmer votre adresse mail"
-            ]);
+            return  "Vous devez confirmer votre adresse mail";
         } 
 
         $createdUser = User::create([
@@ -141,10 +132,7 @@ class AuthController extends Controller
             $newAccess->save();
         }
 
-        return response()->json([
-            "success" => true,
-            "message" => "Bienvenue sur SimpGalleryApp"
-        ]);
+        return "Bienvenue sur SimpGalleryApp";
     }
 
 
@@ -167,36 +155,24 @@ class AuthController extends Controller
 
         $errors = $validator->errors();
         if (count($errors) != 0) {
-            return response()->json([
-                'success' => false,
-                'message' => $errors->first()
-            ]);
+            return  $errors->first();
         }
 
         $verifyToken  = $validator->validated()['verifyToken'];
         $userExist = User::where(['verifyToken' => $verifyToken])->first();
 
         if (!$userExist) {
-            return response()->json([
-                "success" => false,
-                "message" => "Jeton invalide"
-            ]);
+            return "Jeton invalide";
         }
 
         if ($userExist->verified_at != null) {
-            return response()->json([
-                "success" => false,
-                "message" => "Adresse mail déjà vérifier"
-            ]);
+            return "Adresse mail déjà verifier";
         }
 
         $userExist->verified_at = now();
         $userExist->save();
 
-        return response()->json([
-            "success" => true,
-            "message" => "Adresse mail vérifier avec succès"
-        ]);
+        return  "Adresse mail verifier avec succes";
     }
 
 
@@ -210,9 +186,6 @@ class AuthController extends Controller
         Auth::user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
-        return response()->json([
-            'success' => true,
-            "message" => "Vous êtes déconnecté !",
-        ]);
+        return "Vous êtes déconnecté !";
     }
 }
