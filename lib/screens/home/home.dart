@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './albums_widget.dart';
 import './albums_partager_widget.dart';
+import 'package:localstorage/localstorage.dart';
 
 class Home extends StatelessWidget {
   Home({Key? key, required this.title}) : super(key: key);
@@ -15,6 +16,7 @@ class Home extends StatelessWidget {
   // always marked "final".
 
   final String title;
+  final LocalStorage storage = new LocalStorage('sharePhoto');
 
   @override
   Widget build(BuildContext context) {

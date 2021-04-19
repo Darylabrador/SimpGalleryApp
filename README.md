@@ -38,6 +38,10 @@ Pour que le .env soit pris en compte sans avoir d'erreur, on utilise flutter_dot
 - Dans android studio --> run > edit configurations > dans "additional run args" on rajoute "--no-sound-null-safety
 - Depuis votre IDE    --> flutter run --no-sound-null-safety
 
+Contenu du .env 
+
+- DATABASE_URL=
+
 ### V1
 
 Dans la version actuelle il faut modifier le lien vers l'API laravel dans "lib/screens/auth/registration.dart" pour pouvoir faire le test de l'inscription

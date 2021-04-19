@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -6,13 +13,21 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final LocalStorage storage = new LocalStorage('sharePhoto');
   String email = '';
   String password = '';
+
+  var response;
+  var url;
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    if (storage.getItem('SimpGalleryToken') != null) {
+      Navigator.pushNamed(context, '/home');
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -49,9 +64,32 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 10.0),
                 ElevatedButton(
                   onPressed: () async {
-                    Navigator.pushNamed(context, '/home');
                     if (_formKey.currentState!.validate()) {
-                      print('login : okay');
+                      url = Uri.parse(
+                          "${DotEnv.env['DATABASE_URL']}/api/connexion");
+                      response = await http.post(url, body: {
+                        'identifiant': email,
+                        'password': password,
+                      }, headers: {
+                        "Accept": "application/json"
+                      });
+
+                      if (response.statusCode == 200) {
+                        storage.setItem("SimpGalleryToken", response.body);
+                        Navigator.pushNamed(context, '/home');
+                      } else {
+                        showToast(
+                          "Une erreur est survenue",
+                          context: context,
+                          animation: StyledToastAnimation.scale,
+                          reverseAnimation: StyledToastAnimation.fade,
+                          position: StyledToastPosition.bottom,
+                          animDuration: Duration(seconds: 1),
+                          duration: Duration(seconds: 4),
+                          curve: Curves.elasticOut,
+                          reverseCurve: Curves.linear,
+                        );
+                      }
                     }
                   },
                   child: Text('Connexion'),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:client/models/user.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
 
 class Registration extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class Registration extends StatefulWidget {
 
 class _RegistrationState extends State<Registration> {
   late Future<User> futureAlbum;
+  final LocalStorage storage = new LocalStorage('sharePhoto');
 
   String email = '';
   String password = '';
@@ -29,6 +32,10 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
+    if (storage.getItem('SimpGalleryToken') != null) {
+       Navigator.pushNamed(context, '/home');
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -76,26 +83,42 @@ class _RegistrationState extends State<Registration> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/inscription");
+                      url = Uri.parse(
+                          "${DotEnv.env['DATABASE_URL']}/api/inscription");
                       response = await http.post(url, body: {
                         'identifiant': email,
                         'password': password,
                         'passwordConfirm': confirmPassword
+                      }, headers: {
+                        "Accept": "application/json"
                       });
-
-                      print('Response status: ${response.statusCode}');
-                      // print('Response body: ${response.body}');
-                      // print(await http.read(url));
-
-                      print('registration : .... pls');
-
                       if (response.statusCode == 200) {
                         // If the server did return a 200 OK response,
                         // then parse the JSON.
-                        print(response.body);
+                        showToast(
+                          response.body,
+                          context: context,
+                          animation: StyledToastAnimation.scale,
+                          reverseAnimation: StyledToastAnimation.fade,
+                          position: StyledToastPosition.bottom,
+                          animDuration: Duration(seconds: 1),
+                          duration: Duration(seconds: 4),
+                          curve: Curves.elasticOut,
+                          reverseCurve: Curves.linear,
+                        );
                         Navigator.pushNamed(context, '/');
                       } else {
-                        print('error boi');
+                        showToast(
+                          "Une erreur est survenue",
+                          context: context,
+                          animation: StyledToastAnimation.scale,
+                          reverseAnimation: StyledToastAnimation.fade,
+                          position: StyledToastPosition.bottom,
+                          animDuration: Duration(seconds: 1),
+                          duration: Duration(seconds: 4),
+                          curve: Curves.elasticOut,
+                          reverseCurve: Curves.linear,
+                        );
                       }
                     }
                   },
