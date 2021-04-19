@@ -70,6 +70,13 @@ En mode production la commande suivante doit être actif en permanence :
 
 - php artisan queue:work
 
+## Spécificité .env
+
+Pour que le .env soit pris en compte sans avoir d'erreur, on utilise flutter_dotenv. Nous avons deux possibilités d'ignorer l'erreur "safety" :
+
+- Dans android studio --> run > edit configurations > dans "additional run args" on rajoute "--no-sound-null-safety
+- Depuis votre IDE    --> flutter run --no-sound-null-safety
+
 ## Liens utiles
 
 - <a href="https://github.com/Darylabrador/SimpGalleryApp"> Application mobile flutter </a>
