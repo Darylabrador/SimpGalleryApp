@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
-  final Function toggleView;
-  Login({required this.toggleView});
   @override
   _LoginState createState() => _LoginState();
 }
@@ -27,7 +25,7 @@ class _LoginState extends State<Login> {
                 Image.asset('assets/sample-01.jpg',
                     height: 100.0, width: 100.0),
                 Center(
-                  child: Text('Inscrivez-vous',
+                  child: Text('Connexion',
                       style: Theme.of(context).textTheme.headline6),
                 ),
                 SizedBox(height: 10.0),
@@ -51,6 +49,7 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 10.0),
                 ElevatedButton(
                   onPressed: () async {
+                    Navigator.pushNamed(context, '/home');
                     if (_formKey.currentState!.validate()) {
                       print('login : okay');
                     }
@@ -59,9 +58,9 @@ class _LoginState extends State<Login> {
                 ),
                 OutlinedButton(
                   onPressed: () {
-                    widget.toggleView();
+                    Navigator.pushNamed(context, '/register');
                   },
-                  child: Text('J\'ai déjà un compte'),
+                  child: Text("Je n'ai pas de compte"),
                 ),
               ],
             ),

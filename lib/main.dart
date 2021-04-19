@@ -1,8 +1,10 @@
+import 'package:client/screens/auth/login.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
-// import 'screens/home/home.dart';
-// import 'screens/auth/registration.dart';
+
 import 'screens/home/home.dart';
+import 'screens/auth/login.dart';
+import 'screens/auth/registration.dart';
 
 void main() async {
   runApp(MyApp());
@@ -18,10 +20,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
       ),
+        initialRoute: '/',
+      routes: {
+        '/': (context) => Login(),
+        '/register': (context) => Registration(),
+        '/home': (context) => Home(title: "Accueil"),
+      }
       // home: Registration(
       //   toggleView: () => {false},
       // ),
-      home: Home(title: "Accueil",)
+      //
     );
   }
 }

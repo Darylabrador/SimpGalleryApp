@@ -5,8 +5,6 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 
 class Registration extends StatefulWidget {
-  final Function toggleView;
-  Registration({required this.toggleView});
   @override
   _RegistrationState createState() => _RegistrationState();
 }
@@ -76,8 +74,6 @@ class _RegistrationState extends State<Registration> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    print('registration : okay baby');
-
                     if (_formKey.currentState!.validate()) {
                       url = Uri.parse(
                           'http://7aa624de6429.ngrok.io/api/inscription');
@@ -97,6 +93,7 @@ class _RegistrationState extends State<Registration> {
                         // If the server did return a 200 OK response,
                         // then parse the JSON.
                         print(response.body);
+                        Navigator.pushNamed(context, '/');
                       } else {
                         print('error boi');
                       }
@@ -106,9 +103,9 @@ class _RegistrationState extends State<Registration> {
                 ),
                 OutlinedButton(
                   onPressed: () {
-                    widget.toggleView();
+                    Navigator.pushNamed(context, '/');
                   },
-                  child: Text('Je n\'ai pas de compte'),
+                  child: Text("J'ai déjà un compte"),
                 ),
               ],
             ),

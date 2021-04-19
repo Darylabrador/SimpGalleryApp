@@ -20,9 +20,9 @@ class _LinkAuthState extends State<LinkAuth> {
   @override
   Widget build(BuildContext context) {
     if (_toggleLoginPage) {
-      return Login(toggleView: toggleView);
+      return Login();
     } else {
-      return Registration(toggleView: toggleView);
+      return Registration();
     }
   }
 }
