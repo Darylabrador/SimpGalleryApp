@@ -5,6 +5,7 @@ import 'package:client/screens/auth/login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 import 'screens/home/home.dart';
+import 'screens/home/share_settings.dart';
 import 'screens/auth/login.dart';
 import 'screens/auth/registration.dart';
 
@@ -29,10 +30,12 @@ class MyApp extends StatelessWidget {
           '/home': (context) => Home(title: "Accueil"),
           '/photos': (context) => Photos(),
           '/shared': (context) => Shared(),
+          '/settings':(context) => ShareSettings(title: "Options"),
         }
         // home: Registration(
         //   toggleView: () => {false},
         // ),
         );
+
   }
 }
