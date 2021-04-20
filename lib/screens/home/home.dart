@@ -27,10 +27,9 @@ class Home extends StatelessWidget {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     //
-    
-    // token for bearer token
-    var token = storage.getItem('SimpGalleryToken');
 
+    // token for bearer
+    var token = storage.getItem('SimpGalleryToken');
     return Scaffold(
         appBar: AppBar(
           leading: Builder(

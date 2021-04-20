@@ -32,10 +32,6 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
-    if (storage.getItem('SimpGalleryToken') != null) {
-       Navigator.pushNamed(context, '/home');
-    }
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(

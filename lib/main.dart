@@ -7,6 +7,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'screens/home/home.dart';
 import 'screens/auth/login.dart';
 import 'screens/auth/registration.dart';
+import 'package:localstorage/localstorage.dart';
+
+final LocalStorage storage = new LocalStorage('sharePhoto');
+
+String token = storage.getItem('SimpGalleryToken') ?? "";
 
 void main() async {
   await DotEnv.load();
@@ -15,10 +20,11 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'SimpGallery',
         theme: ThemeData(
           primarySwatch: Colors.deepOrange,
         ),
@@ -29,10 +35,6 @@ class MyApp extends StatelessWidget {
           '/home': (context) => Home(title: "Accueil"),
           '/photos': (context) => Photos(),
           '/shared': (context) => Shared(),
-        }
-        // home: Registration(
-        //   toggleView: () => {false},
-        // ),
-        );
+        });
   }
 }

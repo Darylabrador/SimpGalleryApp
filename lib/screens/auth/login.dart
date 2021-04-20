@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../home/home.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
@@ -8,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 
 class Login extends StatefulWidget {
+
   @override
   _LoginState createState() => _LoginState();
 }
@@ -24,10 +26,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    if (storage.getItem('SimpGalleryToken') != null) {
-      Navigator.pushNamed(context, '/home');
-    }
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -46,7 +44,8 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 10.0),
                 TextFormField(
                   decoration: InputDecoration(
-                      labelText: 'Email / N° téléphone', border: OutlineInputBorder()),
+                      labelText: 'Email / N° téléphone',
+                      border: OutlineInputBorder()),
                   validator: (val) => val!.isEmpty ? 'Entrez un email' : null,
                   onChanged: (val) => email = val,
                 ),

@@ -6,7 +6,7 @@ class AlbumsPartagerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('[Products Widget] build()');
+    print('shared albums');
 
     // token for bearer token
     var token = storage.getItem('SimpGalleryToken');
