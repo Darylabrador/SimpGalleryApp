@@ -17,7 +17,7 @@ class AlbumsWidget extends StatelessWidget {
           alignment: Alignment.topLeft,
           padding: EdgeInsets.all(15.0),
           child: Text(
-            'Albums',
+            'Mes Albums',
             style: TextStyle(fontSize: 20),
           ),
         ),
