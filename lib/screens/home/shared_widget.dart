@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 
-class AlbumsPartagerWidget extends StatelessWidget {
+class SharedWidget extends StatelessWidget {
   final LocalStorage storage = new LocalStorage('sharePhoto');
 
   @override

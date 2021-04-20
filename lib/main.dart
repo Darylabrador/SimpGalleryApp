@@ -11,8 +11,8 @@ import 'screens/auth/registration.dart';
 import 'screens/auth/ask_forgotten_pwd.dart';
 import 'screens/auth/reset_forgotten_pwd.dart';
 import 'screens/auth/verify_mail.dart';
+import 'screens/albums/create_album.dart';
 import 'package:localstorage/localstorage.dart';
-
 
 void main() async {
   await DotEnv.load();
@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => Login(),
           '/register': (context) => Registration(),
+          '/create/album': (context) => CreateAlbum(),
           '/home': (context) => Home(title: "Accueil"),
           '/photos': (context) => Photos(),
           '/shared': (context) => Shared(),
