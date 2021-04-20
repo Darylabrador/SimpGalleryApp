@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           '/home': (context) => Home(title: "Accueil"),
           '/photos': (context) => Photos(),
           '/shared': (context) => Shared(),
-          '/settings':(context) => ShareSettings(title: "Options"),
+          '/shared/settings':(context) => ShareSettings(title: "Options"),
         }
     );
   }
