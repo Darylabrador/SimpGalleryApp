@@ -1,10 +1,46 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import './albums_widget.dart';
-import './albums_partager_widget.dart';
+import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 
-class Home extends StatelessWidget {
+// Widgets
+import './albums_widget.dart';
+import './albums_partager_widget.dart';
+
+// Models
+import 'package:client/models/album.dart';
+
+// SAMPLE CODE
+// class HomePage extends StatefulWidget {
+//   HomePage({Key? key}) : super(key: key);
+
+//   @override
+//   _MyHomePageState createState() => new _MyHomePageState();
+// }
+//
+
+Future<Album> fetchAlbum() async {
+  final response =
+      await http.get(Uri.https('jsonplaceholder.typicode.com', 'albums/1'));
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    print("ok ok");
+    return Album.fromJson(jsonDecode(response.body));
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load album');
+  }
+}
+
+class Home extends StatefulWidget {
   Home({Key? key, required this.title}) : super(key: key);
+
+  final String title;
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -15,8 +51,19 @@ class Home extends StatelessWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  @override
+  _HomeState createState() => new _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  late Future<Album> futureAlbum;
   final LocalStorage storage = new LocalStorage('sharePhoto');
+
+  @override
+  void initState() {
+    super.initState();
+    futureAlbum = fetchAlbum();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +77,7 @@ class Home extends StatelessWidget {
 
     // token for bearer
     var token = storage.getItem('SimpGalleryToken');
+
     return Scaffold(
         appBar: AppBar(
           leading: Builder(
@@ -93,6 +141,23 @@ class Home extends StatelessWidget {
         body: Column(children: <Widget>[
           Container(child: AlbumsWidget()),
           Container(child: AlbumsPartagerWidget()),
+          Container(
+            child: Center(
+              child: FutureBuilder<Album>(
+                future: futureAlbum,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(snapshot.data!.title);
+                  } else if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+
+                  // By default, show a loading spinner.
+                  return CircularProgressIndicator();
+                },
+              ),
+            ),
+          ),
         ]));
   }
 }
