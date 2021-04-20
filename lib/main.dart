@@ -10,9 +10,6 @@ import 'screens/auth/login.dart';
 import 'screens/auth/registration.dart';
 import 'package:localstorage/localstorage.dart';
 
-final LocalStorage storage = new LocalStorage('sharePhoto');
-
-String token = storage.getItem('SimpGalleryToken') ?? "";
 
 void main() async {
   await DotEnv.load();
