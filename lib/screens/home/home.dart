@@ -7,7 +7,7 @@ import 'package:localstorage/localstorage.dart';
 
 // Widgets
 import './albums_widget.dart';
-import './albums_partager_widget.dart';
+import './shared_widget.dart';
 
 // Models
 import 'package:client/models/album.dart';
@@ -140,7 +140,7 @@ class _HomeState extends State<Home> {
         ),
         body: Column(children: <Widget>[
           Container(child: AlbumsWidget()),
-          Container(child: AlbumsPartagerWidget()),
+          Container(child: SharedWidget()),
           Container(
             child: Center(
               child: FutureBuilder<Album>(
