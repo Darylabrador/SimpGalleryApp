@@ -8,8 +8,8 @@ import 'screens/home/home.dart';
 import 'screens/home/share_settings.dart';
 import 'screens/auth/login.dart';
 import 'screens/auth/registration.dart';
+import 'screens/albums/create_album.dart';
 import 'package:localstorage/localstorage.dart';
-
 
 void main() async {
   await DotEnv.load();
@@ -30,11 +30,11 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => Login(),
           '/register': (context) => Registration(),
+          '/create/album': (context) => CreateAlbum(),
           '/home': (context) => Home(title: "Accueil"),
           '/photos': (context) => Photos(),
           '/shared': (context) => Shared(),
-          '/shared/settings':(context) => ShareSettings(title: "Options"),
-        }
-    );
+          '/shared/settings': (context) => ShareSettings(title: "Options"),
+        });
   }
 }
