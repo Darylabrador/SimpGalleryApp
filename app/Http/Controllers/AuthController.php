@@ -37,10 +37,7 @@ class AuthController extends Controller
 
         $errors = $validator->errors();
         if (count($errors) != 0) {
-            return response()->json([
-                'success' => false,
-                'message' => $errors->first()
-            ]);
+            return $errors->first();
         }
 
         $identifiant   = $validator->validated()['identifiant'];
@@ -48,18 +45,11 @@ class AuthController extends Controller
         $userExist     = User::where(["identifiant" => $identifiant])->first();
 
         if (!$userExist || !Hash::check($password, $userExist->password)) {
-            return response()->json([
-                'success' => false,
-                'message' => "Identifiant ou mot de passe incorrecte"
-            ]);
+            return "Identifiant ou mot de passe incorrecte";
         }
 
         $token = $userExist->createToken('AuthToken')->accessToken;
-        return response()->json([
-            "success" => true,
-            "message" => "Vous êtes connecté !",
-            "token"   => $token
-        ]);
+        return $token;
     }
 
 
