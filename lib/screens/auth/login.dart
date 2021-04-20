@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../home/home.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
@@ -44,15 +43,17 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 10.0),
                 TextFormField(
                   decoration: InputDecoration(
-                      labelText: 'Email / N° téléphone',
-                      border: OutlineInputBorder()),
+                    labelText: 'Email / N° téléphone',
+                    border: OutlineInputBorder()
+                  ),
                   validator: (val) => val!.isEmpty ? 'Entrez un email' : null,
                   onChanged: (val) => email = val,
                 ),
                 SizedBox(height: 10.0),
                 TextFormField(
                   decoration: InputDecoration(
-                      labelText: 'Mot de passe', border: OutlineInputBorder()),
+                    labelText: 'Mot de passe', border: OutlineInputBorder()
+                  ),
                   validator: (val) => val!.length < 6
                       ? 'Entrez un mot de passe avec 6 ou plus'
                           'des caracteres'
@@ -64,8 +65,7 @@ class _LoginState extends State<Login> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      url = Uri.parse(
-                          "${DotEnv.env['DATABASE_URL']}/api/connexion");
+                      url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/connexion");
                       response = await http.post(url, body: {
                         'identifiant': email,
                         'password': password,
@@ -98,6 +98,21 @@ class _LoginState extends State<Login> {
                     Navigator.pushNamed(context, '/register');
                   },
                   child: Text("Je n'ai pas de compte"),
+                ),
+                new Container(
+                  margin: const EdgeInsets.only(top: 100.0),
+                  child:  
+                  OutlinedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/forgotten/ask');
+                    },
+                    child: Text(
+                      "Mot de passe oublié ?",
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                    ),
+                  ),
                 ),
               ],
             ),

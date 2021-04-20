@@ -105,7 +105,9 @@ class _HomeState extends State<Home> {
               );
             },
           ),
+          
           title: const Text('SimpGalleryApp'),
+
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.add_alert),

@@ -8,6 +8,9 @@ import 'screens/home/home.dart';
 import 'screens/home/share_settings.dart';
 import 'screens/auth/login.dart';
 import 'screens/auth/registration.dart';
+import 'screens/auth/ask_forgotten_pwd.dart';
+import 'screens/auth/reset_forgotten_pwd.dart';
+import 'screens/auth/verify_mail.dart';
 import 'package:localstorage/localstorage.dart';
 
 
@@ -34,6 +37,9 @@ class MyApp extends StatelessWidget {
           '/photos': (context) => Photos(),
           '/shared': (context) => Shared(),
           '/shared/settings':(context) => ShareSettings(title: "Options"),
+          '/verify/mail': (context) => VerifyMail(),
+          '/forgotten/ask': (context) => AskForgottenPwd(),
+          '/forgotten/confirm': (context) => ResetForgottenPwd(),
         }
     );
   }
