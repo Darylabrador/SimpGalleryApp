@@ -115,7 +115,7 @@ class AccountController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $errors->first()
-            ]);
+            ], 400);
         }
 
         $identifiant  = $validator->validated()['identifiant'];
@@ -125,17 +125,13 @@ class AccountController extends Controller
             $resetToken =  Str::random(20);
             $user->resetToken = $resetToken;
             $user->save();
-
-            return response()->json([
-                "success"    => true,
-                "resetToken" => $resetToken
-            ]);
+            return  $resetToken;
         }
 
         return response()->json([
             'success' => false,
             'message' => "Vous ne pouvez pas effectuer cette action"
-        ]);
+        ], 401);
     }
 
 
@@ -164,7 +160,7 @@ class AccountController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $errors->first()
-            ]);
+            ], 400);
         }
 
         $resetToken       = $validator->validated()['resetToken'];
@@ -177,24 +173,21 @@ class AccountController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "Token invalide"
-            ]);
+            ], 400);
         }
 
         if ($password != $passwordConfirm) {
             return response()->json([
                 'success' => false,
                 'message' => "Les mots de passe ne sont pas identique"
-            ]);
+            ], 400);
         }
 
         $user->resetToken = null;
         $user->password   = Hash::make($password);
         $user->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => "Mise à jour effectuée"
-        ]);
+        return  "Mise à jour effectuée";
     }
 
 
