@@ -63,9 +63,7 @@ class _LoginState extends State<Login> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       url = Uri.parse(
-                          // "${DotEnv.env['DATABASE_URL']}/api/connexion");
-                          "http://2c591573402e.ngrok.io/api/connexion");
-                      // "http://315d7f58ac18.ngrok.io/api/connexion");
+                          "${DotEnv.env['DATABASE_URL']}/api/connexion");
                       response = await http.post(url, body: {
                         'identifiant': email,
                         'password': password,
