@@ -80,7 +80,10 @@ class _RegistrationState extends State<Registration> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       url = Uri.parse(
-                          "${DotEnv.env['DATABASE_URL']}/api/inscription");
+                          // "${DotEnv.env['DATABASE_URL']}/api/inscription");
+                          "http://2c591573402e.ngrok.io/api/inscription");
+                      // "http://315d7f58ac18.ngrok.io/api/inscription");
+
                       response = await http.post(url, body: {
                         'identifiant': email,
                         'password': password,

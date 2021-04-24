@@ -1,35 +1,30 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'album.g.dart';
+part 'comment.g.dart';
 
 /// An annotation for the code generator to know that this class needs the
 /// JSON serialization logic to be generated.
 @JsonSerializable()
-class Album {
-  Album();
+class Comment {
+  Comment(this.userId, this.photoId);
 
   @JsonKey(required: false)
-  late int userId;
+  int photoId;
+
+  @JsonKey(required: false)
+  int userId;
 
   @JsonKey(required: true)
-  late String label;
-
-  @JsonKey(required: false)
-  late String cover;
-
-  @JsonKey(required: false)
-  late String shareToken;
-
-  @JsonKey(required: false)
-  late String shareAt;
+  late String comment;
 
   /// A necessary factory constructor for creating a new User instance
-  /// from a map. Pass the map to the generated `_$AlbumFromJson(json)` constructor.
+  /// from a map. Pass the map to the generated `_$CommentFromJson(json)` constructor.
   /// The constructor is named after the source class, in this case, Album.
-  factory Album.fromJson(Map<String, dynamic> json) => _$AlbumFromJson(json);
+  factory Comment.fromJson(Map<String, dynamic> json) =>
+      _$CommentFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated
-  /// helper method `_$AlbumToJson`.
-  Map<String, dynamic> toJson() => _$AlbumToJson(this);
+  /// helper method `_$CommentToJson`.
+  Map<String, dynamic> toJson() => _$CommentToJson(this);
 }

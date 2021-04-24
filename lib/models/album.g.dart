@@ -7,16 +7,19 @@ part of 'album.dart';
 // **************************************************************************
 
 Album _$AlbumFromJson(Map<String, dynamic> json) {
-  $checkKeys(json, requiredKeys: const ['userId', 'id', 'title']);
-  return Album(
-    json['userId'] as int,
-    json['id'] as int,
-    json['title'] as String,
-  );
+  $checkKeys(json, requiredKeys: const ['label']);
+  return Album()
+    ..userId = json['userId'] as int
+    ..label = json['label'] as String
+    ..cover = json['cover'] as String
+    ..shareToken = json['shareToken'] as String
+    ..shareAt = json['shareAt'] as String;
 }
 
 Map<String, dynamic> _$AlbumToJson(Album instance) => <String, dynamic>{
       'userId': instance.userId,
-      'id': instance.id,
-      'title': instance.title,
+      'label': instance.label,
+      'cover': instance.cover,
+      'shareToken': instance.shareToken,
+      'shareAt': instance.shareAt,
     };

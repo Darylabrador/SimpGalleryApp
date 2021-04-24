@@ -12,6 +12,24 @@ class User {
   User(this.email, this.password);
 
   @JsonKey(required: true)
+  late String pseudo;
+
+  @JsonKey(required: true)
+  late String identifiant;
+
+  @JsonKey(required: true)
+  late String profilPic;
+
+  @JsonKey(required: true)
+  late bool isMobile;
+
+  @JsonKey(required: false)
+  late String resetToken;
+
+  @JsonKey(required: false)
+  late DateTime verifyAt;
+
+  @JsonKey(required: true)
   String email;
 
   @JsonKey(required: true)
