@@ -10,7 +10,7 @@ import 'screens/auth/login.dart';
 import 'screens/auth/registration.dart';
 import 'screens/auth/ask_forgotten_pwd.dart';
 import 'screens/auth/reset_forgotten_pwd.dart';
-import 'screens/auth/verify_mail.dart';
+import 'screens/profil/verify_mail.dart';
 import 'screens/albums/create_album.dart';
 import 'package:localstorage/localstorage.dart';
 
