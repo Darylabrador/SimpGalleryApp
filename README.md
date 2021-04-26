@@ -29,6 +29,7 @@ Après avoir fait un git clone de ce projet, vous devez effectué l'action suiva
 
 Dans un second terminal lancer la commande suivante pour tenir compte des changements pour chaque models :
 
+- flutter pub run build_runner build
 - flutter pub run build_runner watch *(si besoin seulement)*
 
 ## Spécificité .env

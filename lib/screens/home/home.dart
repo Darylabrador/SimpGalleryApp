@@ -147,7 +147,7 @@ class _HomeState extends State<Home> {
               future: futureAlbum,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return Text(snapshot.data!.title);
+                  return Text(snapshot.data!.label);
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
