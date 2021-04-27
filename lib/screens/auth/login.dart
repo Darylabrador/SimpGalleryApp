@@ -37,7 +37,8 @@ class _LoginState extends State<Login> {
                     height: 100.0, width: 100.0),
                 Center(
                   child: Text('Connexion',
-                      style: Theme.of(context).textTheme.headline6),
+                      style: Theme.of(context).textTheme.headline6
+                  ),
                 ),
                 SizedBox(height: 10.0),
                 TextFormField(

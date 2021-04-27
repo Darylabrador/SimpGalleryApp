@@ -12,6 +12,8 @@ import 'screens/auth/ask_forgotten_pwd.dart';
 import 'screens/auth/reset_forgotten_pwd.dart';
 import 'screens/profil/verify_mail.dart';
 import 'screens/albums/create_album.dart';
+import 'screens/profil/profil.dart';
+import 'screens/profil/verify_mail.dart';
 import 'package:localstorage/localstorage.dart';
 
 void main() async {
@@ -37,11 +39,12 @@ class MyApp extends StatelessWidget {
           '/home': (context) => Home(title: "Accueil"),
           '/photos': (context) => Photos(),
           '/shared': (context) => Shared(),
-          '/shared/settings':(context) => ShareSettings(title: "Options"),
+          '/shared/settings': (context) => ShareSettings(title: "Options"),
           '/verify/mail': (context) => VerifyMail(),
           '/forgotten/ask': (context) => AskForgottenPwd(),
           '/forgotten/confirm': (context) => ResetForgottenPwd(),
-        }
-    );
+          '/profil': (context) => Profil(),
+          '/profil/verify': (context) => VerifyMail(),
+        });
   }
 }

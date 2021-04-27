@@ -7,12 +7,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 
-class VerifyMail extends StatefulWidget {
+class Profil extends StatefulWidget {
   @override
-  _VerifyMailState createState() => _VerifyMailState();
+  _ProfilState createState() => _ProfilState();
 }
 
-class _VerifyMailState extends State<VerifyMail> {
+class _ProfilState extends State<Profil> {
   final _formKey = GlobalKey<FormState>();
   final LocalStorage storage = new LocalStorage('sharePhoto');
 
@@ -28,7 +28,7 @@ class _VerifyMailState extends State<VerifyMail> {
       appBar: AppBar(
         title: const Text('Mon profil'),
       ),
-     body: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
           child: Form(
@@ -46,50 +46,80 @@ class _VerifyMailState extends State<VerifyMail> {
                     fit: BoxFit.fill
                   ),
                   ),
-                  
                 ),
 
+
                 Container(
-                  margin: const EdgeInsets.only(top: 10.0),
+                  margin: const EdgeInsets.only(top: 15.0),
                   child: Center(
-                    child:  Text(
-                      'Vérification adresse mail',
-                      style: Theme.of(context).textTheme.button
-                    )
-                  )
-                ),
-
-                Container(
-                  margin: const EdgeInsets.only(top: 60.0),
-                  child:   TextFormField(
-                    decoration: InputDecoration(
-                        labelText: 'Saisir le jeton de vérification', border: OutlineInputBorder()
+                    child: OutlinedButton  (
+                      onPressed: () => {
+                       Navigator.pushNamed(context, '/profil/verify')
+                      },
+                      style: TextButton.styleFrom(primary: Colors.black),
+                      child: new Text('Vérifier son adresse mail'),
                     )
                   ),
                 ),
-              
+
+                SizedBox(height: 10.0),
 
                
+                Container(
+                  margin: const EdgeInsets.only(top: 10.0),
+                  child:   TextFormField(
+                    decoration: InputDecoration(
+                        labelText: 'Pseudo', 
+                        border: OutlineInputBorder()
+                    )
+                  ),
+                ),
+
+                
+                Container(
+                  margin: const EdgeInsets.only(top: 10.0),
+                  child:   TextFormField(
+                    decoration: InputDecoration(
+                        labelText: 'Mot de passe',
+                        border: OutlineInputBorder()
+                    ),
+                    obscureText: true,
+                  ),
+                ),
+
+                
+                Container(
+                  margin: const EdgeInsets.only(top: 10.0),
+                  child:   TextFormField(
+                    decoration: InputDecoration(
+                        labelText: 'Confirmation mot de passe', 
+                        border: OutlineInputBorder()
+                    ),
+                    obscureText: true,
+                  ),
+                ),
+
+
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Container(
-                        margin: const EdgeInsets.only(right: 20.0, top: 165.0),
+                        margin: const EdgeInsets.only(right: 10.0, top: 45.0),
                         child: ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(primary: Colors.redAccent),
-                          child: Text('Annuler'),
+                          child: Text('Supprimer'),
                         )
                       )
                     ),
                     Expanded(
                       child: Container(
-                        margin: const EdgeInsets.only(top: 165.0),
+                        margin: const EdgeInsets.only(top: 45.0),
                         child: ElevatedButton(
                           onPressed: () async {},
                           style: ElevatedButton.styleFrom(primary: Colors.blueAccent),
-                          child: Text('Valider'),
+                          child: Text('Modifier'),
                         )
                       )
                     ),
