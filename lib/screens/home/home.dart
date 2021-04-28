@@ -91,6 +91,16 @@ class _HomeState extends State<Home> {
           },
         ),
         title: const Text('SimpGalleryApp'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'deconnexion',
+            onPressed: () async {
+              await storage.clear();
+              await Navigator.pushNamed(context, '/');
+            },
+          ),
+        ],
       ),
       body: Column(children: <Widget>[
         Container(child: AlbumsWidget()),

@@ -20,6 +20,16 @@ class _PhotosState extends State<Photos> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Albums'),
+         actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'deconnexion',
+            onPressed: () async {
+              await storage.clear();
+              await Navigator.pushNamed(context, '/');
+            },
+          ),
+        ],
       ),
       body: const Center(
         child: Text(

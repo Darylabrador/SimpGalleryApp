@@ -28,6 +28,16 @@ class _VerifyMailState extends State<VerifyMail> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mon profil'),
+         actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'deconnexion',
+            onPressed: () async {
+              await storage.clear();
+              await Navigator.pushNamed(context, '/');
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(

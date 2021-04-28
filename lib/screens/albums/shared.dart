@@ -20,6 +20,16 @@ class _SharedState extends State<Shared> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shared'),
+         actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'deconnexion',
+            onPressed: () async {
+              await storage.clear();
+              await Navigator.pushNamed(context, '/');
+            },
+          ),
+        ],
       ),
       body: const Center(
         child: Text(
