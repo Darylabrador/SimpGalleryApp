@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:http/http.dart' as http;
 
 class SharedWidget extends StatelessWidget {
   final LocalStorage storage = new LocalStorage('sharePhoto');

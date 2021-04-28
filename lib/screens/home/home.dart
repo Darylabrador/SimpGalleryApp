@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 // Widgets
 import './albums_widget.dart';
@@ -77,6 +78,7 @@ class _HomeState extends State<Home> {
 
     // token for bearer
     var token = storage.getItem('SimpGalleryToken');
+    var url;
 
     return Scaffold(
       appBar: AppBar(
@@ -96,6 +98,11 @@ class _HomeState extends State<Home> {
             icon: const Icon(Icons.logout),
             tooltip: 'deconnexion',
             onPressed: () async {
+              url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/deconnexion");
+              await http.get(url, headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token
+              });
               await storage.clear();
               await Navigator.pushNamed(context, '/');
             },

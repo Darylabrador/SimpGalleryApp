@@ -33,6 +33,13 @@ class _VerifyMailState extends State<VerifyMail> {
             icon: const Icon(Icons.logout),
             tooltip: 'deconnexion',
             onPressed: () async {
+              url = Uri.parse(
+                  "${DotEnv.env['DATABASE_URL']}/api/deconnexion");
+              await http.get(url,
+                  headers: {
+                    "Accept": "application/json",
+                    "Authorization" : "Bearer " + token
+                  });
               await storage.clear();
               await Navigator.pushNamed(context, '/');
             },
