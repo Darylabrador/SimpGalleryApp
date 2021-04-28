@@ -18,6 +18,7 @@ class _VerifyMailState extends State<VerifyMail> {
 
   var response;
   var url;
+  String validationCode = '';
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class _VerifyMailState extends State<VerifyMail> {
       appBar: AppBar(
         title: const Text('Mon profil'),
       ),
-     body: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
           child: Form(
@@ -40,59 +41,91 @@ class _VerifyMailState extends State<VerifyMail> {
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: NetworkImage('https://googleflutter.com/sample_image.jpg'),
-                    fit: BoxFit.fill
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: NetworkImage(
+                            'https://googleflutter.com/sample_image.jpg'),
+                        fit: BoxFit.fill),
                   ),
-                  ),
-                  
                 ),
-
                 Container(
-                  margin: const EdgeInsets.only(top: 10.0),
-                  child: Center(
-                    child:  Text(
-                      'Vérification adresse mail',
-                      style: Theme.of(context).textTheme.button
-                    )
-                  )
-                ),
-
+                    margin: const EdgeInsets.only(top: 10.0),
+                    child: Center(
+                        child: Text('Vérification adresse mail',
+                            style: Theme.of(context).textTheme.button))),
                 Container(
                   margin: const EdgeInsets.only(top: 60.0),
-                  child:   TextFormField(
+                  child: TextFormField(
                     decoration: InputDecoration(
-                        labelText: 'Saisir le jeton de vérification', border: OutlineInputBorder()
-                    )
+                        labelText: 'Saisir le jeton de vérification',
+                        border: OutlineInputBorder()),
+                    validator: (val) =>
+                        val!.isEmpty ? 'Saisir le code de validation' : null,
+                    onChanged: (val) => validationCode = val,
                   ),
                 ),
-              
-
-               
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 20.0, top: 165.0),
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(primary: Colors.redAccent),
-                          child: Text('Annuler'),
-                        )
-                      )
-                    ),
+                        child: Container(
+                            margin:
+                                const EdgeInsets.only(right: 20.0, top: 165.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.redAccent),
+                              child: Text('Annuler'),
+                            ))),
                     Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 165.0),
-                        child: ElevatedButton(
-                          onPressed: () async {},
-                          style: ElevatedButton.styleFrom(primary: Colors.blueAccent),
-                          child: Text('Valider'),
-                        )
-                      )
-                    ),
+                        child: Container(
+                            margin: const EdgeInsets.only(top: 165.0),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  url = Uri.parse(
+                                      "${DotEnv.env['DATABASE_URL']}/api/email/verification");
+                                  response = await http.post(url,
+                                      body: {'verifyToken': validationCode},
+                                      headers: {
+                                        "Accept": "application/json",
+                                        "Authorization" : "Bearer " + token
+                                      });
+
+                                  if (response.statusCode == 200) {
+                                    Navigator.pop(context);
+                                    showToast(
+                                      response.body,
+                                      context: context,
+                                      animation: StyledToastAnimation.scale,
+                                      reverseAnimation: StyledToastAnimation.fade,
+                                      position: StyledToastPosition.bottom,
+                                      animDuration: Duration(seconds: 1),
+                                      duration: Duration(seconds: 4),
+                                      curve: Curves.elasticOut,
+                                      reverseCurve: Curves.linear,
+                                    );
+                                  } else {
+                                    showToast(
+                                      "Une erreur est survenue",
+                                      context: context,
+                                      animation: StyledToastAnimation.scale,
+                                      reverseAnimation: StyledToastAnimation.fade,
+                                      position: StyledToastPosition.bottom,
+                                      animDuration: Duration(seconds: 1),
+                                      duration: Duration(seconds: 4),
+                                      curve: Curves.elasticOut,
+                                      reverseCurve: Curves.linear,
+                                    );
+                                  }
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.blueAccent),
+                              child: Text('Valider'),
+                            ))),
                   ],
                 ),
               ],

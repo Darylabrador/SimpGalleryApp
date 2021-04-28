@@ -30,7 +30,7 @@ class _ProfilState extends State<Profil> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -105,17 +105,20 @@ class _ProfilState extends State<Profil> {
                   children: [
                     Expanded(
                       child: Container(
-                        margin: const EdgeInsets.only(right: 10.0, top: 45.0),
+                        margin: const EdgeInsets.only(top: 45.0),
                         child: ElevatedButton(
                           onPressed: () {},
-                          style: ElevatedButton.styleFrom(primary: Colors.redAccent),
-                          child: Text('Supprimer'),
+                          style: ElevatedButton.styleFrom(primary: Colors.redAccent,),
+                          child: Text(
+                            'Supprimer mon compte', 
+                            style: TextStyle(fontSize: 12)
+                          ),
                         )
                       )
                     ),
                     Expanded(
                       child: Container(
-                        margin: const EdgeInsets.only(top: 45.0),
+                        margin: const EdgeInsets.only(left: 10.0, top: 45.0),
                         child: ElevatedButton(
                           onPressed: () async {},
                           style: ElevatedButton.styleFrom(primary: Colors.blueAccent),
