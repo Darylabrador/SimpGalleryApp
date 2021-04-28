@@ -73,8 +73,22 @@ class _LoginState extends State<Login> {
                       });
 
                       if (response.statusCode == 200) {
-                        storage.setItem("SimpGalleryToken", response.body);
-                        Navigator.pushNamed(context, '/home');
+                        if(response.body == "Identifiant ou mot de passe incorrecte") {
+                          showToast(
+                            response.body,
+                            context: context,
+                            animation: StyledToastAnimation.scale,
+                            reverseAnimation: StyledToastAnimation.fade,
+                            position: StyledToastPosition.bottom,
+                            animDuration: Duration(seconds: 1),
+                            duration: Duration(seconds: 4),
+                            curve: Curves.elasticOut,
+                            reverseCurve: Curves.linear,
+                          );
+                        } else {
+                          storage.setItem("SimpGalleryToken", response.body);
+                          Navigator.pushNamed(context, '/home');
+                        }
                       } else {
                         showToast(
                           "Une erreur est survenue",
