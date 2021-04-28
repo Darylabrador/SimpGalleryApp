@@ -148,18 +148,19 @@ class AuthController extends Controller
             return  $errors->first();
         }
 
+        $user = Auth::user();
         $verifyToken  = $validator->validated()['verifyToken'];
-        $userExist = User::where(['verifyToken' => $verifyToken])->first();
+        $userExist = User::where(['verifyToken' => $verifyToken, 'id' => $user->id])->first();
 
         if (!$userExist) {
             return "Jeton invalide";
         }
 
-        if ($userExist->verified_at != null) {
+        if ($userExist->verify_at != null) {
             return "Adresse mail déjà verifier";
         }
 
-        $userExist->verified_at = now();
+        $userExist->verify_at = now();
         $userExist->save();
 
         return  "Adresse mail verifier avec succes";
