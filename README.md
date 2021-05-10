@@ -52,3 +52,7 @@ Dans la version actuelle il faut modifier le lien vers l'API laravel dans "lib/s
 - [Application mobile flutter]("https://github.com/Darylabrador/SimpGalleryApp")
 - [Conception du projet]("https://github.com/Darylabrador/SimpGalleryApp/tree/ressource")
 - [Backend]("https://github.com/Darylabrador/SimpGalleryApp/tree/server")
+
+## Ressources :
+
+- Upload d'image : https://medium.com/fabcoding/adding-an-image-picker-in-a-flutter-app-pick-images-using-camera-and-gallery-photos-7f016365d856

@@ -6,16 +6,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Profil extends StatefulWidget {
   @override
   _ProfilState createState() => _ProfilState();
 }
 
-class Dialog extends StatelessWidget {
-
+class DialogDelete extends StatelessWidget {
   static Route<Object?> _dialogBuilder(
-    BuildContext context, Object? arguments) {
+      BuildContext context, Object? arguments) {
     final LocalStorage storage = new LocalStorage('sharePhoto');
     var response;
     var url;
@@ -25,81 +25,83 @@ class Dialog extends StatelessWidget {
 
     return DialogRoute<void>(
       context: context,
-      builder: (BuildContext context) =>
-          AlertDialog(
-            title: Text('Voulez-vous vraiment supprimer votre compte ?'),
-            content:SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(top: 5.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          labelText: 'Mot de passe',
-                          border: OutlineInputBorder()),
-                      obscureText: true,
-                      initialValue: "",
-                      onChanged: (val) => password = val,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 5.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          labelText: 'Confirmation mot de passe',
-                          border: OutlineInputBorder()
-                      ),
-                      obscureText: true,
-                      initialValue: "",
-                      onChanged: (val) => passwordConfirm = val,
-                    ),
-                  ),
-                ],
+      builder: (BuildContext context) => AlertDialog(
+        title: Text('Voulez-vous vraiment supprimer votre compte ?'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(top: 5.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      labelText: 'Mot de passe', border: OutlineInputBorder()),
+                  obscureText: true,
+                  initialValue: "",
+                  onChanged: (val) => password = val,
+                ),
               ),
-            ),
-            actions: <Widget>[
-              OutlinedButton (
-                child: Text('Annuler', style: TextStyle(color: Colors.black38),),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+              Container(
+                margin: const EdgeInsets.only(top: 5.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      labelText: 'Confirmation mot de passe',
+                      border: OutlineInputBorder()),
+                  obscureText: true,
+                  initialValue: "",
+                  onChanged: (val) => passwordConfirm = val,
+                ),
               ),
-
-              OutlinedButton (
-                child: Text('Valider', style: TextStyle(color: Colors.redAccent),),
-                onPressed: () async {
-                    url = Uri.parse(
-                          "${DotEnv.env['DATABASE_URL']}/api/delete/account");
-                      response = await http.post(url, body: {
-                        'password': password,
-                        'passwordConfirm': passwordConfirm,
-                      }, headers: {
-                        "Accept": "application/json",
-                        "Authorization": "Bearer " + token
-                      });
-
-                      if (response.statusCode == 200) {
-                        if(response.body == "Compte supprimer") {
-                          Navigator.of(context).pop();
-                          Navigator.pushNamed(context, '/');
-                        } else {
-                          showToast(
-                            response.body,
-                            context: context,
-                            animation: StyledToastAnimation.scale,
-                            reverseAnimation: StyledToastAnimation.fade,
-                            position: StyledToastPosition.bottom,
-                            animDuration: Duration(seconds: 1),
-                            duration: Duration(seconds: 4),
-                            curve: Curves.elasticOut,
-                            reverseCurve: Curves.linear,
-                          );
-                        }
-                      }
-                  },
-              ),
-          ],
+            ],
+          ),
         ),
+        actions: <Widget>[
+          OutlinedButton(
+            child: Text(
+              'Annuler',
+              style: TextStyle(color: Colors.black38),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          OutlinedButton(
+            child: Text(
+              'Valider',
+              style: TextStyle(color: Colors.redAccent),
+            ),
+            onPressed: () async {
+              url =
+                  Uri.parse("${DotEnv.env['DATABASE_URL']}/api/delete/account");
+              response = await http.post(url, body: {
+                'password': password,
+                'passwordConfirm': passwordConfirm,
+              }, headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token
+              });
+
+              if (response.statusCode == 200) {
+                if (response.body == "Compte supprimer") {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, '/');
+                } else {
+                  showToast(
+                    response.body,
+                    context: context,
+                    animation: StyledToastAnimation.scale,
+                    reverseAnimation: StyledToastAnimation.fade,
+                    position: StyledToastPosition.bottom,
+                    animDuration: Duration(seconds: 1),
+                    duration: Duration(seconds: 4),
+                    curve: Curves.elasticOut,
+                    reverseCurve: Curves.linear,
+                  );
+                }
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -109,15 +111,105 @@ class Dialog extends StatelessWidget {
       onPressed: () {
         Navigator.of(context).restorablePush(_dialogBuilder);
       },
-      child: Text(
-        'Supprimer mon compte',
-        style: TextStyle(fontSize: 12)
-      ),
+      child: Text('Supprimer mon compte', style: TextStyle(fontSize: 12)),
     );
   }
 }
 
+class DialogAvatar extends StatelessWidget {
+  static Route<Object?> _dialogBuilder(
+      BuildContext context, Object? arguments) {
+    final LocalStorage storage = new LocalStorage('sharePhoto');
+    var response;
+    var url;
+    var file;
+    var token = storage.getItem('SimpGalleryToken');
 
+    return DialogRoute<void>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text('Avatar'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(top: 5.0),
+                child: OutlinedButton(
+                  child: Text(
+                    'Selectionner une photo depuis la gallery',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  onPressed: () async {
+                    file = await ImagePicker.pickImage(
+                        source: ImageSource.gallery);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          OutlinedButton(
+            child: Text(
+              'Annuler',
+              style: TextStyle(color: Colors.black38),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          OutlinedButton(
+            child: Text(
+              'Valider',
+              style: TextStyle(color: Colors.redAccent),
+            ),
+            onPressed: () async {
+              url =
+                  Uri.parse("${DotEnv.env['DATABASE_URL']}/api/update/avatar");
+              var request = http.MultipartRequest(
+                'POST',
+                url,
+              );
+              request.headers["authorization"] = "Bearer " + token;
+              request.files.add(
+                  await http.MultipartFile.fromPath('profilPic', file.path));
+              var response = await request.send();
+              if (response.statusCode == 200) {
+                Navigator.of(context).pop();
+              }
+              print(response);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).restorablePush(_dialogBuilder);
+        },
+        child: CircleAvatar(
+          radius: 55,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  image: NetworkImage(
+                      'https://googleflutter.com/sample_image.jpg'),
+                  fit: BoxFit.fill),
+            ),
+            width: 100,
+            height: 100,
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class _ProfilState extends State<Profil> {
   final _formKey = GlobalKey<FormState>();
@@ -162,17 +254,7 @@ class _ProfilState extends State<Profil> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            'https://googleflutter.com/sample_image.jpg'),
-                        fit: BoxFit.fill),
-                  ),
-                ),
+                DialogAvatar(),
                 Container(
                   margin: const EdgeInsets.only(top: 15.0),
                   child: Center(
@@ -219,11 +301,10 @@ class _ProfilState extends State<Profil> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(child: Container(
-                      margin: const EdgeInsets.only(top: 45.0),
-                      child: Dialog()
-                      )
-                    ),
+                    Expanded(
+                        child: Container(
+                            margin: const EdgeInsets.only(top: 45.0),
+                            child: DialogDelete())),
                     Expanded(
                         child: Container(
                             margin:
@@ -237,7 +318,6 @@ class _ProfilState extends State<Profil> {
                                     'pseudo': pseudo,
                                     'password': password,
                                     'passwordConfirm': passwordConfirm,
-                                    'profilPic': "",
                                   }, headers: {
                                     "Accept": "application/json",
                                     "Authorization": "Bearer " + token
