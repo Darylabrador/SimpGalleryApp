@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use App\Mail\DeleteAccountMail;
 use App\Mail\ForgottenPassword;
 use App\Mail\ChangePassword;
+use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
 {
@@ -26,22 +27,19 @@ class AccountController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'pseudo'          => 'required',
+                'pseudo'          => 'required|unique:users',
                 'password'        => 'nullable',
                 'passwordConfirm' => 'nullable',
-                'profilPic'       => 'nullable',
             ],
             [
                 'required' => 'Le champ :attribute est requis',
+                'unique' => 'Pseudo existe déjà'
             ]
         );
 
         $errors = $validator->errors();
         if (count($errors) != 0) {
-            return response()->json([
-                'success' => false,
-                'message' => $errors->first()
-            ]);
+            return  $errors->first();
         }
 
 
@@ -53,23 +51,53 @@ class AccountController extends Controller
         $userExist  = User::where(["id" => $userId])->first();
 
         if(!$userExist) {
-            return response()->json([
-                'success' => false,
-                'message' => "Compte introuvable"
-            ]);
+            return  "Compte introuvable";
         }
 
-        if($password != null) {
+        if($password != "") {
             if ($password != $passwordConfirm) {
-                return response()->json([
-                    "success" => false,
-                    "message" => "Les mots de passe ne sont pas identique"
-                ]);
+                return "Les mots de passe ne sont pas identique";
+            } else {
+                $userExist->password    = Hash::make($password);
             }
         }
 
         $userExist->pseudo      = $pseudo;
-        $userExist->password    = Hash::make($password);
+        $userExist->save();
+
+        return 'Mise à jour effectuée';
+    }
+
+
+    /**
+     * Handle request for forgotten password.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAvatarImage(Request $request) {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'profilPic'       => 'nullable|sometimes|image',
+            ],
+            [
+                'required' => 'Le champ :attribute est requis',
+                'image' => "Ce n'est pas une image"
+            ]
+        );
+
+        $errors = $validator->errors();
+        if (count($errors) != 0) {
+            return  $errors->first();
+        }
+
+        $userId     = Auth::id();
+        $userExist  = User::where(["id" => $userId])->first();
+
+        if(!$userExist) {
+            return  "Compte introuvable";
+        }
+
 
         if ($request->hasFile('profilPic')) {
             $oldImage = $userExist->profilPic;
@@ -87,11 +115,10 @@ class AccountController extends Controller
         }
 
         $userExist->save();
-        return response()->json([
-            'success' => true,
-            'message' => 'Mise à jour effectuée'
-        ]);
+
+        return 'Mise à jour effectuée';
     }
+
 
     /**
      * Handle request for forgotten password.
@@ -127,11 +154,6 @@ class AccountController extends Controller
             $user->save();
             return  $resetToken;
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => "Vous ne pouvez pas effectuer cette action"
-        ], 401);
     }
 
 
@@ -210,20 +232,14 @@ class AccountController extends Controller
 
         $errors = $validator->errors();
         if (count($errors) != 0) {
-            return response()->json([
-                'success' => false,
-                'message' => $errors->first()
-            ]);
+            return $errors->first();
         }
 
         $password         = $validator->validated()['password'];
         $passwordConfirm  = $validator->validated()['passwordConfirm'];
 
         if ($password != $passwordConfirm) {
-            return response()->json([
-                'success' => false,
-                'message' => "Les mots de passe ne sont pas identique"
-            ]);
+            return "Les mots de passe ne sont pas identique";
         }
         
         Auth::user()->tokens->each(function ($token, $key) {
@@ -232,9 +248,6 @@ class AccountController extends Controller
 
         User::destroy(Auth::id());
         
-        return response()->json([
-            'success' => true,
-            'message' => "Compte supprimer"
-        ]);
+        return  "Compte supprimer";
     }
 }

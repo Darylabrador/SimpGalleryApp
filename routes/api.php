@@ -50,6 +50,7 @@ Route::prefix("reset")->group(function() {
 */
 
 Route::middleware(['auth:api'])->group(function(){
+    Route::post('/update/avatar', [AccountController::class, 'updateAvatarImage'])->name('api.update.updateAvatarImage');
     Route::post('/update/profil', [AccountController::class, 'updateProfil'])->name('api.update.profil');
     Route::post('/delete/account', [AccountController::class, 'deleteAccount'])->name("api.delete.account");
 });
