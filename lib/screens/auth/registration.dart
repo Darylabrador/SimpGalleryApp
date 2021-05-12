@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 
@@ -89,21 +90,36 @@ class _RegistrationState extends State<Registration> {
                       }, headers: {
                         "Accept": "application/json"
                       });
+
                       if (response.statusCode == 200) {
-                        // If the server did return a 200 OK response,
-                        // then parse the JSON.
-                        showToast(
-                          response.body,
-                          context: context,
-                          animation: StyledToastAnimation.scale,
-                          reverseAnimation: StyledToastAnimation.fade,
-                          position: StyledToastPosition.bottom,
-                          animDuration: Duration(seconds: 1),
-                          duration: Duration(seconds: 4),
-                          curve: Curves.elasticOut,
-                          reverseCurve: Curves.linear,
-                        );
-                        Navigator.pushNamed(context, '/');
+                        var parsedJson = json.decode(response.body);
+                        
+                        if(parsedJson['success']) {
+                          showToast(
+                            parsedJson['message'],
+                            context: context,
+                            animation: StyledToastAnimation.scale,
+                            reverseAnimation: StyledToastAnimation.fade,
+                            position: StyledToastPosition.bottom,
+                            animDuration: Duration(seconds: 1),
+                            duration: Duration(seconds: 4),
+                            curve: Curves.elasticOut,
+                            reverseCurve: Curves.linear,
+                          );
+                          Navigator.pushNamed(context, '/');
+                        } else {
+                          showToast(
+                            parsedJson['message'],
+                            context: context,
+                            animation: StyledToastAnimation.scale,
+                            reverseAnimation: StyledToastAnimation.fade,
+                            position: StyledToastPosition.bottom,
+                            animDuration: Duration(seconds: 1),
+                            duration: Duration(seconds: 4),
+                            curve: Curves.elasticOut,
+                            reverseCurve: Curves.linear,
+                          );
+                        }
                       } else {
                         showToast(
                           "Une erreur est survenue",

@@ -24,6 +24,7 @@ class _VerifyMailState extends State<VerifyMail> {
   Widget build(BuildContext context) {
     // token for bearer
     var token = storage.getItem('SimpGalleryToken');
+    var avatar = storage.getItem('SimpGalleryAvatar');
 
     return Scaffold(
       appBar: AppBar(
@@ -54,15 +55,22 @@ class _VerifyMailState extends State<VerifyMail> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            'https://googleflutter.com/sample_image.jpg'),
-                        fit: BoxFit.fill),
+                Center(
+                  child: GestureDetector(
+                    child: CircleAvatar(
+                      radius: 55,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image:
+                                  NetworkImage("${DotEnv.env['DATABASE_URL']}/img/$avatar"),
+                              fit: BoxFit.fill),
+                        ),
+                        width: 100,
+                        height: 100,
+                      ),
+                    ),
                   ),
                 ),
                 Container(
@@ -112,18 +120,34 @@ class _VerifyMailState extends State<VerifyMail> {
                                       });
 
                                   if (response.statusCode == 200) {
-                                    Navigator.pop(context);
-                                    showToast(
-                                      response.body,
-                                      context: context,
-                                      animation: StyledToastAnimation.scale,
-                                      reverseAnimation: StyledToastAnimation.fade,
-                                      position: StyledToastPosition.bottom,
-                                      animDuration: Duration(seconds: 1),
-                                      duration: Duration(seconds: 4),
-                                      curve: Curves.elasticOut,
-                                      reverseCurve: Curves.linear,
-                                    );
+                                    var parsedJson = json.decode(response.body);
+                                    if(parsedJson['success']) {
+                                      showToast(
+                                        parsedJson['message'],
+                                        context: context,
+                                        animation: StyledToastAnimation.scale,
+                                        reverseAnimation: StyledToastAnimation.fade,
+                                        position: StyledToastPosition.bottom,
+                                        animDuration: Duration(seconds: 1),
+                                        duration: Duration(seconds: 4),
+                                        curve: Curves.elasticOut,
+                                        reverseCurve: Curves.linear,
+                                      );
+                                      storage.setItem("SimpGalleryMailVerify", false);
+                                      Navigator.of(context)..pop()..pop()..pushNamed('/profil');
+                                    } else {
+                                      showToast(
+                                        parsedJson['message'],
+                                        context: context,
+                                        animation: StyledToastAnimation.scale,
+                                        reverseAnimation: StyledToastAnimation.fade,
+                                        position: StyledToastPosition.bottom,
+                                        animDuration: Duration(seconds: 1),
+                                        duration: Duration(seconds: 4),
+                                        curve: Curves.elasticOut,
+                                        reverseCurve: Curves.linear,
+                                      );
+                                    }
                                   } else {
                                     showToast(
                                       "Une erreur est survenue",
@@ -142,7 +166,9 @@ class _VerifyMailState extends State<VerifyMail> {
                               style: ElevatedButton.styleFrom(
                                   primary: Colors.blueAccent),
                               child: Text('Valider'),
-                            ))),
+                            )
+                        )
+                    ),
                   ],
                 ),
               ],

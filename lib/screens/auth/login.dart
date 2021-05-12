@@ -37,8 +37,7 @@ class _LoginState extends State<Login> {
                     height: 100.0, width: 100.0),
                 Center(
                   child: Text('Connexion',
-                      style: Theme.of(context).textTheme.headline6
-                  ),
+                      style: Theme.of(context).textTheme.headline6),
                 ),
                 SizedBox(height: 10.0),
                 TextFormField(
@@ -73,22 +72,29 @@ class _LoginState extends State<Login> {
                       });
 
                       if (response.statusCode == 200) {
-                        if(response.body == "Identifiant ou mot de passe incorrecte") {
-                          showToast(
-                            response.body,
-                            context: context,
-                            animation: StyledToastAnimation.scale,
-                            reverseAnimation: StyledToastAnimation.fade,
-                            position: StyledToastPosition.bottom,
-                            animDuration: Duration(seconds: 1),
-                            duration: Duration(seconds: 4),
-                            curve: Curves.elasticOut,
-                            reverseCurve: Curves.linear,
-                          );
-                        } else {
-                          storage.setItem("SimpGalleryToken", response.body);
-                          Navigator.pushNamed(context, '/home');
-                        }
+                          var parsedJson = json.decode(response.body);
+
+                          if(parsedJson['success']) {
+                            storage.setItem("SimpGalleryToken", parsedJson['token']);
+                            storage.setItem("SimpGalleryPseudo", parsedJson['pseudo']);
+                            storage.setItem("SimpGalleryAvatar", parsedJson['avatar']);
+                            storage.setItem("SimpGalleryMailVerify", parsedJson['verify']);
+                            Navigator.pushNamed(context, '/home');
+                          } else {
+                            showToast(
+                              parsedJson['message'],
+                              context: context,
+                              animation: StyledToastAnimation.scale,
+                              reverseAnimation: StyledToastAnimation.fade,
+                              position: StyledToastPosition.bottom,
+                              animDuration: Duration(seconds: 1),
+                              duration: Duration(seconds: 4),
+                              curve: Curves.elasticOut,
+                              reverseCurve: Curves.linear,
+                            );
+                          }
+
+                        
                       } else {
                         showToast(
                           "Une erreur est survenue",
