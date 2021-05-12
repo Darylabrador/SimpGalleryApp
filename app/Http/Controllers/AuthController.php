@@ -37,7 +37,10 @@ class AuthController extends Controller
 
         $errors = $validator->errors();
         if (count($errors) != 0) {
-            return $errors->first();
+            return response()->json([
+                "success"      => false,
+                "message"       => $errors->first(),
+            ]);
         }
 
         $identifiant   = $validator->validated()['identifiant'];
@@ -45,11 +48,21 @@ class AuthController extends Controller
         $userExist     = User::where(["identifiant" => $identifiant])->first();
 
         if (!$userExist || !Hash::check($password, $userExist->password)) {
-            return "Identifiant ou mot de passe incorrecte";
+            return response()->json([
+                "success"   => false,
+                "message"  => "Identifiant ou mot de passe incorrecte",
+            ]);
         }
 
         $token = $userExist->createToken('AuthToken')->accessToken;
-        return $token;
+
+        return response()->json([
+            "success"     => true,
+            "token"       => $token,
+            "pseudo"      => $userExist->pseudo,
+            "avatar"      => $userExist->profilPic,
+            "verify"      => $userExist->verify_at == null ? true : false
+        ]);
     }
 
 
@@ -76,7 +89,10 @@ class AuthController extends Controller
         $errors = $validator->errors();
 
         if (count($errors) != 0) {
-            return $errors->first() ;
+            return response()->json([
+                "success"      => false,
+                "message"       => $errors->first(),
+            ]);
         }
 
         $identifiant       = $validator->validated()['identifiant'];
@@ -84,7 +100,10 @@ class AuthController extends Controller
         $passwordConfirm   = $validator->validated()['passwordConfirm'];
 
         if ($password != $passwordConfirm) {
-            return "Les mots de passe ne sont pas identique";
+            return response()->json([
+                'success' => true,
+                'message' => "Les mots de passe ne sont pas identique"
+            ]);
         }
 
         $verifyToken       = Str::random(20);
@@ -103,7 +122,11 @@ class AuthController extends Controller
             $user->save();
 
             Mail::to($identifiant)->send(new RegisterMail($identifiant, $verifyToken));
-            return  "Vous devez confirmer votre adresse mail";
+
+            return response()->json([
+                'success' => true,
+                'message' =>  "Vous devez confirmer votre adresse mail"
+            ]);
         } 
 
         $createdUser = User::create([
@@ -122,7 +145,10 @@ class AuthController extends Controller
             $newAccess->save();
         }
 
-        return "Bienvenue sur SimpGalleryApp";
+        return response()->json([
+            'success' => true,
+            'message' =>  "Bienvenue sur SimpGalleryApp"
+        ]);
     }
 
 
@@ -145,7 +171,10 @@ class AuthController extends Controller
 
         $errors = $validator->errors();
         if (count($errors) != 0) {
-            return  $errors->first();
+            return response()->json([
+                "success"      => false,
+                "message"       => $errors->first(),
+            ]);
         }
 
         $user = Auth::user();
@@ -163,7 +192,10 @@ class AuthController extends Controller
         $userExist->verify_at = now();
         $userExist->save();
 
-        return  "Adresse mail verifier avec succes";
+        return response()->json([
+            'success' => true,
+            'message' => "Compte confirmer"
+        ]);
     }
 
 
@@ -177,6 +209,9 @@ class AuthController extends Controller
         Auth::user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
-        return "Vous êtes déconnecté !";
+        return response()->json([
+            'success' => true,
+            'message' => "Vous êtes déconnecté !"
+        ]);
     }
 }

@@ -30,12 +30,13 @@ Route::post('/connexion', [AuthController::class, 'connection'])->name('api.conn
 Route::post('/inscription', [AuthController::class, 'register'])->name('api.inscription');
 Route::get('/deconnexion', [AuthController::class, 'logout'])->middleware('auth:api')->name('api.deconnexion');
 Route::post('/email/verification', [AuthController::class, "verifymail"])->middleware(['auth:api'])->name('api.verify.email');
-
 /*
 |--------------------------------------------------------------------------
 | Account routes
 |--------------------------------------------------------------------------
 */
+
+Route::get('/account/info', [AccountController::class, "accountInformations"])->middleware(['auth:api'])->name('api.user.info');
 
 Route::prefix("reset")->group(function() {
     Route::post("/request", [AccountController::class, 'forgottenPassRequest'])->name("api.reset.request");

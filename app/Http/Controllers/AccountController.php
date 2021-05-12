@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use DateTime;
 use Carbon\Carbon;
 use App\Models\User;
@@ -18,6 +19,18 @@ use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
 {
+
+    /**
+     * Get user account informations.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function accountInformations() {
+        $user = User::where(['id' => Auth::id()])->first();
+        return new  UserResource($user);
+    }
+
+
     /**
      * Update user profil.
      *
@@ -39,7 +52,10 @@ class AccountController extends Controller
 
         $errors = $validator->errors();
         if (count($errors) != 0) {
-            return  $errors->first();
+            return response()->json([
+                "success"  => false,
+                "message"  => $errors->first(),
+            ]);
         }
 
 
@@ -51,12 +67,18 @@ class AccountController extends Controller
         $userExist  = User::where(["id" => $userId])->first();
 
         if(!$userExist) {
-            return  "Compte introuvable";
+            return response()->json([
+                "success"  => false,
+                "message"  => "Compte introuvable",
+            ]);
         }
 
         if($password != "") {
             if ($password != $passwordConfirm) {
-                return "Les mots de passe ne sont pas identique";
+                return response()->json([
+                    "success"  => false,
+                    "message"  => "Les mots de passe ne sont pas identique",
+                ]);
             } else {
                 $userExist->password    = Hash::make($password);
             }
@@ -65,7 +87,11 @@ class AccountController extends Controller
         $userExist->pseudo      = $pseudo;
         $userExist->save();
 
-        return 'Mise à jour effectuée';
+        return response()->json([
+            "success"  => true,
+            "pseudo"   => $userExist->pseudo,
+            "message"  => "Mise à jour effectuée",
+        ]);
     }
 
 
@@ -88,14 +114,20 @@ class AccountController extends Controller
 
         $errors = $validator->errors();
         if (count($errors) != 0) {
-            return  $errors->first();
+            return response()->json([
+                "success"  => false,
+                "message"  => $errors->first(),
+            ]);
         }
 
         $userId     = Auth::id();
         $userExist  = User::where(["id" => $userId])->first();
 
         if(!$userExist) {
-            return  "Compte introuvable";
+            return response()->json([
+                "success"  => false,
+                "message"  => "Compte introuvable",
+            ]);
         }
 
 
@@ -116,7 +148,11 @@ class AccountController extends Controller
 
         $userExist->save();
 
-        return 'Mise à jour effectuée';
+        return response()->json([
+            "success"  => true,
+            "message"  => "Mise à jour effectuée",
+            "avatar"   => $userExist->profilPic
+        ]);
     }
 
 
@@ -142,7 +178,7 @@ class AccountController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $errors->first()
-            ], 400);
+            ]);
         }
 
         $identifiant  = $validator->validated()['identifiant'];
@@ -182,7 +218,7 @@ class AccountController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $errors->first()
-            ], 400);
+            ]);
         }
 
         $resetToken       = $validator->validated()['resetToken'];
@@ -195,21 +231,24 @@ class AccountController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "Token invalide"
-            ], 400);
+            ]);
         }
 
         if ($password != $passwordConfirm) {
             return response()->json([
                 'success' => false,
                 'message' => "Les mots de passe ne sont pas identique"
-            ], 400);
+            ]);
         }
 
         $user->resetToken = null;
         $user->password   = Hash::make($password);
         $user->save();
 
-        return  "Mise à jour effectuée";
+        return response()->json([
+            'success' => true,
+            'message' => "Mise à jour effectuée"
+        ]);
     }
 
 
@@ -232,14 +271,20 @@ class AccountController extends Controller
 
         $errors = $validator->errors();
         if (count($errors) != 0) {
-            return $errors->first();
+            return response()->json([
+                'success' => false,
+                'message' => $errors->first()
+            ]);
         }
 
         $password         = $validator->validated()['password'];
         $passwordConfirm  = $validator->validated()['passwordConfirm'];
 
         if ($password != $passwordConfirm) {
-            return "Les mots de passe ne sont pas identique";
+            return response()->json([
+                'success' => true,
+                'message' => "Les mots de passe ne sont pas identique"
+            ]);
         }
         
         Auth::user()->tokens->each(function ($token, $key) {
@@ -248,6 +293,9 @@ class AccountController extends Controller
 
         User::destroy(Auth::id());
         
-        return  "Compte supprimer";
+        return response()->json([
+            'success' => true,
+            'message' => "Compte supprimer"
+        ]);
     }
 }
