@@ -93,8 +93,6 @@ class _LoginState extends State<Login> {
                               reverseCurve: Curves.linear,
                             );
                           }
-
-                        
                       } else {
                         showToast(
                           "Une erreur est survenue",

@@ -23,17 +23,18 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-
+  final LocalStorage storage = new LocalStorage('sharePhoto');
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
         title: 'SimpGallery',
         theme: ThemeData(
           primarySwatch: Colors.deepOrange,
         ),
-        initialRoute: '/',
+        initialRoute: '/logging',
         routes: {
-          '/': (context) => Login(),
+          '/logging': (context) => Login(),
           '/register': (context) => Registration(),
           '/create/album': (context) => CreateAlbum(),
           '/home': (context) => Home(title: "Accueil"),
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
           '/forgotten/confirm': (context) => ResetForgottenPwd(),
           '/profil': (context) => Profil(),
           '/profil/verify': (context) => VerifyMail(),
-        });
+        },
+    );
   }
 }

@@ -106,7 +106,7 @@ class _RegistrationState extends State<Registration> {
                             curve: Curves.elasticOut,
                             reverseCurve: Curves.linear,
                           );
-                          Navigator.pushNamed(context, '/');
+                          Navigator.pushNamed(context, '/logging');
                         } else {
                           showToast(
                             parsedJson['message'],
@@ -139,7 +139,7 @@ class _RegistrationState extends State<Registration> {
                 ),
                 OutlinedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/');
+                    Navigator.pushNamed(context, '/logging');
                   },
                   child: Text("J'ai déjà un compte"),
                 ),

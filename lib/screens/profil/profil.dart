@@ -66,7 +66,7 @@ class _ProfilState extends State<Profil> {
                 "Authorization": "Bearer " + token
               });
               await storage.clear();
-              await Navigator.pushNamed(context, '/');
+              await Navigator.pushNamed(context, '/logging');
             },
           ),
         ],

@@ -13,15 +13,6 @@ import './shared_widget.dart';
 // Models
 import 'package:client/models/album.dart';
 
-// SAMPLE CODE
-// class HomePage extends StatefulWidget {
-//   HomePage({Key? key}) : super(key: key);
-
-//   @override
-//   _MyHomePageState createState() => new _MyHomePageState();
-// }
-//
-
 Future<Album> fetchAlbum() async {
   final response =
       await http.get(Uri.https('jsonplaceholder.typicode.com', 'albums/1'));
@@ -68,76 +59,84 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    //
-
     // token for bearer
     var token = storage.getItem('SimpGalleryToken');
     var url;
 
     return Scaffold(
-      appBar: AppBar(
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Navigator.pushNamed(context, '/profil');
-              },
-            );
-          },
-        ),
-        title: const Text('SimpGalleryApp'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'deconnexion',
-            onPressed: () async {
-              url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/deconnexion");
-              await http.get(url, headers: {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + token
-              });
-              await storage.clear();
-              await Navigator.pushNamed(context, '/');
+        appBar: AppBar(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/profil');
+                },
+              );
             },
           ),
-        ],
-      ),
-      body: Column(children: <Widget>[
-        Container(child: AlbumsWidget()),
-        Container(child: SharedWidget()),
-        Container(
-          child: Center(
-            child: FutureBuilder<Album>(
-              future: futureAlbum,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text(snapshot.data!.label);
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-
-                // By default, show a loading spinner.
-                return CircularProgressIndicator();
+          title: const Text('SimpGalleryApp'),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.logout),
+              tooltip: 'deconnexion',
+              onPressed: () async {
+                url =
+                    Uri.parse("${DotEnv.env['DATABASE_URL']}/api/deconnexion");
+                await http.get(url, headers: {
+                  "Accept": "application/json",
+                  "Authorization": "Bearer " + token
+                });
+                await storage.clear();
+                await Navigator.pushNamed(context, '/logging');
               },
             ),
-          ),
+          ],
         ),
-      ]),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.pushNamed(context, '/create/album');
-        },
-        label: const Text('Nouveau album'),
-        icon: const Icon(Icons.add),
-        backgroundColor: Colors.green,
-      ),
+        body: Column(children: <Widget>[
+          Container(child: AlbumsWidget()),
+          Container(child: SharedWidget()),
+          Container(
+            child: Center(
+              child: FutureBuilder<Album>(
+                future: futureAlbum,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(snapshot.data!.label);
+                  } else if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+
+                  // By default, show a loading spinner.
+                  return CircularProgressIndicator();
+                },
+              ),
+            ),
+          ),
+        ]),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget> [
+          Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/create/album');
+              },
+              child: Icon(Icons.settings),
+              backgroundColor: Colors.deepOrange,
+            ),
+          ),
+          
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/create/album');
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Colors.deepOrange,
+          ),
+        ]
+      )
     );
   }
 }

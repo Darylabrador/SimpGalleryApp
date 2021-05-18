@@ -86,7 +86,7 @@ class _ResetForgottenPwdState extends State<ResetForgottenPwd> {
                         margin: const EdgeInsets.only(right: 10.0, top: 15.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/');
+                            Navigator.pushNamed(context, '/logging');
                           },
                           style: ElevatedButton.styleFrom(primary: Colors.grey),
                           child: Text('Annuler'),
@@ -110,7 +110,7 @@ class _ResetForgottenPwdState extends State<ResetForgottenPwd> {
 
                               if (response.statusCode == 200) {
                                 storage.clear();
-                                Navigator.pushNamed(context, '/');
+                                Navigator.pushNamed(context, '/logging');
                                 showToast(
                                   response.body,
                                   context: context,

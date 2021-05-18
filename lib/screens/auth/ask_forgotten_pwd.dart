@@ -68,7 +68,7 @@ class _AskForgottenPwdState extends State<AskForgottenPwd> {
                         margin: const EdgeInsets.only(right: 10.0, top: 10.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/');
+                            Navigator.pushNamed(context, '/logging');
                           },
                           style: ElevatedButton.styleFrom(primary: Colors.grey),
                           child: Text('Annuler'),

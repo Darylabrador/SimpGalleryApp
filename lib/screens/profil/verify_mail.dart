@@ -42,7 +42,7 @@ class _VerifyMailState extends State<VerifyMail> {
                     "Authorization" : "Bearer " + token
                   });
               await storage.clear();
-              await Navigator.pushNamed(context, '/');
+              await Navigator.pushNamed(context, '/logging');
             },
           ),
         ],

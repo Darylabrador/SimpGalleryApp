@@ -33,7 +33,7 @@ class _PhotosState extends State<Photos> {
                 "Authorization": "Bearer " + token
               });
               await storage.clear();
-              await Navigator.pushNamed(context, '/');
+              await Navigator.pushNamed(context, '/logging');
             },
           ),
         ],

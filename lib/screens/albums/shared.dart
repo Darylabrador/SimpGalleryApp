@@ -34,7 +34,7 @@ class _SharedState extends State<Shared> {
                 "Authorization": "Bearer " + token
               });
               await storage.clear();
-              await Navigator.pushNamed(context, '/');
+              await Navigator.pushNamed(context, '/logging');
             },
           ),
         ],

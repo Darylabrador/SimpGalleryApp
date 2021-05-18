@@ -92,7 +92,7 @@ class DialogDeleteAccount extends StatelessWidget {
                   );
                   storage.clear();
                   Navigator.of(context).pop();
-                  Navigator.pushNamed(context, '/');
+                  Navigator.pushNamed(context, '/logging');
                 } else {
                   showToast(
                     parsedJson['message'],
