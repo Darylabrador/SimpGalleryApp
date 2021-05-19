@@ -117,16 +117,16 @@ class _HomeState extends State<Home> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget> [
-          Container(
-            margin: const EdgeInsets.only(right: 10.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/create/album');
-              },
-              child: Icon(Icons.settings),
-              backgroundColor: Colors.deepOrange,
-            ),
-          ),
+          // Container(
+          //   margin: const EdgeInsets.only(right: 10.0),
+          //   child: FloatingActionButton(
+          //     onPressed: () {
+          //       Navigator.pushNamed(context, '/create/album');
+          //     },
+          //     child: Icon(Icons.settings),
+          //     backgroundColor: Colors.deepOrange,
+          //   ),
+          // ),
           
           FloatingActionButton(
             onPressed: () {

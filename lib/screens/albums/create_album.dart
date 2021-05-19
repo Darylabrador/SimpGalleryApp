@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../home/home.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
@@ -7,6 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateAlbum extends StatefulWidget {
   @override
@@ -16,15 +16,24 @@ class CreateAlbum extends StatefulWidget {
 class _CreateAlbumState extends State<CreateAlbum> {
   final LocalStorage storage = new LocalStorage('sharePhoto');
   String label = '';
-  String cover = '';
+  var _cover;
+  var coverPicker;
 
   var response;
   var url;
 
   final _formKey = GlobalKey<FormState>();
 
+  Future<void> _updateImage(cover) async {
+    setState(() {
+      _cover = cover;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    var token = storage.getItem('SimpGalleryToken');
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -36,28 +45,28 @@ class _CreateAlbumState extends State<CreateAlbum> {
                     height: 300,
                     width: 500,
                     child: Stack(children: <Widget>[
-                      Image.asset('assets/sample-01.jpg', fit: BoxFit.cover),
+                      _cover != null
+                          ? Image.file(_cover, fit: BoxFit.cover)
+                          : Image.asset('assets/sample-01.jpg',
+                              fit: BoxFit.cover),
                       Center(
-                        child: OutlinedButton(
-                          style: ButtonStyle(
-                            foregroundColor: MaterialStateProperty.all<Color>(
-                                Colors.lightBlue),
-                          ),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/home');
-                          },
-                          child: Text("Selectionner une image"),
-                        ),
-                      ),
+                          child: GestureDetector(
+                        onTap: () async {
+                          coverPicker = await ImagePicker.pickImage(
+                              source: ImageSource.gallery);
+                          await _updateImage(coverPicker);
+                        },
+                        child: Text("Selectionner une image",
+                            style: TextStyle(color: Colors.white)),
+                      )),
                     ])),
-                SizedBox(height: 50.0),
                 Center(
-                  child: Text('Ajouter un album',
+                  child: Text('Nouvelle album photo',
                       style: Theme.of(context).textTheme.headline6),
                 ),
                 Container(
                   padding:
-                      EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0),
+                      EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -74,40 +83,19 @@ class _CreateAlbumState extends State<CreateAlbum> {
                       SizedBox(height: 10.0),
                       ElevatedButton(
                         onPressed: () async {
-                          // if (_formKey.currentState!.validate()) {
-                          //   url = Uri.parse(
-                          //       // "${DotEnv.env['DATABASE_URL']}/api/connexion");
-                          //       "http://78c7949cddff.ngrok.io/api/inscription");
-                          //   response = await http.post(url, body: {
-                          //     'identifiant': email,
-                          //     'password': password,
-                          //   }, headers: {
-                          //     "Accept": "application/json"
-                          //   });
-
-                          //   if (response.statusCode == 200) {
-                          //     storage.setItem("SimpGalleryToken", response.body);
-                          //     Navigator.pushNamed(context, '/home');
-                          //   } else {
-                          //     showToast(
-                          //       "Une erreur est survenue",
-                          //       context: context,
-                          //       animation: StyledToastAnimation.scale,
-                          //       reverseAnimation: StyledToastAnimation.fade,
-                          //       position: StyledToastPosition.bottom,
-                          //       animDuration: Duration(seconds: 1),
-                          //       duration: Duration(seconds: 4),
-                          //       curve: Curves.elasticOut,
-                          //       reverseCurve: Curves.linear,
-                          //     );
-                          //   }
-                          // }
+                          url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/album/create");
+                          var request = http.MultipartRequest('POST', url);
+                          request.headers["authorization"] = "Bearer " + token;
+                          request.fields['label'] = label;
+                          request.files.add(await http.MultipartFile.fromPath('cover', _cover.path));
+                          await request.send();
+                          Navigator.of(context)..pop();
                         },
                         child: Text('Ajouter'),
                       ),
                       OutlinedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/home');
+                          Navigator.of(context)..pop();
                         },
                         child: Text("Annuler"),
                       ),
