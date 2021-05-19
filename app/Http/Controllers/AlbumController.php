@@ -128,12 +128,11 @@ class AlbumController extends Controller
             $request->all(),
             [   
                 'label' => 'required',
-                'cover' => 'required|file|mimes:jpg,jpeg,png|max:5000',
+                'cover' => 'required|file|mimes:jpg,jpeg,png',
             ],
             [
                 'file'  => 'Image non fournis',
                 'mimes' => 'Extension invalide',
-                'max'   => '5Mb maximum'
             ]
         );
 
@@ -145,19 +144,22 @@ class AlbumController extends Controller
             ]);
         }
 
-        $cover          = $validator->validated()['cover'];
-        $extension      = $cover->getClientOriginalExtension();
-        $image          = time() . rand() . '.' . $extension;
-        $cover->move(public_path('img/cover'), $image);
-        $album          = new Album;
-        $album->cover   = $image;
-        $album->label   = $validator->validated()['label'];
-        $album->save();
+        if($request->hasFile("cover")){
+            $cover          = $validator->validated()['cover'];
+            $extension      = $cover->getClientOriginalExtension();
+            $image          = time() . rand() . '.' . $extension;
+            $cover->move(public_path('img/cover'), $image);
+            $album          = new Album;
+            $album->cover   = $image;
+            $album->label   = $validator->validated()['label'];
+            $album->user_id = Auth::id();
+            $album->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => "Album créé"
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => "Album créé"
+            ]);
+        }
     }
 
 
