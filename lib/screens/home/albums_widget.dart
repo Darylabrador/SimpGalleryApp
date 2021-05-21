@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 class AlbumsWidget extends StatelessWidget {
-  final LocalStorage storage = new LocalStorage('sharePhoto');
+  final arrayData;
+  AlbumsWidget({this.arrayData});
 
   @override
   Widget build(BuildContext context) {
     print('my albums');
-
-     // token for bearer token
-    var token = storage.getItem('SimpGalleryToken');
+    print(arrayData);
 
     return Column(
       children: <Widget>[
@@ -21,47 +21,32 @@ class AlbumsWidget extends StatelessWidget {
             style: TextStyle(fontSize: 20),
           ),
         ),
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: SizedBox(
-                  child: GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/photos');
-                },
-                child: Card(
-                  child: Column(
-                    children: <Widget>[
-                      Image.asset('assets/sample-01.jpg',
-                          height: 150, width: 150, fit: BoxFit.fill),
-                      Text(
-                        'album 1',
+        Container(
+          height: 200,
+          child: ListView.builder(
+             scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.all(8),
+              itemCount: arrayData.length,
+              itemBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                      child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/photos');
+                    },
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          Image.network("${DotEnv.env['DATABASE_URL']}/img/" + arrayData[index]['cover'],
+                              height: 150, width: 150, fit: BoxFit.fill),
+                          Text(
+                            arrayData[index]["label"],
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              )),
-            ),
-            Expanded(
-              child: SizedBox(
-                  child: GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/photos');
-                },
-                child: Card(
-                  child: Column(
-                    children: <Widget>[
-                      Image.asset('assets/sample-02.jpg',
-                          height: 150, width: 150, fit: BoxFit.fill),
-                      Text(
-                        'album 1',
-                      ),
-                    ],
-                  ),
-                ),
-              )),
-            ),
-          ],
+                    ),
+                  )
+                );
+              }),
         )
       ],
     );
