@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+
+import 'dart:async';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 class Photos extends StatefulWidget {
+  final arrayData;
+  Photos({this.arrayData});
+
   @override
-  State<StatefulWidget> createState() {
-    return _PhotosState();
-  }
+  _PhotosState createState() => _PhotosState();
 }
 
 class _PhotosState extends State<Photos> {
   final LocalStorage storage = new LocalStorage('sharePhoto');
-  String _mainText = 'This is the first assignment!';
 
   @override
   Widget build(BuildContext context) {
     // token for bearer token
     var token = storage.getItem('SimpGalleryToken');
     var url;
+    print(widget.arrayData);
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Albums'),
@@ -40,7 +45,7 @@ class _PhotosState extends State<Photos> {
       ),
       body: const Center(
         child: Text(
-          'This is Albums Page',
+          '$widget.arrayData["label"]',
           style: TextStyle(fontSize: 24),
         ),
       ),

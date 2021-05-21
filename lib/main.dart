@@ -1,20 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:client/screens/albums/photos.dart';
-import 'package:client/screens/albums/shared.dart';
-import 'package:client/screens/auth/login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
-
-import 'screens/home/home.dart';
-import 'screens/home/share_settings.dart';
-import 'screens/auth/login.dart';
-import 'screens/auth/registration.dart';
-import 'screens/auth/ask_forgotten_pwd.dart';
-import 'screens/auth/reset_forgotten_pwd.dart';
-import 'screens/profil/verify_mail.dart';
-import 'screens/albums/create_album.dart';
-import 'screens/profil/profil.dart';
-import 'screens/profil/verify_mail.dart';
 import 'package:localstorage/localstorage.dart';
+
+import './route_generator.dart';
 
 void main() async {
   await DotEnv.load();
@@ -33,20 +21,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.deepOrange,
         ),
         initialRoute: '/logging',
-        routes: {
-          '/logging': (context) => Login(),
-          '/register': (context) => Registration(),
-          '/create/album': (context) => CreateAlbum(),
-          '/home': (context) => Home(title: "Accueil"),
-          '/photos': (context) => Photos(),
-          '/shared': (context) => Shared(),
-          '/shared/settings': (context) => ShareSettings(title: "Options"),
-          '/verify/mail': (context) => VerifyMail(),
-          '/forgotten/ask': (context) => AskForgottenPwd(),
-          '/forgotten/confirm': (context) => ResetForgottenPwd(),
-          '/profil': (context) => Profil(),
-          '/profil/verify': (context) => VerifyMail(),
-        },
+        onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }
