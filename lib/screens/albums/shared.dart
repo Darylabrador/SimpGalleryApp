@@ -29,7 +29,7 @@ class _SharedState extends State<Shared> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Albums'),
+          title: const Text('Albums partager'),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.logout),

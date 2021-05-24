@@ -32,15 +32,20 @@ class RouteGenerator {
       case '/home':
         return MaterialPageRoute(builder: (_) => Home(title: "Accueil"));
       case '/photos':
-        if(args != null) {
+        if (args != null) {
           return MaterialPageRoute(builder: (_) => Photos(arrayData: args));
         } else {
           return MaterialPageRoute(builder: (_) => Home(title: "Accueil"));
         }
       case '/shared':
-        return MaterialPageRoute(builder: (_) => Shared());
+        if (args != null) {
+          return MaterialPageRoute(builder: (_) => Shared(arrayData: args));
+        } else {
+          return MaterialPageRoute(builder: (_) => Home(title: "Accueil"));
+        }
       case '/shared/settings':
-        return MaterialPageRoute(builder: (_) => ShareSettings(title: "Options"));
+        return MaterialPageRoute(
+            builder: (_) => ShareSettings(title: "Options"));
       case '/verify/mail':
         return MaterialPageRoute(builder: (_) => VerifyMail());
       case '/forgotten/ask':
