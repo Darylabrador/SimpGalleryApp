@@ -56,4 +56,5 @@ Dans la version actuelle il faut modifier le lien vers l'API laravel dans "lib/s
 ## Ressources :
 
 - parse JSON : https://medium.com/flutter-community/how-to-parse-json-in-flutter-for-beginners-8074a68d7a79
-- Upload d'image : https://medium.com/fabcoding/adding-an-image-picker-in-a-flutter-app-pick-images-using-camera-and-gallery-photos-7f016365d856
+- Upload d'image (1 seul) : https://medium.com/fabcoding/adding-an-image-picker-in-a-flutter-app-pick-images-using-camera-and-gallery-photos-7f016365d856
+- Upload multiple d'images : https://medium.com/flutterdevs/multiimage-picker-in-flutter-69bd9f6cedfb
