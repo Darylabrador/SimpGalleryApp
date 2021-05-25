@@ -90,7 +90,6 @@ class ShareSettings extends StatelessWidget {
 
     Expanded(child:Container(
       child:ListView.builder(
-
           itemCount: 4,
           itemBuilder: (context, index) {
             return Card(

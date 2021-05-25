@@ -79,12 +79,17 @@ class _PhotosState extends State<Photos> {
                     height: 200,
                     width: 500,
                     child: Stack(children: <Widget>[
-                      Image.network(
-                          "${DotEnv.env['DATABASE_URL']}/img/" +
-                              widget.arrayData['cover'],
-                          height: 200,
-                          width: 500,
-                          fit: BoxFit.fill)
+                      GestureDetector(
+                        onLongPress: () {
+                          print('edit cover');
+                        },
+                        child: Image.network(
+                            "${DotEnv.env['DATABASE_URL']}/img/" +
+                                widget.arrayData['cover'],
+                            height: 200,
+                            width: 500,
+                            fit: BoxFit.fill),
+                      ),
                     ])),
                 Container(
                     alignment: Alignment.topLeft,
