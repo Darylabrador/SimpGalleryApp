@@ -20,7 +20,7 @@ class DialogAvatar extends StatelessWidget {
     return DialogRoute<void>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: Text('Avatar'),
+        title: Text('Avatar', textAlign: TextAlign.center),
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[

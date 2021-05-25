@@ -21,7 +21,7 @@ class DialogDeleteAccount extends StatelessWidget {
     return DialogRoute<void>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: Text('Voulez-vous vraiment supprimer votre compte ?'),
+        title: Text('Voulez-vous vraiment supprimer votre compte ?', textAlign: TextAlign.center),
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[

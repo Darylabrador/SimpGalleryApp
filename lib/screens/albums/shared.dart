@@ -5,7 +5,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
-import '../../components/dialog/DialogImagesMultiple.dart';
+import '../../components/dialog/DialogImage.dart';
+
 
 class Shared extends StatefulWidget {
   final arrayData;
@@ -90,6 +91,7 @@ class _SharedState extends State<Shared> {
               onPressed: () {
                 Navigator.pushNamed(context, '/create/album');
               },
+              heroTag: 'setting',
               child: Icon(Icons.settings),
               backgroundColor: Colors.deepOrange,
             ),
@@ -100,11 +102,14 @@ class _SharedState extends State<Shared> {
               onPressed: () {
                 Navigator.pushNamed(context, '/create/album');
               },
+              heroTag: 'share',
               child: Icon(Icons.share),
               backgroundColor: Colors.deepOrange,
             ),
           ),
-          DialogImagesMultiple(isShare: true),
+          Container(
+            child: DialogImage(albumId: widget.arrayData['id'], allData: widget.arrayData, isShare: true),
+          )
         ]));
   }
 }

@@ -5,7 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
-import '../../components/dialog/DialogImagesMultiple.dart';
+import '../../components/dialog/DialogImage.dart';
 
 class Photos extends StatefulWidget {
   final arrayData;
@@ -17,6 +17,32 @@ class Photos extends StatefulWidget {
 
 class _PhotosState extends State<Photos> {
   final LocalStorage storage = new LocalStorage('sharePhoto');
+  var _albumData = [];
+
+  Future fetchAlbumData() async {
+    final LocalStorage storage = new LocalStorage('sharePhoto');
+    var token = storage.getItem('SimpGalleryToken');
+
+    var url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/photo/list/" +
+        widget.arrayData['id'].toString());
+    var getAlbums = await http.get(url, headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + token
+    });
+
+    if (getAlbums.statusCode == 200) {
+      var parsedJson = json.decode(getAlbums.body);
+      setState(() {
+        _albumData = parsedJson['data'];
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAlbumData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +102,40 @@ class _PhotosState extends State<Photos> {
                             child: Divider(color: Colors.black),
                           ),
                         ])),
+                Container(
+                  margin: EdgeInsets.only(bottom: 80.0),
+                  height: 500,
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.all(8),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4),
+                    itemCount: _albumData.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onDoubleTap: () {
+                          print('delete');
+                        },
+                        onLongPress: () {
+                          print('detail');
+                        },
+                        child: Card(
+                          child: Column(
+                            children: <Widget>[
+                              Image.network(
+                                  "${DotEnv.env['DATABASE_URL']}/img/" +
+                                      _albumData[index]['label'],
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )
               ],
             ),
           ),
@@ -88,6 +148,7 @@ class _PhotosState extends State<Photos> {
               onPressed: () {
                 Navigator.pushNamed(context, '/create/album');
               },
+              heroTag: 'setting',
               child: Icon(Icons.settings),
               backgroundColor: Colors.deepOrange,
             ),
@@ -98,11 +159,17 @@ class _PhotosState extends State<Photos> {
               onPressed: () {
                 Navigator.pushNamed(context, '/create/album');
               },
+              heroTag: 'share',
               child: Icon(Icons.share),
               backgroundColor: Colors.deepOrange,
             ),
           ),
-          DialogImagesMultiple(isShare: false),
+          Container(
+            child: DialogImage(
+                albumId: widget.arrayData['id'],
+                allData: widget.arrayData,
+                isShare: false),
+          )
         ]));
   }
 }
