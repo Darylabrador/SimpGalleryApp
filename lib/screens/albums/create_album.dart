@@ -89,13 +89,13 @@ class _CreateAlbumState extends State<CreateAlbum> {
                           request.fields['label'] = label;
                           request.files.add(await http.MultipartFile.fromPath('cover', _cover.path));
                           await request.send();
-                          Navigator.of(context)..pop();
+                          Navigator.of(context)..pop()..pop()..pushNamed("/home");
                         },
                         child: Text('Ajouter'),
                       ),
                       OutlinedButton(
                         onPressed: () {
-                          Navigator.of(context)..pop();
+                          Navigator.of(context)..pop()..pop()..pushNamed("/home");
                         },
                         child: Text("Annuler"),
                       ),

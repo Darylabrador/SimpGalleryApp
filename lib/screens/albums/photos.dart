@@ -9,6 +9,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:image_picker/image_picker.dart';
 
 import '../../components/dialog/DialogImage.dart';
+import '../../components/dialog/DialogShareAlbum.dart';
+
 
 class Photos extends StatefulWidget {
   final arrayData;
@@ -349,14 +351,7 @@ class _PhotosState extends State<Photos> {
           ),
           Container(
             margin: const EdgeInsets.only(right: 10.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/create/album');
-              },
-              heroTag: 'share',
-              child: Icon(Icons.share),
-              backgroundColor: Colors.deepOrange,
-            ),
+            child: DialogShareAlbum(allData: widget.arrayData),
           ),
           Container(
             child: DialogImage(
