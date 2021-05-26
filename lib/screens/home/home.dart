@@ -12,6 +12,7 @@ import './shared_widget.dart';
 
 // Models
 import 'package:client/models/album.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key, required this.title}) : super(key: key);
