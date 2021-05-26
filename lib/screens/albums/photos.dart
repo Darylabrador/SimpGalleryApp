@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:image_picker/image_picker.dart';
+
 import '../../components/dialog/DialogImage.dart';
 
 class Photos extends StatefulWidget {
@@ -38,6 +41,88 @@ class _PhotosState extends State<Photos> {
     }
   }
 
+  Future renderDialog(photoId) {
+    var token = storage.getItem('SimpGalleryToken');
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(top: 5.0),
+                child: Text(
+                  'Voulez-vous vraiment supprimer cette photo ?',
+                  style: TextStyle(color: Colors.black),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          OutlinedButton(
+            child: Text(
+              'Annuler',
+              style: TextStyle(color: Colors.black38),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          OutlinedButton(
+            child: Text(
+              'Valider',
+              style: TextStyle(color: Colors.redAccent),
+            ),
+            onPressed: () async {
+              var url = Uri.parse(
+                  "${DotEnv.env['DATABASE_URL']}/api/photo/delete/$photoId");
+              var response = await http.delete(url, headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token
+              });
+              if (response.statusCode == 200) {
+                var parsedJson = json.decode(response.body);
+
+                showToast(
+                  parsedJson['message'],
+                  context: context,
+                  animation: StyledToastAnimation.scale,
+                  reverseAnimation: StyledToastAnimation.fade,
+                  position: StyledToastPosition.bottom,
+                  animDuration: Duration(seconds: 1),
+                  duration: Duration(seconds: 4),
+                  curve: Curves.elasticOut,
+                  reverseCurve: Curves.linear,
+                );
+
+                if (parsedJson['success']) {
+                  Navigator.of(context)
+                    ..pop()
+                    ..pop()
+                    ..pushNamed('/photos', arguments: widget.arrayData);
+                }
+              } else {
+                showToast(
+                  "Une erreur est survenue",
+                  context: context,
+                  animation: StyledToastAnimation.scale,
+                  reverseAnimation: StyledToastAnimation.fade,
+                  position: StyledToastPosition.bottom,
+                  animDuration: Duration(seconds: 1),
+                  duration: Duration(seconds: 4),
+                  curve: Curves.elasticOut,
+                  reverseCurve: Curves.linear,
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -49,7 +134,6 @@ class _PhotosState extends State<Photos> {
     // token for bearer token
     var token = storage.getItem('SimpGalleryToken');
     var url;
-    print(widget.arrayData);
 
     return Scaffold(
         appBar: AppBar(
@@ -82,6 +166,7 @@ class _PhotosState extends State<Photos> {
                       GestureDetector(
                         onLongPress: () {
                           print('edit cover');
+                          print(widget.arrayData);
                         },
                         child: Image.network(
                             "${DotEnv.env['DATABASE_URL']}/img/" +
@@ -120,10 +205,11 @@ class _PhotosState extends State<Photos> {
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onDoubleTap: () {
-                          print('delete');
+                          renderDialog(_albumData[index]['id']);
                         },
                         onLongPress: () {
                           print('detail');
+                          print(_albumData[index]);
                         },
                         child: Card(
                           child: Column(
