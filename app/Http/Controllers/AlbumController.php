@@ -172,12 +172,11 @@ class AlbumController extends Controller
             $request->all(),
             [
                 'albumId' => "required",
-                'cover'   => 'required|file|mimes:jpg,jpeg,png|max:5000',
+                'cover'   => 'required|image|mimes:jpg,jpeg,png',
             ],
             [
-                'file'  => 'Image non fournis',
+                'image'  => 'Image non fournis',
                 'mimes' => 'Extension invalide',
-                'max'   => '5Mb maximum'
             ]
         );
 
@@ -197,7 +196,7 @@ class AlbumController extends Controller
             $oldImage = $album->cover;
 
             if ($oldImage != null) {
-                $oldFilePath = public_path('img/cover') . '/' . $oldImage;
+                $oldFilePath = public_path('img') . '/' . $oldImage;
                 unlink($oldFilePath);
             }
 
@@ -284,15 +283,17 @@ class AlbumController extends Controller
                 $accessAlbum->album_id = $album->id;
                 $accessAlbum->save();
 
-                $notif = new Notification();
-                $notif->label   = "{$userIdentity} vous a invité à rejoindre son album photo";
-                $notif->user_id = $userExist->id;
-                $notif->save();
+                // $notif = new Notification();
+                // $notif->label   = "{$userIdentity} vous a invité à rejoindre son album photo";
+                // $notif->user_id = $userExist->id;
+                // $notif->save();
+
+                Mail::to($target)->send(new InvitationMail($target, $sendingMessage, $shareToken));
             }
         } else {
-            $invitation           = new Invitation();
+            $invitation            = new Invitation();
             $invitation->target    = $target;
-            $invitation->album_id = $album->id;
+            $invitation->album_id  = $album->id;
             
             if ($type == 0) {
                 Mail::to($target)->send(new InvitationMail($target, $sendingMessage, $shareToken));
@@ -436,7 +437,12 @@ class AlbumController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-        $album = Album::where('id',$id)->first;
+        $album = Album::where('id',$id)->first();
+
+        foreach ($album->photos as $photo) {
+            $photo->delete();
+        }
+
         $album->delete(); 
         return response()->json([
             'success' => true,

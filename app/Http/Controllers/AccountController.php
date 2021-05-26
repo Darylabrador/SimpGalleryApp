@@ -40,7 +40,7 @@ class AccountController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'pseudo'          => 'required|unique:users',
+                'pseudo'          => 'required',
                 'password'        => 'nullable',
                 'passwordConfirm' => 'nullable',
             ],
@@ -82,6 +82,15 @@ class AccountController extends Controller
             } else {
                 $userExist->password    = Hash::make($password);
             }
+        }
+
+        $pseudoExist  = User::where(["pseudo" => $pseudo])->where("id", "!=", $userId)->first();
+
+        if($pseudoExist) {
+            return response()->json([
+                "success"  => false,
+                "message"  => "Pseudo existe déjà",
+            ]);
         }
 
         $userExist->pseudo      = $pseudo;

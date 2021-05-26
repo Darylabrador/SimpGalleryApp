@@ -88,7 +88,7 @@ Route::middleware(['auth:api'])->prefix('/album')->group(function() {
 Route::middleware(['auth:api'])->prefix('/photo')->group(function(){
     Route::post('/create', [PhotoController::class, 'create'])->name('api.create.photo');
     Route::delete('/delete/{id}', [PhotoController::class, 'destroy'])->name('api.delete.photo');
-    Route::get('/list/{albumId}', [PhotoController::class, 'list'])->name('api.list.photo');
+    Route::get('/list/{albumId}', [PhotoController::class, 'photoList'])->name('api.list.photo');
     Route::get('/show/{photoId}', [AlbumController::class, 'showOne'])->name('api.show.photo');
 });
 

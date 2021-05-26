@@ -14,12 +14,12 @@ class PhotoController extends Controller
      * Add pic to an album
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, $albumId){
+    public function create(Request $request){
         $validator = Validator::make(
             $request->all(),
             [   
-                'images'   => "required",
-                'images.*' => 'required|file|mimes:jpg,jpeg,png|max:5000',
+                'albumId' => 'required',
+                'image'   => 'required|file|mimes:jpg,jpeg,png|max:5000',
             ],
             [
                 'required' => 'Le champ :attribute est requis',
@@ -37,23 +37,26 @@ class PhotoController extends Controller
             ]);
         }
 
-        if($request->hasFile('images')){
-            foreach ($request->file('images') as $file) {
-                $extension          = $file->getClientOriginalExtension();
-                $image              = time() . rand() . '.' . $extension;
-                $file->move(public_path('img/albums'), $image);
-                $album              = new Album;
-                $album->album_id    = $albumId;
-                $album->label       = $image;
-                $album->save();
-            }
+        if($request->hasFile('image')){
+            $file      = $validator->validated()['image'];
+            $albumId   = $validator->validated()['albumId'];
+
+            $extension          = $file->getClientOriginalExtension();
+            $image              = time() . rand() . '.' . $extension;
+            $file->move(public_path('img/albums'), $image);
+            $photo              = new Photo();
+            $photo->album_id    = $albumId;
+            $photo->label       = $image;
+            $photo->save();
 
             return response()->json([
                 'success' => true,
-                'message' => "Photo(s) ajoutée(s)"
+                'message' => "Photo ajoutée"
             ]);
         }
     }
+
+
     /**
      * Pic list on an album
      *
@@ -61,10 +64,10 @@ class PhotoController extends Controller
      */
     public function photoList($albumId)
     {
-
-        $photos = Photo::where('album_id', $albumId)->get();
+        $photos = Photo::where(['album_id' => $albumId])->get();
         return PhotoResource::collection($photos);
     }
+
 
     /**
      * get a pic
