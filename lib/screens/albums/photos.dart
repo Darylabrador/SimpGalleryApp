@@ -126,6 +126,23 @@ class _PhotosState extends State<Photos> {
     );
   }
 
+  Future displayFullScreenImage(contend) {
+    return showGeneralDialog(
+        context: context,
+        pageBuilder: (context, animation, secondaryAnimation) => Scaffold(
+              backgroundColor: Colors.black87,
+              body: Container(
+                height: 400,
+                width: 500,
+                child: Image.network(
+                    "${DotEnv.env['DATABASE_URL']}/img/" + contend['label'],
+                    height: 400,
+                    width: 500,
+                    fit: BoxFit.cover),
+              ),
+            ));
+  }
+
   Future deleteSingleImageDialog(photoId) {
     var token = storage.getItem('SimpGalleryToken');
     return showDialog<String>(
@@ -295,8 +312,7 @@ class _PhotosState extends State<Photos> {
                           deleteSingleImageDialog(_albumData[index]['id']);
                         },
                         onDoubleTap: () {
-                          print('detail');
-                          print(_albumData[index]);
+                          displayFullScreenImage(_albumData[index]);
                         },
                         child: Card(
                           child: Column(
