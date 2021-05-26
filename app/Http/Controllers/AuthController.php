@@ -110,9 +110,9 @@ class AuthController extends Controller
         $part1             = Str::random(4);
         $part2             = Str::random(4);
     
-        $invitationList = Invitation::where(['target' => $identifiant])->get();
+        $invitation = Invitation::where(['target' => $identifiant])->first();
         
-        if(count($invitationList) == 0) {
+        if(!$invitation) {
             $user              = new User();
             $user->pseudo      = "user" . $part1 . "X" . $part2;
             $user->identifiant = $identifiant;
@@ -123,31 +123,29 @@ class AuthController extends Controller
 
             Mail::to($identifiant)->send(new RegisterMail($identifiant, $verifyToken));
 
-            return response()->json([
-                'success' => true,
-                'message' =>  "Vous devez confirmer votre adresse mail"
-            ]);
-        } 
+ 
+        } else {
+            $user              = new User();
+            $user->pseudo      = "user" . $part1 . "X" . $part2;
+            $user->identifiant = $identifiant;
+            $user->password    = Hash::make($password);
+            $user->verifyToken = $verifyToken;
+            $user->isMobile    = 0;
+            $user->save();
 
-        $createdUser = User::create([
-            "pseudo"      => "user" . $part1 . "X" . $part2,
-            "identifiant" => $identifiant,
-            "password"    => Hash::make($password),
-            "verifyToken" => $verifyToken,
-            "isMobile"    => $invitationList[0]->isMobile,
-            "verify_at"   => now(),
-        ]);
-
-        foreach ($invitationList as $invitation) {
             $newAccess = new Access();
             $newAccess->album_id = $invitation->album_id;
-            $newAccess->user_id  = $createdUser->id;
+            $newAccess->user_id  = $user->id;
             $newAccess->save();
+
+            $invitation->delete();
+
+            Mail::to($identifiant)->send(new RegisterMail($identifiant, $verifyToken));
         }
 
         return response()->json([
             'success' => true,
-            'message' =>  "Bienvenue sur SimpGalleryApp"
+            'message' =>  "Vous devez confirmer votre adresse mail"
         ]);
     }
 

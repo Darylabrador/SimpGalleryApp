@@ -10,6 +10,7 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Models\Access;
 use App\Http\Resources\AlbumResource;
+use App\Mail\CreationCompteMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -70,7 +71,7 @@ class AlbumController extends Controller
         $accesses   = Access::where('user_id', $userId)->get();
         $albumIds    = [];
         foreach ($accesses as $access) {
-            array_push($albumId,$access->id);
+            array_push($albumId, $access->id);
         }
         $albums = Album::whereIn('id', $albumIds)->get();
         return AlbumResource::collection($albums);
@@ -89,7 +90,7 @@ class AlbumController extends Controller
         $accesses   = Access::where('user_id', $userId)->get();
         $albumIds    = [];
         foreach ($accesses as $access) {
-            array_push($albumId,$access->id);
+            array_push($albumId, $access->id);
         }
         $albums = Album::whereIn('id', $albumIds)->limit(2)->get();
 
@@ -108,8 +109,9 @@ class AlbumController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function autocomplete($value) {
-        $listMail = User::where("email", "LIKE", "%".$value."%")->get();
+    public function autocomplete($value)
+    {
+        $listMail = User::where("email", "LIKE", "%" . $value . "%")->get();
         return UserResource::collection($listMail);
     }
 
@@ -123,10 +125,11 @@ class AlbumController extends Controller
      * Create an album
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request){
+    public function create(Request $request)
+    {
         $validator = Validator::make(
             $request->all(),
-            [   
+            [
                 'label' => 'required',
                 'cover' => 'required|file|mimes:jpg,jpeg,png',
             ],
@@ -144,7 +147,7 @@ class AlbumController extends Controller
             ]);
         }
 
-        if($request->hasFile("cover")){
+        if ($request->hasFile("cover")) {
             $cover          = $validator->validated()['cover'];
             $extension      = $cover->getClientOriginalExtension();
             $image          = time() . rand() . '.' . $extension;
@@ -167,7 +170,8 @@ class AlbumController extends Controller
      * Edit cover
      * @return \Illuminate\Http\Response
      */
-    public function editCover(Request $request) {
+    public function editCover(Request $request)
+    {
         $validator = Validator::make(
             $request->all(),
             [
@@ -220,19 +224,18 @@ class AlbumController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function share(Request $request) {
+    public function share(Request $request)
+    {
         $validator = Validator::make(
             $request->all(),
             [
                 'albumId' => 'required',
                 'target'  => 'required',
                 'message' => 'nullable',
-                'type'    => 'required'
+                // 'type'    => 'required'
             ],
             [
                 'required' => 'Le champ :attribute est requis',
-                'array'    => 'Format invalide',
-                'email'    => 'Contenue invalide',
             ]
         );
 
@@ -248,12 +251,12 @@ class AlbumController extends Controller
         $albumId = $validator->validated()['albumId'];
         $target  = $validator->validated()['target'];
         $message = $validator->validated()['message'];
-        $type    = $validator->validated()['type'];
+        // $type    = $validator->validated()['type'];
 
         $user         = Auth::user();
         $userIdentity = $user->pseudo;
 
-        if($message != null) {
+        if ($message != null) {
             $sendingMessage = $message;
         } else {
             $sendingMessage = "{$userIdentity} vous a invité à rejoindre un de ses albums !";
@@ -261,63 +264,81 @@ class AlbumController extends Controller
 
         $album = Album::where(['id' => $albumId, 'user_id' => $user->id])->first();
 
-        if(!$album) {
+        if (!$album) {
             return response()->json([
                 'success' => false,
                 'message' => "Album inexistant"
             ]);
         }
 
-        $shareToken        = Str::random(20);
-        $album->shareToken = $shareToken;
-        $album->share_at   = now();
-        $album->save();
+        if ($album->shareToken == null) {
+            $shareToken        = Str::random(20);
+            $album->shareToken = $shareToken . $album->id;
+            $album->share_at   = now();
+            $album->save();
+        }
 
         $userExist = User::where(['identifiant' => $target])->first();
 
-        if ($userExist) {
-            $accessAlbumExist = Access::where(['album_id' => $albumId, 'user_id' => $userExist->id])->first();
-            if (!$accessAlbumExist) {
-                $accessAlbum = new Access();
-                $accessAlbum->user_id  = $userExist->id;
-                $accessAlbum->album_id = $album->id;
-                $accessAlbum->save();
+        $invitationExist = Invitation::where(['album_id' => $albumId, 'target' => $target])->first();
 
-                // $notif = new Notification();
-                // $notif->label   = "{$userIdentity} vous a invité à rejoindre son album photo";
-                // $notif->user_id = $userExist->id;
-                // $notif->save();
-
-                Mail::to($target)->send(new InvitationMail($target, $sendingMessage, $shareToken));
-            }
-        } else {
-            $invitation            = new Invitation();
-            $invitation->target    = $target;
-            $invitation->album_id  = $album->id;
-            
-            if ($type == 0) {
-                Mail::to($target)->send(new InvitationMail($target, $sendingMessage, $shareToken));
+        if (!$invitationExist) {
+            if ($userExist) {
+                Mail::to($target)->send(new InvitationMail($userExist->pseudo, $sendingMessage, $album->shareToken));
             } else {
-                // $basic  = new \Nexmo\Client\Credentials\Basic(env('NEXMO_ID', ''), env('NEXMO_PASSWORD', ''));
-                // $client = new \Nexmo\Client($basic);
+                $invitation = new Invitation();
+                $invitation->target   = $target;
+                $invitation->album_id = $albumId;
+                $invitation->save();
 
-                // $message = $client->message()->send([
-                //     // 'to' => '262692023484',
-                //     'to' => $target,
-                //     'from' => env('APP_NAME', ''),
-                //     'text' => $sendingMessage . " " . "Ci-dessous votre clé : \n {$shareToken}"
-                // ]);
-                
-                $invitation->isMobile = true;
+                Mail::to($target)->send(new CreationCompteMail($sendingMessage, $album->shareToken));
             }
 
-            $invitation->save();
+            return response()->json([
+                'success' => true,
+                'message' => "Invitation envoyée !"
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => "Invitation déjà envoyée !"
+            ]);
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => "Invitations envoyées !"
-        ]);
+
+
+        // if ($userExist) {
+        //     $accessAlbumExist = Access::where(['album_id' => $albumId, 'user_id' => $userExist->id])->first();
+        //     if (!$accessAlbumExist) {
+        //         $accessAlbum = new Access();
+        //         $accessAlbum->user_id  = $userExist->id;
+        //         $accessAlbum->album_id = $album->id;
+        //         $accessAlbum->save();
+        //         // $notif = new Notification();
+        //         // $notif->label   = "{$userIdentity} vous a invité à rejoindre son album photo";
+        //         // $notif->user_id = $userExist->id;
+        //         // $notif->save();
+        //         Mail::to($target)->send(new InvitationMail($target, $sendingMessage, $shareToken));
+        //     }
+        // } else {
+        //     $invitation            = new Invitation();
+        //     $invitation->target    = $target;
+        //     $invitation->album_id  = $album->id;
+        //     if ($type == 0) {
+        //         Mail::to($target)->send(new InvitationMail($target, $sendingMessage, $shareToken));
+        //     } else {
+        //         // $basic  = new \Nexmo\Client\Credentials\Basic(env('NEXMO_ID', ''), env('NEXMO_PASSWORD', ''));
+        //         // $client = new \Nexmo\Client($basic);
+        //         // $message = $client->message()->send([
+        //         //     // 'to' => '262692023484',
+        //         //     'to' => $target,
+        //         //     'from' => env('APP_NAME', ''),
+        //         //     'text' => $sendingMessage . " " . "Ci-dessous votre clé : \n {$shareToken}"
+        //         // ]);
+        //         $invitation->isMobile = true;
+        //     }
+        //     $invitation->save();
+        // }
     }
 
 
@@ -326,7 +347,8 @@ class AlbumController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function join(Request $request) {
+    public function join(Request $request)
+    {
         $validator = Validator::make(
             $request->all(),
             [
@@ -349,14 +371,14 @@ class AlbumController extends Controller
         $shareToken = $validator->validated()['shareToken'];
         $album = Album::where(['shareToken' => $shareToken])->first();
 
-        if(!$album){
+        if (!$album) {
             return response()->json([
                 'success' => false,
                 'message' => "Clé invalide"
             ]);
         }
 
-        if($shareToken == $album->shareToken) {
+        if ($shareToken == $album->shareToken) {
             $access = Access::where(['album_id' => $album->id, "user_id" => $userId])->first();
             $access->isAuthorize = true;
             $access->save();
@@ -374,10 +396,11 @@ class AlbumController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function leave($albumId) {
+    public function leave($albumId)
+    {
         $userId = Auth::id();
         $accessToAlbum = Access::where(['album_id' => $albumId, 'user_id' => $userId]);
-        if($accessToAlbum) {
+        if ($accessToAlbum) {
             $accessToAlbum->delete();
             return response()->json([
                 'success' => true,
@@ -397,7 +420,8 @@ class AlbumController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function deleteShare(Request $request) {
+    public function deleteShare(Request $request)
+    {
         $validator = Validator::make(
             $request->all(),
             [
@@ -436,14 +460,15 @@ class AlbumController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id){
-        $album = Album::where('id',$id)->first();
+    public function destroy($id)
+    {
+        $album = Album::where('id', $id)->first();
 
         foreach ($album->photos as $photo) {
             $photo->delete();
         }
 
-        $album->delete(); 
+        $album->delete();
         return response()->json([
             'success' => true,
             'message' => "Album supprimé"
