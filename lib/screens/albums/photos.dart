@@ -21,6 +21,14 @@ class Photos extends StatefulWidget {
 class _PhotosState extends State<Photos> {
   final LocalStorage storage = new LocalStorage('sharePhoto');
   var _albumData = [];
+  var _imageCoverUpdate;
+  var imageCoverPicker;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAlbumData();
+  }
 
   Future fetchAlbumData() async {
     final LocalStorage storage = new LocalStorage('sharePhoto');
@@ -41,9 +49,87 @@ class _PhotosState extends State<Photos> {
     }
   }
 
-  Future renderDialog(photoId) {
+  Future<void> _updateCoverImage(file) async {
+    Navigator.of(context).pop();
+    setState(() {
+      _imageCoverUpdate = file;
+    });
+  }
+
+  Future editCoverDialog() {
     var token = storage.getItem('SimpGalleryToken');
     return showDialog<String>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text("Modification de la couverture",
+            style: TextStyle(color: Colors.black), textAlign: TextAlign.center),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Container(
+                  height: _imageCoverUpdate != null ? 300 : null,
+                  width: 500,
+                  child: Stack(children: <Widget>[
+                    Container(
+                      child: _imageCoverUpdate != null
+                          ? Image.file(_imageCoverUpdate, fit: BoxFit.cover)
+                          : null,
+                    ),
+                    Center(
+                        child: OutlinedButton(
+                      onPressed: () async {
+                        imageCoverPicker = await ImagePicker.pickImage(
+                            source: ImageSource.gallery);
+                        await _updateCoverImage(imageCoverPicker);
+                        await editCoverDialog();
+                      },
+                      child: Text("Selectionner une image",
+                          style: TextStyle(color: Colors.black)),
+                    )),
+                  ])),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          OutlinedButton(
+            child: Text(
+              'Annuler',
+              style: TextStyle(color: Colors.black38),
+            ),
+            onPressed: () {
+              _updateCoverImage(null);
+            },
+          ),
+          OutlinedButton(
+            child: Text(
+              'Valider',
+              style: TextStyle(color: Colors.redAccent),
+            ),
+            onPressed: () async {
+              var url =
+                  Uri.parse("${DotEnv.env['DATABASE_URL']}/api/album/cover");
+              var request = http.MultipartRequest(
+                'POST',
+                url,
+              );
+              request.headers["authorization"] = "Bearer " + token;
+              request.fields['albumId'] = widget.arrayData["id"].toString();
+              request.files.add(await http.MultipartFile.fromPath(
+                  'cover', _imageCoverUpdate.path));
+              await request.send();
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future deleteSingleImageDialog(photoId) {
+    var token = storage.getItem('SimpGalleryToken');
+    return showDialog<String>(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) => AlertDialog(
         content: SingleChildScrollView(
@@ -84,7 +170,6 @@ class _PhotosState extends State<Photos> {
               });
               if (response.statusCode == 200) {
                 var parsedJson = json.decode(response.body);
-
                 showToast(
                   parsedJson['message'],
                   context: context,
@@ -124,12 +209,6 @@ class _PhotosState extends State<Photos> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    fetchAlbumData();
-  }
-
-  @override
   Widget build(BuildContext context) {
     // token for bearer token
     var token = storage.getItem('SimpGalleryToken');
@@ -137,6 +216,13 @@ class _PhotosState extends State<Photos> {
 
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context)
+              ..pop()
+              ..pop()
+              ..pushNamed('/home'),
+          ),
           title: const Text('Albums'),
           actions: <Widget>[
             IconButton(
@@ -164,17 +250,18 @@ class _PhotosState extends State<Photos> {
                     width: 500,
                     child: Stack(children: <Widget>[
                       GestureDetector(
-                        onLongPress: () {
-                          print('edit cover');
-                          print(widget.arrayData);
-                        },
-                        child: Image.network(
-                            "${DotEnv.env['DATABASE_URL']}/img/" +
-                                widget.arrayData['cover'],
-                            height: 200,
-                            width: 500,
-                            fit: BoxFit.fill),
-                      ),
+                          onDoubleTap: () {
+                            editCoverDialog();
+                          },
+                          child: _imageCoverUpdate == null
+                              ? Image.network(
+                                  "${DotEnv.env['DATABASE_URL']}/img/" +
+                                      widget.arrayData['cover'],
+                                  height: 200,
+                                  width: 500,
+                                  fit: BoxFit.fill)
+                              : Image.file(_imageCoverUpdate,
+                                  height: 200, width: 500, fit: BoxFit.fill)),
                     ])),
                 Container(
                     alignment: Alignment.topLeft,
@@ -204,10 +291,10 @@ class _PhotosState extends State<Photos> {
                     itemCount: _albumData.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
-                        onDoubleTap: () {
-                          renderDialog(_albumData[index]['id']);
-                        },
                         onLongPress: () {
+                          deleteSingleImageDialog(_albumData[index]['id']);
+                        },
+                        onDoubleTap: () {
                           print('detail');
                           print(_albumData[index]);
                         },
