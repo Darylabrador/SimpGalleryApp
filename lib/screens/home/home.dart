@@ -66,6 +66,7 @@ class _HomeState extends State<Home> {
 
     if (getShares.statusCode == 200) {
       var parsedJson = json.decode(getShares.body);
+
       setState(() {
         _albumShare = parsedJson['data'];
       });
@@ -132,7 +133,53 @@ class _HomeState extends State<Home> {
                 'Valider',
                 style: TextStyle(color: Colors.redAccent),
               ),
-              onPressed: () async {},
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  var url = Uri.parse(
+                      "${DotEnv.env['DATABASE_URL']}/api/album/share/confirm");
+                  var response = await http.post(url, body: {
+                    'jeton': jeton,
+                  }, headers: {
+                    "Accept": "application/json",
+                    "Authorization": "Bearer " + token
+                  });
+
+                  if (response.statusCode == 200) {
+                    var parsedJson = json.decode(response.body);
+
+                    showToast(
+                      parsedJson['message'],
+                      context: context,
+                      animation: StyledToastAnimation.scale,
+                      reverseAnimation: StyledToastAnimation.fade,
+                      position: StyledToastPosition.bottom,
+                      animDuration: Duration(seconds: 1),
+                      duration: Duration(seconds: 4),
+                      curve: Curves.elasticOut,
+                      reverseCurve: Curves.linear,
+                    );
+
+                    if (parsedJson['success']) {
+                      Navigator.of(context)
+                        ..pop()
+                        ..pop()
+                        ..pushNamed('/home');
+                    }
+                  } else {
+                    showToast(
+                      "Une erreur est survenue",
+                      context: context,
+                      animation: StyledToastAnimation.scale,
+                      reverseAnimation: StyledToastAnimation.fade,
+                      position: StyledToastPosition.bottom,
+                      animDuration: Duration(seconds: 1),
+                      duration: Duration(seconds: 4),
+                      curve: Curves.elasticOut,
+                      reverseCurve: Curves.linear,
+                    );
+                  }
+                }
+              },
             ),
           ],
         ),

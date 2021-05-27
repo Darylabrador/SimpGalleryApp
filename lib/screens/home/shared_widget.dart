@@ -35,12 +35,12 @@ class SharedWidget extends StatelessWidget {
                       children: <Widget>[
                         Image.network(
                             "${DotEnv.env['DATABASE_URL']}/img/" +
-                                arrayData[index]['cover'],
+                                arrayData[index]['album']['cover'],
                             height: 150,
                             width: 150,
                             fit: BoxFit.fill),
                         Text(
-                          arrayData[index]["label"],
+                          arrayData[index]['album']["label"],
                         ),
                       ],
                     ),
