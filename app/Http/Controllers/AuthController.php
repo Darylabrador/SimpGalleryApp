@@ -112,35 +112,18 @@ class AuthController extends Controller
     
         $invitation = Invitation::where(['target' => $identifiant])->first();
         
-        if(!$invitation) {
-            $user              = new User();
-            $user->pseudo      = "user" . $part1 . "X" . $part2;
-            $user->identifiant = $identifiant;
-            $user->password    = Hash::make($password);
-            $user->verifyToken = $verifyToken;
-            $user->isMobile    = 0;
-            $user->save();
+        $user              = new User();
+        $user->pseudo      = "user" . $part1 . "X" . $part2;
+        $user->identifiant = $identifiant;
+        $user->password    = Hash::make($password);
+        $user->verifyToken = $verifyToken;
+        $user->isMobile    = 0;
+        $user->save();
 
-            Mail::to($identifiant)->send(new RegisterMail($identifiant, $verifyToken));
+        Mail::to($identifiant)->send(new RegisterMail($identifiant, $verifyToken));
 
- 
-        } else {
-            $user              = new User();
-            $user->pseudo      = "user" . $part1 . "X" . $part2;
-            $user->identifiant = $identifiant;
-            $user->password    = Hash::make($password);
-            $user->verifyToken = $verifyToken;
-            $user->isMobile    = 0;
-            $user->save();
-
-            $newAccess = new Access();
-            $newAccess->album_id = $invitation->album_id;
-            $newAccess->user_id  = $user->id;
-            $newAccess->save();
-
+        if($invitation) {
             $invitation->delete();
-
-            Mail::to($identifiant)->send(new RegisterMail($identifiant, $verifyToken));
         }
 
         return response()->json([
