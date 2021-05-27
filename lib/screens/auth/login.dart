@@ -77,6 +77,7 @@ class _LoginState extends State<Login> {
                           if(parsedJson['success']) {
                             storage.setItem("SimpGalleryToken", parsedJson['token']);
                             storage.setItem("SimpGalleryPseudo", parsedJson['pseudo']);
+                            storage.setItem("SimpGalleryUser", parsedJson['userId']);
                             storage.setItem("SimpGalleryAvatar", parsedJson['avatar']);
                             storage.setItem("SimpGalleryMailVerify", parsedJson['verify']);
                             Navigator.pushNamed(context, '/home');

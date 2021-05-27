@@ -11,8 +11,6 @@ import 'package:image_picker/image_picker.dart';
 import '../../components/dialog/DialogAvatar.dart';
 import '../../components/dialog/DialogDeleteAccount.dart';
 
-
-
 class Profil extends StatefulWidget {
   @override
   _ProfilState createState() => _ProfilState();
@@ -29,21 +27,20 @@ class _ProfilState extends State<Profil> {
   var url;
 
   Future<void> getAvatar() async {
-  final LocalStorage storage = new LocalStorage('sharePhoto');
-  var token = storage.getItem('SimpGalleryToken');
-  var newUrl = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/account/info");
-  var newResponse = await http.get(newUrl, headers: {
-    "Accept": "application/json",
-    "Authorization": "Bearer " + token
-  });
+    final LocalStorage storage = new LocalStorage('sharePhoto');
+    var token = storage.getItem('SimpGalleryToken');
+    var newUrl = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/account/info");
+    var newResponse = await http.get(newUrl, headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + token
+    });
 
-  if (newResponse.statusCode == 200) {
-    var parsedJson = json.decode(newResponse.body);
-    storage.setItem("SimpGalleryAvatar", parsedJson['data']['avatar']);
+    if (newResponse.statusCode == 200) {
+      var parsedJson = json.decode(newResponse.body);
+      storage.setItem("SimpGalleryAvatar", parsedJson['data']['avatar']);
+    }
   }
-}
 
- 
   @override
   Widget build(BuildContext context) {
     // token for bearer
@@ -54,6 +51,13 @@ class _ProfilState extends State<Profil> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context)
+            ..pop()
+            ..pop()
+            ..pushNamed('/home'),
+        ),
         title: const Text('Mon profil'),
         actions: <Widget>[
           IconButton(

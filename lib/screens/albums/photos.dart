@@ -11,7 +11,6 @@ import 'package:image_picker/image_picker.dart';
 import '../../components/dialog/DialogImage.dart';
 import '../../components/dialog/DialogShareAlbum.dart';
 
-
 class Photos extends StatefulWidget {
   final arrayData;
   Photos({this.arrayData});
@@ -230,9 +229,10 @@ class _PhotosState extends State<Photos> {
   @override
   Widget build(BuildContext context) {
     // token for bearer token
-    var token = storage.getItem('SimpGalleryToken');
+    var token         = storage.getItem('SimpGalleryToken');
+    var userConnected = storage.getItem('SimpGalleryUser');
     var url;
-
+    
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -351,7 +351,9 @@ class _PhotosState extends State<Photos> {
           ),
           Container(
             margin: const EdgeInsets.only(right: 10.0),
-            child: DialogShareAlbum(allData: widget.arrayData),
+            child: userConnected == widget.arrayData["owner"]["id"]
+            ? DialogShareAlbum(allData: widget.arrayData)
+            : Text("")
           ),
           Container(
             child: DialogImage(

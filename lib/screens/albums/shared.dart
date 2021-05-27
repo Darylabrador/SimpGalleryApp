@@ -26,7 +26,7 @@ class _SharedState extends State<Shared> {
     // token for bearer token
     var token = storage.getItem('SimpGalleryToken');
     var url;
-    print(widget.arrayData);
+
 
     return Scaffold(
         appBar: AppBar(

@@ -26,6 +26,7 @@ class _HomeState extends State<Home> {
   var _albumShare = [];
 
   final LocalStorage storage = new LocalStorage('sharePhoto');
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -46,6 +47,7 @@ class _HomeState extends State<Home> {
 
     if (getAlbums.statusCode == 200) {
       var parsedJson = json.decode(getAlbums.body);
+
       setState(() {
         _album = parsedJson['data'];
       });
@@ -74,7 +76,68 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     // token for bearer
     var token = storage.getItem('SimpGalleryToken');
+    var isNeedToVerify = storage.getItem('SimpGalleryMailVerify');
+    String jeton = "";
+
     var url;
+
+    Future renderDialog() {
+      return showDialog<String>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text("Rejoindre un album", textAlign: TextAlign.center),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(top: 5.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        SizedBox(height: 10.0),
+                        TextFormField(
+                          decoration: InputDecoration(
+                              labelText: "Jeton d'autorisation",
+                              border: OutlineInputBorder()),
+                          validator: (val) =>
+                              val!.isEmpty ? 'Saisir le jeton' : null,
+                          onChanged: (val) => jeton = val,
+                        ),
+                        SizedBox(height: 10.0),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            OutlinedButton(
+              child: Text(
+                'Annuler',
+                style: TextStyle(color: Colors.black38),
+              ),
+              onPressed: () {
+                Navigator.of(context)
+                  ..pop()
+                  ..pop()
+                  ..pushNamed('/home');
+              },
+            ),
+            OutlinedButton(
+              child: Text(
+                'Valider',
+                style: TextStyle(color: Colors.redAccent),
+              ),
+              onPressed: () async {},
+            ),
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
         appBar: AppBar(
@@ -107,30 +170,30 @@ class _HomeState extends State<Home> {
           ],
         ),
         body: Column(children: <Widget>[
-          Container( child: AlbumsWidget(arrayData: _album)),
-          Container( child: SharedWidget(arrayData: _albumShare)),
+          Container(child: AlbumsWidget(arrayData: _album)),
+          Container(child: SharedWidget(arrayData: _albumShare)),
         ]),
         floatingActionButton:
             Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-            // Container(
-            //   margin: const EdgeInsets.only(right: 10.0),
-            //   child: FloatingActionButton(
-            //     onPressed: () {
-            //       Navigator.pushNamed(context, '/create/album');
-            //     },
-            //     child: Icon(Icons.settings),
-            //     backgroundColor: Colors.deepOrange,
-            //   ),
-            // ),
-
-            FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/create/album');
-              },
-              child: Icon(Icons.add),
-              backgroundColor: Colors.deepOrange,
-            ),
-          ])
-    );
+          Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            child: isNeedToVerify
+                ? Text("")
+                : FloatingActionButton(
+                    onPressed: () {
+                      renderDialog();
+                    },
+                    child: Icon(Icons.people),
+                    backgroundColor: Colors.deepOrange,
+                  ),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/create/album');
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Colors.deepOrange,
+          ),
+        ]));
   }
 }
