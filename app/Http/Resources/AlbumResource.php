@@ -18,6 +18,7 @@ class AlbumResource extends JsonResource
             "id"            => $this->id,
             "label"         => $this->label,
             "cover"         => $this->cover,
+            "owner"         => new UserResource($this->user)
         ];
     }
 }
