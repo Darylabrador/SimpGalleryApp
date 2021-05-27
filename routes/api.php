@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccessController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AlbumController;
@@ -76,6 +77,7 @@ Route::middleware(['auth:api'])->prefix('/album')->group(function() {
     Route::get('/share/limit', [AlbumController::class, 'shareAlbumLimit'])->name('api.share.limit.album');
     Route::get('/list', [AlbumController::class, 'myAlbumList'])->name('api.list.album');
     Route::get('/limit', [AlbumController::class, 'myAlbumLimit'])->name('api.limit.album');
+    Route::post('/share/confirm', [AccessController::class, "checkAccess"])->name('api.share.confirm');
 });
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AccessResource;
 use App\Http\Resources\UserResource;
 use App\Mail\InvitationMail;
 use App\Models\Album;
@@ -68,13 +69,8 @@ class AlbumController extends Controller
     {
         $loggedUser = Auth::user();
         $userId     = $loggedUser->id;
-        $accesses   = Access::where('user_id', $userId)->get();
-        $albumIds    = [];
-        foreach ($accesses as $access) {
-            array_push($albumId, $access->id);
-        }
-        $albums = Album::whereIn('id', $albumIds)->get();
-        return AlbumResource::collection($albums);
+        $accesses   = Access::where(['user_id' => $userId])->get();
+        return AccessResource::collection($accesses);
     }
 
 
