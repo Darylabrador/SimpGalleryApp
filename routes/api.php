@@ -78,6 +78,7 @@ Route::middleware(['auth:api'])->prefix('/album')->group(function() {
     Route::get('/list', [AlbumController::class, 'myAlbumList'])->name('api.list.album');
     Route::get('/limit', [AlbumController::class, 'myAlbumLimit'])->name('api.limit.album');
     Route::post('/share/confirm', [AccessController::class, "checkAccess"])->name('api.share.confirm');
+    Route::get('/share/leave/{id}', [AccessController::class, "leaveAlbumShare"])->name('api.share.leave');
 });
 
 

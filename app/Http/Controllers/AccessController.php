@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 class AccessController extends Controller
 {
     /**
-     * Get user account informations.
+     * Join album
      *
      * @return \Illuminate\Http\Response
      */
@@ -67,5 +67,29 @@ class AccessController extends Controller
                 "message" => "Album non partager"
             ]);
         }
+    }
+    
+    
+    /**
+     * Leave shared album
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function leaveAlbumShare($id) {
+        $shareAccess = Access::where(["id" => $id])->first();
+
+        if(!$shareAccess) {
+            return response()->json([
+                "success" => false,
+                "message" => "Access inexistant"
+            ]);
+        }
+
+        $shareAccess->delete();
+
+        return response()->json([
+            "success" => true,
+            "message" => "Vous avez quitter l'album"
+        ]);
     }
 }
