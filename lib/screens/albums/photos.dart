@@ -35,8 +35,7 @@ class _PhotosState extends State<Photos> {
     final LocalStorage storage = new LocalStorage('sharePhoto');
     var token = storage.getItem('SimpGalleryToken');
 
-    var url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/photo/list/" +
-        widget.arrayData['id'].toString());
+    var url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/photo/list/" + widget.arrayData['id'].toString());
     var getAlbums = await http.get(url, headers: {
       "Accept": "application/json",
       "Authorization": "Bearer " + token

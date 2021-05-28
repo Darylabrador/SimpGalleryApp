@@ -42,7 +42,10 @@ class AlbumsWidget extends StatelessWidget {
                 style: TextStyle(color: Colors.black38),
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context)
+                  ..pop()
+                  ..pop()
+                  ..pushNamed('/home');
               },
             ),
             OutlinedButton(

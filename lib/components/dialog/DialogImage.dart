@@ -94,7 +94,7 @@ class _DialogImage extends State<DialogImage> {
                   Navigator.of(context)
                     ..pop()
                     ..pop()
-                    ..pushNamed('/share', arguments: widget.allData);
+                    ..pushNamed('/shared', arguments: widget.allData);
                 } else {
                   Navigator.of(context)
                     ..pop()
