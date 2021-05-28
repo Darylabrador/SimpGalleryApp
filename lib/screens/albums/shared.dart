@@ -58,7 +58,7 @@ class _SharedState extends State<Shared> {
                     child: Stack(children: <Widget>[
                       Image.network(
                           "${DotEnv.env['DATABASE_URL']}/img/" +
-                              widget.arrayData['cover'],
+                              widget.arrayData['album']['cover'],
                           height: 200,
                           width: 500,
                           fit: BoxFit.fill)
@@ -108,7 +108,7 @@ class _SharedState extends State<Shared> {
             ),
           ),
           Container(
-            child: DialogImage(albumId: widget.arrayData['id'], allData: widget.arrayData, isShare: true),
+            child: DialogImage(albumId: widget.arrayData['album']['id'], allData: widget.arrayData, isShare: true),
           )
         ]));
   }

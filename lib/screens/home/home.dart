@@ -187,6 +187,7 @@ class _HomeState extends State<Home> {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: Builder(
             builder: (BuildContext context) {
@@ -230,6 +231,7 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       renderDialog();
                     },
+                    heroTag: "join_album",
                     child: Icon(Icons.people),
                     backgroundColor: Colors.deepOrange,
                   ),
@@ -238,6 +240,7 @@ class _HomeState extends State<Home> {
             onPressed: () {
               Navigator.pushNamed(context, '/create/album');
             },
+            heroTag: "create_album",
             child: Icon(Icons.add),
             backgroundColor: Colors.deepOrange,
           ),

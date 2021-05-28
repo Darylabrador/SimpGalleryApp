@@ -7,8 +7,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
-import '../../screens/albums/photos.dart';
-
 class AlbumsWidget extends StatelessWidget {
   final arrayData;
   AlbumsWidget({this.arrayData});
