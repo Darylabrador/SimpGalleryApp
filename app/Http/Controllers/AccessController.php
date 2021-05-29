@@ -39,7 +39,7 @@ class AccessController extends Controller
         $userId    = Auth::id();
         $jeton     = $validator->validated()['jeton'];
         
-        $albumShare = Album::where(["shareToken" => $jeton])->first();
+        $albumShare = Album::where(["shareToken" => $jeton])->where("share_at", "!=", null)->first();
 
         if ($albumShare) {
             $accessExist = Access::where(["album_id" => $albumShare, "user_id" => $userId])->first();

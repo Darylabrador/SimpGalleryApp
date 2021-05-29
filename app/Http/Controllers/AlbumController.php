@@ -21,15 +21,11 @@ use Illuminate\Support\Str;
 
 class AlbumController extends Controller
 {
-
-
     /*
     |--------------------------------------------------------------------------
     | Get infos
     |--------------------------------------------------------------------------
     */
-
-
 
     /**
      * User Album list
@@ -45,21 +41,6 @@ class AlbumController extends Controller
     }
 
 
-
-    /**
-     * User Album  limit to two Album
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function myAlbumLimit()
-    {
-        $loggedUser = Auth::user();
-        $userId = $loggedUser->id;
-        $albums = Album::where('user_id', $userId)->limit(2)->get();
-        return AlbumResource::collection($albums);
-    }
-
-
     /**
      * Album share to user
      *
@@ -69,28 +50,17 @@ class AlbumController extends Controller
     {
         $loggedUser = Auth::user();
         $userId     = $loggedUser->id;
-        $accesses   = Access::where(['user_id' => $userId])->get();
+
+        $accesses   = Access::orderBy('accesses.id', 'desc')
+        ->join('albums', 'albums.id', '=', 'accesses.album_id')
+        ->where('accesses.user_id', $userId)
+        ->where("accesses.isAuthorize", 1)
+        ->where("albums.shareToken", "!=", null)
+        ->where("albums.share_at", "!=", null)
+        ->select('accesses.*')
+        ->get();
+
         return AccessResource::collection($accesses);
-    }
-
-
-    /**
-     * Album share to user limit to two Album
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function shareAlbumLimit()
-    {
-        $loggedUser = Auth::user();
-        $userId     = $loggedUser->id;
-        $accesses   = Access::where('user_id', $userId)->get();
-        $albumIds    = [];
-        foreach ($accesses as $access) {
-            array_push($albumId, $access->id);
-        }
-        $albums = Album::whereIn('id', $albumIds)->limit(2)->get();
-
-        return AlbumResource::collection($albums);
     }
 
 
@@ -274,13 +244,19 @@ class AlbumController extends Controller
             $album->save();
         }
 
-        $userExist = User::where(['identifiant' => $target])->first();
-
+        $userExist       = User::where(['identifiant' => $target])->first();
         $invitationExist = Invitation::where(['album_id' => $albumId, 'target' => $target])->first();
 
         if (!$invitationExist) {
             if ($userExist) {
-                Mail::to($target)->send(new InvitationMail($userExist->pseudo, $sendingMessage, $album->shareToken));
+                $userAccess = Access::where(['user_id' => $userExist->id, 'album_id' => $albumId])->first();
+
+                if(!$userAccess) {
+                    Mail::to($target)->send(new InvitationMail($userExist->pseudo, $sendingMessage, $album->shareToken));
+                } else {
+                    $userAccess->isAuthorize = 1;
+                    $userAccess->save();
+                }
             } else {
                 $invitation = new Invitation();
                 $invitation->target   = $target;
@@ -300,6 +276,7 @@ class AlbumController extends Controller
                 'message' => "Invitation déjà envoyée !"
             ]);
         }
+
 
 
 
