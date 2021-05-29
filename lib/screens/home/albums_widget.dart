@@ -14,6 +14,8 @@ class AlbumsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(arrayData);
+
     Future deleteSingleAlbumDialog(albumId) {
       var token = storage.getItem('SimpGalleryToken');
 
@@ -112,7 +114,7 @@ class AlbumsWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: 200,
+          height: 250,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.all(8),
@@ -136,9 +138,20 @@ class AlbumsWidget extends StatelessWidget {
                             height: 150,
                             width: 150,
                             fit: BoxFit.fill),
-                        Text(
-                          arrayData[index]["label"],
+                        Container(
+                          margin: EdgeInsets.only(top: 10.0),
+                          child: arrayData[index]['shareAt'].toString() == "x"
+                              ? Text(
+                                  arrayData[index]["label"],
+                                )
+                              : Text(
+                                  arrayData[index]["label"],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.deepOrange),
+                                ),
                         ),
+                        Text(arrayData[index]["counterPhoto"].toString() + " photos")
                       ],
                     ),
                   ),

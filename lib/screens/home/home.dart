@@ -47,7 +47,6 @@ class _HomeState extends State<Home> {
 
     if (getAlbums.statusCode == 200) {
       var parsedJson = json.decode(getAlbums.body);
-
       setState(() {
         _album = parsedJson['data'];
       });
@@ -187,7 +186,7 @@ class _HomeState extends State<Home> {
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: Builder(
             builder: (BuildContext context) {
@@ -217,7 +216,7 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
-        body: Column(children: <Widget>[
+        body: ListView(children: <Widget>[
           Container(child: AlbumsWidget(arrayData: _album)),
           Container(child: SharedWidget(arrayData: _albumShare)),
         ]),
