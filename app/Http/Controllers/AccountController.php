@@ -25,7 +25,8 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function accountInformations() {
+    public function accountInformations()
+    {
         $user = User::where(['id' => Auth::id()])->first();
         return new  UserResource($user);
     }
@@ -36,17 +37,19 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function updateProfil(Request $request) {
+    public function updateProfil(Request $request)
+    {
         $validator = Validator::make(
             $request->all(),
             [
                 'pseudo'          => 'required',
+                'identite'        => 'required|email',
                 'password'        => 'nullable',
                 'passwordConfirm' => 'nullable',
             ],
             [
                 'required' => 'Le champ :attribute est requis',
-                'unique' => 'Pseudo existe déjà'
+                'email' => 'Le champ :attribute est invalide',
             ]
         );
 
@@ -60,20 +63,21 @@ class AccountController extends Controller
 
 
         $pseudo             = $validator->validated()['pseudo'];
+        $identite           = $validator->validated()['identite'];
         $password           = $validator->validated()['password'];
         $passwordConfirm    = $validator->validated()['passwordConfirm'];
 
         $userId     = Auth::id();
         $userExist  = User::where(["id" => $userId])->first();
 
-        if(!$userExist) {
+        if (!$userExist) {
             return response()->json([
                 "success"  => false,
                 "message"  => "Compte introuvable",
             ]);
         }
 
-        if($password != "") {
+        if ($password != "") {
             if ($password != $passwordConfirm) {
                 return response()->json([
                     "success"  => false,
@@ -86,19 +90,30 @@ class AccountController extends Controller
 
         $pseudoExist  = User::where(["pseudo" => $pseudo])->where("id", "!=", $userId)->first();
 
-        if($pseudoExist) {
+        if ($pseudoExist) {
             return response()->json([
                 "success"  => false,
                 "message"  => "Pseudo existe déjà",
             ]);
         }
 
-        $userExist->pseudo      = $pseudo;
+        $emailExist  = User::where(["identifiant" => $identite])->where("id", "!=", $userId)->first();
+
+        if ($emailExist) {
+            return response()->json([
+                "success"  => false,
+                "message"  => "Identifiant existe déjà",
+            ]);
+        }
+
+        $userExist->pseudo        = $pseudo;
+        $userExist->identifiant   = $identite;
         $userExist->save();
 
         return response()->json([
             "success"  => true,
             "pseudo"   => $userExist->pseudo,
+            "info"     => $userExist->identifiant,
             "message"  => "Mise à jour effectuée",
         ]);
     }
@@ -109,7 +124,8 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function updateAvatarImage(Request $request) {
+    public function updateAvatarImage(Request $request)
+    {
         $validator = Validator::make(
             $request->all(),
             [
@@ -132,7 +148,7 @@ class AccountController extends Controller
         $userId     = Auth::id();
         $userExist  = User::where(["id" => $userId])->first();
 
-        if(!$userExist) {
+        if (!$userExist) {
             return response()->json([
                 "success"  => false,
                 "message"  => "Compte introuvable",
@@ -235,7 +251,7 @@ class AccountController extends Controller
         $passwordConfirm  = $validator->validated()['passwordConfirm'];
 
         $user = User::where(["resetToken" => $resetToken])->first();
-        
+
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -266,7 +282,8 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function deleteAccount(Request $request) {
+    public function deleteAccount(Request $request)
+    {
         $validator = Validator::make(
             $request->all(),
             [
@@ -295,13 +312,13 @@ class AccountController extends Controller
                 'message' => "Les mots de passe ne sont pas identique"
             ]);
         }
-        
+
         Auth::user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
 
         User::destroy(Auth::id());
-        
+
         return response()->json([
             'success' => true,
             'message' => "Compte supprimer"

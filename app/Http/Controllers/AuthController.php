@@ -60,6 +60,7 @@ class AuthController extends Controller
             "success"     => true,
             "token"       => $token,
             "pseudo"      => $userExist->pseudo,
+            "info"        => $userExist->identifiant,
             "userId"      => $userExist->id,
             "avatar"      => $userExist->profilPic,
             "verify"      => $userExist->verify_at == null ? true : false
