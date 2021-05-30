@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'main.dart';
 
@@ -35,13 +39,13 @@ class RouteGenerator {
         if (args != null) {
           return MaterialPageRoute(builder: (_) => Photos(arrayData: args));
         } else {
-          return MaterialPageRoute(builder: (_) => Home(title: "Accueil"));
+          return MaterialPageRoute(builder: (_) => ErrorPage());
         }
       case '/shared':
         if (args != null) {
           return MaterialPageRoute(builder: (_) => Shared(arrayData: args));
         } else {
-          return MaterialPageRoute(builder: (_) => Home(title: "Accueil"));
+          return MaterialPageRoute(builder: (_) => ErrorPage());
         }
       case '/shared/settings':
         return MaterialPageRoute(
@@ -57,9 +61,50 @@ class RouteGenerator {
       case '/profil/verify':
         return MaterialPageRoute(builder: (_) => VerifyMail());
       default:
-        return MaterialPageRoute(builder: (_) => Home(title: "Accueil"));
+        return MaterialPageRoute(builder: (_) => ErrorPage());
     }
   }
 }
 
+class ErrorPage extends StatelessWidget {
+  final LocalStorage storage = new LocalStorage('sharePhoto');
+  @override
+  Widget build(BuildContext context) {
+    // token for bearer token
+    var token = storage.getItem('SimpGalleryToken');
+    var url;
 
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context)
+            ..pop()
+            ..pop()
+            ..pushNamed('/home'),
+        ),
+        title: const Text('Albums'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'deconnexion',
+            onPressed: () async {
+              url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/deconnexion");
+              await http.get(url, headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token
+              });
+              await storage.clear();
+              await Navigator.pushNamed(context, '/logging');
+            },
+          ),
+        ],
+      ),
+      body: Container(
+        child: Center(
+          child: Text("La page chercher n'existe pas"),
+        ),
+      ),
+    );
+  }
+}
