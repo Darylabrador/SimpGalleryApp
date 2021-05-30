@@ -65,7 +65,7 @@ class AccessController extends Controller
         $albumShare = Album::where(["shareToken" => $jeton])->where("share_at", "!=", null)->first();
 
         if ($albumShare) {
-            $accessExist = Access::where(["album_id" => $albumShare, "user_id" => $userId])->first();
+            $accessExist = Access::where(["album_id" => $albumShare->id, "user_id" => $userId])->first();
 
             if (!$accessExist) {
                 $newAccess              = new Access();
@@ -79,9 +79,12 @@ class AccessController extends Controller
                     "message" => "Vous avez rejoinds l'album"
                 ]);
             } else {
+                $accessExist->isAuthorize = 1;
+                $accessExist->save();
+
                 return response()->json([
-                    "success" => false,
-                    "message" => "Vous avez déjà rejoinds l'album"
+                    "success" => true,
+                    "message" => "Vous avez rejoinds l'album"
                 ]);
             }
         } else {
@@ -118,6 +121,28 @@ class AccessController extends Controller
                 "message"  => $errors->first(),
             ]);
         }
+
+        $userInfos     = $validator->validated()['userInfos'];
+        
+        foreach ($userInfos as $userId) {
+            $userAccess = Access::where(["album_id" => $id, "user_id" => $userId])->first();
+            $userAccess->isAuthorize = 0;
+            $userAccess->save(); 
+        }
+
+        $userAccessCount = Access::where(["album_id" => $id, "isAuthorize" => 1])->count();
+
+        if($userAccessCount == 0) {
+            $album = Album::where(['id' => $id])->first();
+            $album->share_at   = null;
+            $album->shareToken = null;
+            $album->save();
+        }
+        
+        return response()->json([
+            "success"   => true,
+            "message"  => "Mise à jour effectuée"
+        ]);
     }
 
     

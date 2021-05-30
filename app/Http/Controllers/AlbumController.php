@@ -219,6 +219,15 @@ class AlbumController extends Controller
         $message = $validator->validated()['message'];
         // $type    = $validator->validated()['type'];
 
+        $user = Auth::user();
+
+        if($user->identifiant == $target) {
+            return response()->json([
+                'success' => false,
+                'message' => "L'album vous appartient"
+            ]);
+        }
+
         $user         = Auth::user();
         $userIdentity = $user->pseudo;
 
