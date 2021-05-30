@@ -46,6 +46,7 @@ class _ProfilState extends State<Profil> {
     // token for bearer
     var token = storage.getItem('SimpGalleryToken');
     var pseudo = storage.getItem('SimpGalleryPseudo');
+    var identite = storage.getItem('SimpGalleryIdentity');
     var verify = storage.getItem('SimpGalleryMailVerify');
     getAvatar();
 
@@ -112,6 +113,18 @@ class _ProfilState extends State<Profil> {
                   margin: const EdgeInsets.only(top: 10.0),
                   child: TextFormField(
                     decoration: InputDecoration(
+                        labelText: 'Adresse mail',
+                        border: OutlineInputBorder()),
+                    validator: (val) =>
+                        val!.isEmpty ? 'Adresse mail obligatoire' : null,
+                    onChanged: (val) => identite = val,
+                    initialValue: identite,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
                         labelText: 'Mot de passe',
                         border: OutlineInputBorder()),
                     obscureText: true,
@@ -146,46 +159,53 @@ class _ProfilState extends State<Profil> {
                                 if (_formKey.currentState!.validate()) {
                                   url = Uri.parse(
                                       "${DotEnv.env['DATABASE_URL']}/api/update/profil");
-                                  response = await http.post(url, body: {
-                                    'pseudo': pseudo,
-                                    'password': password,
-                                    'passwordConfirm': passwordConfirm,
-                                  }, headers: {
-                                    "Accept": "application/json",
-                                    "Authorization": "Bearer " + token
-                                  });
+                                  response = await http.post(url,
+                                      body: json.encode({
+                                        'identite': identite,
+                                        'pseudo': pseudo,
+                                        'password': password,
+                                        'passwordConfirm': passwordConfirm,
+                                      }),
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                        "Accept": "application/json",
+                                        "Authorization": "Bearer " + token
+                                      });
 
                                   if (response.statusCode == 200) {
                                     var parsedJson = json.decode(response.body);
+                                    showToast(
+                                      parsedJson['message'],
+                                      context: context,
+                                      animation: StyledToastAnimation.scale,
+                                      reverseAnimation:
+                                          StyledToastAnimation.fade,
+                                      position: StyledToastPosition.bottom,
+                                      animDuration: Duration(seconds: 1),
+                                      duration: Duration(seconds: 4),
+                                      curve: Curves.elasticOut,
+                                      reverseCurve: Curves.linear,
+                                    );
+
                                     if (parsedJson['success']) {
                                       storage.setItem("SimpGalleryPseudo",
                                           parsedJson['pseudo']);
-                                      showToast(
-                                        parsedJson['message'],
-                                        context: context,
-                                        animation: StyledToastAnimation.scale,
-                                        reverseAnimation:
-                                            StyledToastAnimation.fade,
-                                        position: StyledToastPosition.bottom,
-                                        animDuration: Duration(seconds: 1),
-                                        duration: Duration(seconds: 4),
-                                        curve: Curves.elasticOut,
-                                        reverseCurve: Curves.linear,
-                                      );
-                                    } else {
-                                      showToast(
-                                        parsedJson['message'],
-                                        context: context,
-                                        animation: StyledToastAnimation.scale,
-                                        reverseAnimation:
-                                            StyledToastAnimation.fade,
-                                        position: StyledToastPosition.bottom,
-                                        animDuration: Duration(seconds: 1),
-                                        duration: Duration(seconds: 4),
-                                        curve: Curves.elasticOut,
-                                        reverseCurve: Curves.linear,
-                                      );
+                                      storage.setItem("SimGalleryIdentity",
+                                          parsedJson['info']);
                                     }
+                                  } else {
+                                    showToast(
+                                      "Une erreur est survenue",
+                                      context: context,
+                                      animation: StyledToastAnimation.scale,
+                                      reverseAnimation:
+                                          StyledToastAnimation.fade,
+                                      position: StyledToastPosition.bottom,
+                                      animDuration: Duration(seconds: 1),
+                                      duration: Duration(seconds: 4),
+                                      curve: Curves.elasticOut,
+                                      reverseCurve: Curves.linear,
+                                    );
                                   }
                                 }
                               },
