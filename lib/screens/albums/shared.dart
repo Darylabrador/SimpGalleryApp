@@ -53,17 +53,53 @@ class _SharedState extends State<Shared> {
     return showGeneralDialog(
         context: context,
         pageBuilder: (context, animation, secondaryAnimation) => Scaffold(
-              backgroundColor: Colors.black87,
-              body: Container(
-                height: 400,
-                width: 500,
-                child: Image.network(
-                    "${DotEnv.env['DATABASE_URL']}/img/" + contend['label'],
-                    height: 400,
-                    width: 500,
-                    fit: BoxFit.cover),
-              ),
-            ));
+            backgroundColor: Colors.black87,
+            body: ListView(
+              children: [
+                Container(
+                  height: 360,
+                  width: 500,
+                  child: Image.network(
+                      "${DotEnv.env['DATABASE_URL']}/img/" + contend['label'],
+                      height: 400,
+                      width: 500,
+                      fit: BoxFit.cover),
+                ),
+                Card(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        height: 180,
+                        width: 500,
+                        decoration: BoxDecoration(color: Colors.white),
+                        child: null,
+                      ),
+                      Divider(),
+                      Container(
+                          height: 70,
+                          width: 500,
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 70,
+                                width: 300,
+                                child: TextFormField(
+                                  expands: true,
+                                  minLines: null,
+                                  maxLines: null,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(right: 5.0),
+                                child: Icon(Icons.send, color: Colors.blue),
+                              ),
+                            ],
+                          ))
+                    ],
+                  ),
+                )
+              ],
+            )));
   }
 
   Future deleteSingleImageDialog(photoId) {
@@ -158,6 +194,7 @@ class _SharedState extends State<Shared> {
     var url;
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),

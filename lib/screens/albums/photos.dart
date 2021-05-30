@@ -132,17 +132,25 @@ class _PhotosState extends State<Photos> {
     return showGeneralDialog(
         context: context,
         pageBuilder: (context, animation, secondaryAnimation) => Scaffold(
-              backgroundColor: Colors.black87,
-              body: Container(
-                height: 400,
-                width: 500,
-                child: Image.network(
-                    "${DotEnv.env['DATABASE_URL']}/img/" + contend['label'],
-                    height: 400,
-                    width: 500,
-                    fit: BoxFit.cover),
-              ),
-            ));
+            backgroundColor: Colors.black87,
+            body: Column(
+              children: [
+                Container(
+                  height: 400,
+                  width: 500,
+                  child: Image.network(
+                      "${DotEnv.env['DATABASE_URL']}/img/" + contend['label'],
+                      height: 400,
+                      width: 500,
+                      fit: BoxFit.cover),
+                ),
+                Container(
+                  child: Image.network(
+                      "${DotEnv.env['DATABASE_URL']}/img/" + contend['label'],
+                      fit: BoxFit.cover),
+                ),
+              ],
+            )));
   }
 
   Future deleteSingleImageDialog(photoId) {
@@ -235,6 +243,7 @@ class _PhotosState extends State<Photos> {
     var url;
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -341,7 +350,10 @@ class _PhotosState extends State<Photos> {
             Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
           Container(
             margin: const EdgeInsets.only(right: 10.0),
-            child: DialogSettingShare(albumId: widget.arrayData['id'], arrayData: widget.arrayData,),
+            child: DialogSettingShare(
+              albumId: widget.arrayData['id'],
+              arrayData: widget.arrayData,
+            ),
           ),
           Container(
               margin: const EdgeInsets.only(right: 10.0),
