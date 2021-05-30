@@ -43,21 +43,31 @@ class _DialogShareAlbum extends State<DialogShareAlbum> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         SizedBox(height: 10.0),
+                        Text("Inviter une personne"),
+                        SizedBox(height: 10.0),
                         TextFormField(
                           decoration: InputDecoration(
-                              labelText: "Adresse email",
+                              // labelText: "Adresse email",
                               border: OutlineInputBorder()),
                           validator: (val) =>
                               val!.isEmpty ? 'Entrez un email' : null,
                           onChanged: (val) => target = val,
                         ),
+                        SizedBox(height: 25.0),
+                        Text("Message personnalisé"),
                         SizedBox(height: 10.0),
-                        TextFormField(
-                          decoration: InputDecoration(
-                              labelText: "Votre message personnalisé",
-                              border: OutlineInputBorder()),
-                          onChanged: (val) => message = val,
-                        ),
+                        SizedBox(
+                          height: 140,
+                          child: TextFormField(
+                            expands: true,
+                            maxLines: null,
+                            minLines: null,
+                            decoration: InputDecoration(
+                                // labelText: "Votre message personnalisé",
+                                border: OutlineInputBorder()),
+                            onChanged: (val) => message = val,
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -81,7 +91,7 @@ class _DialogShareAlbum extends State<DialogShareAlbum> {
             ),
             OutlinedButton(
               child: Text(
-                'Valider',
+                'Partager',
                 style: TextStyle(color: Colors.redAccent),
               ),
               onPressed: () async {

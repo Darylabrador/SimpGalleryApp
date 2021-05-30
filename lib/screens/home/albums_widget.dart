@@ -14,8 +14,6 @@ class AlbumsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(arrayData);
-
     Future deleteSingleAlbumDialog(albumId) {
       var token = storage.getItem('SimpGalleryToken');
 
@@ -103,6 +101,92 @@ class AlbumsWidget extends StatelessWidget {
       );
     }
 
+    Future deleteShare(id) async {
+      var token = storage.getItem('SimpGalleryToken');
+
+      return showDialog<String>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(top: 5.0),
+                  child: Text(
+                    'Voulez-vous vraiment supprimer le partage de cet album ?',
+                    style: TextStyle(color: Colors.black),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            OutlinedButton(
+              child: Text(
+                'Annuler',
+                style: TextStyle(color: Colors.black38),
+              ),
+              onPressed: () {
+                Navigator.of(context)
+                  ..pop()
+                  ..pop()
+                  ..pushNamed('/home');
+              },
+            ),
+            OutlinedButton(
+              child: Text(
+                'Valider',
+                style: TextStyle(color: Colors.redAccent),
+              ),
+              onPressed: () async {
+                var url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/album/$id/share/delete/");
+                var response = await http.delete(url, headers: {
+                  "Accept": "application/json",
+                  "Authorization": "Bearer " + token
+                });
+
+                if (response.statusCode == 200) {
+                  var parsedJson = json.decode(response.body);
+                  showToast(
+                    parsedJson['message'],
+                    context: context,
+                    animation: StyledToastAnimation.scale,
+                    reverseAnimation: StyledToastAnimation.fade,
+                    position: StyledToastPosition.bottom,
+                    animDuration: Duration(seconds: 1),
+                    duration: Duration(seconds: 4),
+                    curve: Curves.elasticOut,
+                    reverseCurve: Curves.linear,
+                  );
+
+                  if (parsedJson['success']) {
+                    Navigator.of(context)
+                      ..pop()
+                      ..pop()
+                      ..pushNamed('/home');
+                  }
+                } else {
+                  showToast(
+                    "Une erreur est survenue",
+                    context: context,
+                    animation: StyledToastAnimation.scale,
+                    reverseAnimation: StyledToastAnimation.fade,
+                    position: StyledToastPosition.bottom,
+                    animDuration: Duration(seconds: 1),
+                    duration: Duration(seconds: 4),
+                    curve: Curves.elasticOut,
+                    reverseCurve: Curves.linear,
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      );
+    }
+
     return Column(
       children: <Widget>[
         Container(
@@ -125,6 +209,9 @@ class AlbumsWidget extends StatelessWidget {
                   onTap: () {
                     Navigator.pushNamed(context, '/photos',
                         arguments: arrayData[index]);
+                  },
+                  onDoubleTap: () {
+                    deleteShare(arrayData[index]['id'].toString());
                   },
                   onLongPress: () {
                     deleteSingleAlbumDialog(arrayData[index]["id"].toString());
@@ -151,7 +238,8 @@ class AlbumsWidget extends StatelessWidget {
                                       color: Colors.deepOrange),
                                 ),
                         ),
-                        Text(arrayData[index]["counterPhoto"].toString() + " photos")
+                        Text(arrayData[index]["counterPhoto"].toString() +
+                            " photos")
                       ],
                     ),
                   ),

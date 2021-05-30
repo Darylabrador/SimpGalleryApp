@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../components/dialog/DialogImage.dart';
 import '../../components/dialog/DialogShareAlbum.dart';
+import '../../components/dialog/DialogSettingShare.dart';
 
 class Photos extends StatefulWidget {
   final arrayData;
@@ -35,7 +36,8 @@ class _PhotosState extends State<Photos> {
     final LocalStorage storage = new LocalStorage('sharePhoto');
     var token = storage.getItem('SimpGalleryToken');
 
-    var url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/photo/list/" + widget.arrayData['id'].toString());
+    var url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/photo/list/" +
+        widget.arrayData['id'].toString());
     var getAlbums = await http.get(url, headers: {
       "Accept": "application/json",
       "Authorization": "Bearer " + token
@@ -228,10 +230,10 @@ class _PhotosState extends State<Photos> {
   @override
   Widget build(BuildContext context) {
     // token for bearer token
-    var token         = storage.getItem('SimpGalleryToken');
+    var token = storage.getItem('SimpGalleryToken');
     var userConnected = storage.getItem('SimpGalleryUser');
     var url;
-    
+
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -339,21 +341,13 @@ class _PhotosState extends State<Photos> {
             Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
           Container(
             margin: const EdgeInsets.only(right: 10.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/create/album');
-              },
-              heroTag: 'setting',
-              child: Icon(Icons.settings),
-              backgroundColor: Colors.deepOrange,
-            ),
+            child: DialogSettingShare(albumId: widget.arrayData['id']),
           ),
           Container(
-            margin: const EdgeInsets.only(right: 10.0),
-            child: userConnected == widget.arrayData["owner"]["id"]
-            ? DialogShareAlbum(allData: widget.arrayData)
-            : Text("")
-          ),
+              margin: const EdgeInsets.only(right: 10.0),
+              child: userConnected == widget.arrayData["owner"]["id"]
+                  ? DialogShareAlbum(allData: widget.arrayData)
+                  : Text("")),
           Container(
             child: DialogImage(
                 albumId: widget.arrayData['id'],

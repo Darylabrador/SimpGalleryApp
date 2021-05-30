@@ -113,7 +113,7 @@ class SharedWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: 200,
+          height: 250,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.all(8),
@@ -137,9 +137,18 @@ class SharedWidget extends StatelessWidget {
                             height: 150,
                             width: 150,
                             fit: BoxFit.fill),
-                        Text(
-                          arrayData[index]['album']["label"],
+                        Container(
+                          margin: EdgeInsets.only(top: 10.0),
+                          child: Text(
+                            arrayData[index]['album']["label"],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
+                        Text(arrayData[index]['album']["counterPhoto"]
+                                .toString() +
+                            " photos")
                       ],
                     ),
                   ),
