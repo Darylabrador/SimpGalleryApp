@@ -393,40 +393,29 @@ class AlbumController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function deleteShare(Request $request)
+    public function deleteShare($id)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'albumId'       => 'required',
-                'identifiants.*' => 'required',
-            ],
-            [
-                'required' => 'Le champ :attribute est requis',
-            ]
-        );
+        $accesses = Access::where(["album_id" => $id])->get();
 
-        $errors = $validator->errors();
-        if (count($errors) != 0) {
-            return response()->json([
-                'success' => false,
-                'message' => $errors->first()
-            ]);
+        foreach ($accesses as $access) {
+            $access->delete();
         }
 
-        $identifiants = $validator->validated()['identifiants'];
-        $albumId      = $validator->validated()['albumId'];
+        $album = Album::where(['id' => $id, "user_id" => Auth::id()])->first();
 
-        foreach ($identifiants as $identifiant) {
-            $userExist   = User::where(['identifiant' => $identifiant])->first();
-            Access::where(['user_id' => $userExist->id, 'album_id' => $albumId])->delete();
+        if($album) {
+            $album->share_at   = null;
+            $album->shareToken = null;
+            $album->save();
         }
 
         return response()->json([
             'success' => true,
-            'message' => "Membre(s) supprimer !"
+            'message' => "L'album n'est plus partager"
         ]);
     }
+
+
 
     /**
      * Destroy an Album 

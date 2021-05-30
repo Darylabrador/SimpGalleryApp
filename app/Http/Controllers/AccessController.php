@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AccessUserResource;
 use App\Models\Access;
 use App\Models\Album;
 use Illuminate\Http\Request;
@@ -11,6 +12,28 @@ use Illuminate\Support\Facades\Validator;
 
 class AccessController extends Controller
 {
+    /**
+     * Participant list
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function listParticipants($id) {
+        $userId = Auth::id();
+        
+        $accesses   = Access::orderBy('accesses.id', 'desc')
+        ->join('albums', 'albums.id', '=', 'accesses.album_id')
+        ->where('accesses.album_id', $id)
+        ->where('albums.user_id', $userId)
+        ->where("accesses.isAuthorize", 1)
+        ->where("albums.shareToken", "!=", null)
+        ->where("albums.share_at", "!=", null)
+        ->select('accesses.*')
+        ->get();
+
+        return AccessUserResource::collection($accesses);
+    }
+
+
     /**
      * Join album
      *
@@ -68,6 +91,35 @@ class AccessController extends Controller
             ]);
         }
     }
+    
+
+
+    /**
+     * Remove access for 1 or more user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteSingleParticipant(Request $request, $id) {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'userInfos'  => 'required',
+                'userInfos.*'  => 'required',
+            ],
+            [
+                'required'     => 'Le champ :attribute est requis',
+            ]
+        );
+
+        $errors = $validator->errors();
+        if (count($errors) != 0) {
+            return response()->json([
+                "success"  => false,
+                "message"  => $errors->first(),
+            ]);
+        }
+    }
+
     
     
     /**

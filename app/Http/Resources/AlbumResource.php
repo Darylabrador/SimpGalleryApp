@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+
 use App\Models\Photo;
 use DateTime;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -16,7 +17,6 @@ class AlbumResource extends JsonResource
      */
     public function toArray($request)
     {
-
         $shareAt = new DateTime($this->share_at);
         $shareAtFormated = $shareAt->format('d-m-Y H:i:s');
         
@@ -26,7 +26,7 @@ class AlbumResource extends JsonResource
             "cover"           => $this->cover,
             "shareAt"         => $this->share_at != null ? $shareAtFormated : "x",
             'counterPhoto'    => Photo::where(['album_id' => $this->id])->count(),
-            "owner"           => new UserResource($this->user)
+            "owner"           => new UserResource($this->user),
         ];
     }
 }
