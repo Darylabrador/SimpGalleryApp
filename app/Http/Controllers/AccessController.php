@@ -102,7 +102,7 @@ class AccessController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function deleteSingleParticipant(Request $request, $id) {
+    public function deleteParticipants(Request $request, $id) {
         $validator = Validator::make(
             $request->all(),
             [

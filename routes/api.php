@@ -78,7 +78,7 @@ Route::middleware(['auth:api'])->prefix('/album')->group(function() {
     Route::post('/share/confirm', [AccessController::class, "checkAccess"])->name('api.share.confirm');
     
     Route::get('{id}/participants', [AccessController::class, "listParticipants"])->name('api.share.participants');
-    Route::put('{id}/participant/delete', [AccessController::class, "deleteSingleParticipant"])->name('api.share.delete.participants');
+    Route::put('{id}/participant/delete', [AccessController::class, "deleteParticipants"])->name('api.share.delete.participants');
     Route::get('/share/leave/{id}', [AccessController::class, "leaveAlbumShare"])->name('api.share.leave');
     Route::delete('{id}/share/delete', [AlbumController::class, 'deleteShare'])->name('api.share.delete');
 });
