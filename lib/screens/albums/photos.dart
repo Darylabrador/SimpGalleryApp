@@ -341,7 +341,7 @@ class _PhotosState extends State<Photos> {
             Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
           Container(
             margin: const EdgeInsets.only(right: 10.0),
-            child: DialogSettingShare(albumId: widget.arrayData['id']),
+            child: DialogSettingShare(albumId: widget.arrayData['id'], arrayData: widget.arrayData,),
           ),
           Container(
               margin: const EdgeInsets.only(right: 10.0),

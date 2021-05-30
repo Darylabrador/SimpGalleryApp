@@ -9,7 +9,8 @@ import 'package:localstorage/localstorage.dart';
 
 class DialogSettingShare extends StatefulWidget {
   final albumId;
-  DialogSettingShare({this.albumId});
+  final arrayData;
+  DialogSettingShare({this.albumId, this.arrayData});
 
   @override
   _DialogSettingShare createState() => _DialogSettingShare();
@@ -18,7 +19,7 @@ class DialogSettingShare extends StatefulWidget {
 class _DialogSettingShare extends State<DialogSettingShare> {
   final LocalStorage storage = new LocalStorage('sharePhoto');
   List<dynamic> _participantList = [];
-  var deleteList = [];
+  List<dynamic> deleteList = [];
   String target = '';
   String message = '';
 
@@ -45,7 +46,6 @@ class _DialogSettingShare extends State<DialogSettingShare> {
       setState(() {
         _participantList = parsedJson['data'];
       });
-      print(parsedJson);
     }
   }
 
@@ -67,7 +67,7 @@ class _DialogSettingShare extends State<DialogSettingShare> {
                     margin: const EdgeInsets.only(top: 5.0),
                     child: _participantList.length != 0
                         ? ListView.builder(
-                            scrollDirection: Axis.horizontal,
+                            scrollDirection: Axis.vertical,
                             padding: const EdgeInsets.all(8),
                             itemCount: _participantList.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -79,8 +79,6 @@ class _DialogSettingShare extends State<DialogSettingShare> {
                                             !_participantList[index]
                                                 ["selected"];
                                       });
-                                      Navigator.of(context).pop();
-                                      renderDialog();
 
                                       if (_participantList[index]["selected"]
                                               .toString() ==
@@ -95,9 +93,9 @@ class _DialogSettingShare extends State<DialogSettingShare> {
                                                 .toString());
                                         deleteList.removeAt(deleteIndex);
                                       }
-                                      print(_participantList[index]
-                                          ["participant"]["id"]);
-                                      print(deleteList);
+
+                                      Navigator.of(context).pop();
+                                      renderDialog();
                                     },
                                     child: Container(
                                         child: _participantList[index]
@@ -143,6 +141,12 @@ class _DialogSettingShare extends State<DialogSettingShare> {
                 style: TextStyle(color: Colors.black38),
               ),
               onPressed: () {
+                for (var items in _participantList) {
+                  items["selected"] = false;
+                }
+                setState(() {
+                  deleteList = [];
+                });
                 Navigator.of(context).pop();
               },
             ),
@@ -151,7 +155,54 @@ class _DialogSettingShare extends State<DialogSettingShare> {
                 'Valider',
                 style: TextStyle(color: Colors.redAccent),
               ),
-              onPressed: () async {},
+              onPressed: () async {
+                var url = Uri.parse(
+                    "${DotEnv.env['DATABASE_URL']}/api/album/${widget.albumId}/participant/delete");
+                var response = await http.put(url,
+                    body: json.encode({
+                      "userInfos": deleteList,
+                    }),
+                    headers: {
+                      "Content-Type": "application/json",
+                      "Accept": "application/json",
+                      "Authorization": "Bearer " + token
+                    });
+
+                if (response.statusCode == 200) {
+                  var parsedJson = json.decode(response.body);
+
+                  showToast(
+                    parsedJson['message'],
+                    context: context,
+                    animation: StyledToastAnimation.scale,
+                    reverseAnimation: StyledToastAnimation.fade,
+                    position: StyledToastPosition.bottom,
+                    animDuration: Duration(seconds: 1),
+                    duration: Duration(seconds: 4),
+                    curve: Curves.elasticOut,
+                    reverseCurve: Curves.linear,
+                  );
+
+                  if (parsedJson['success']) {
+                    Navigator.of(context)
+                      ..pop()
+                      ..pop()
+                      ..pushNamed('/photos', arguments: widget.arrayData);
+                  }
+                } else {
+                  showToast(
+                    "Une erreur est survenue",
+                    context: context,
+                    animation: StyledToastAnimation.scale,
+                    reverseAnimation: StyledToastAnimation.fade,
+                    position: StyledToastPosition.bottom,
+                    animDuration: Duration(seconds: 1),
+                    duration: Duration(seconds: 4),
+                    curve: Curves.elasticOut,
+                    reverseCurve: Curves.linear,
+                  );
+                }
+              },
             ),
           ],
         ),
