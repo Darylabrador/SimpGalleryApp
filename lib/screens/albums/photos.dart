@@ -131,29 +131,10 @@ class _PhotosState extends State<Photos> {
     );
   }
 
-  Future displayFullScreenImage(content) {
+ Future displayFullScreenImage(content) {
     final LocalStorage storage = new LocalStorage('sharePhoto');
     var token = storage.getItem('SimpGalleryToken');
     var _commentList = content["comments"];
-
-    Future fetchComment(photoId) async {
-      final LocalStorage storage = new LocalStorage('sharePhoto');
-      var token = storage.getItem('SimpGalleryToken');
-
-      var url =
-          Uri.parse("${DotEnv.env['DATABASE_URL']}/api/comment/list/$photoId");
-      var getAlbums = await http.get(url, headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer " + token
-      });
-
-      if (getAlbums.statusCode == 200) {
-        var parsedJson = json.decode(getAlbums.body);
-        setState(() {
-          _commentList = parsedJson['data'];
-        });
-      }
-    }
 
     return showGeneralDialog(
         context: context,
@@ -184,59 +165,7 @@ class _PhotosState extends State<Photos> {
                                 itemCount: _commentList.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return GestureDetector(
-                                    onLongPress: () async {
-                                      var commentId = _commentList[index]['id'];
-                                      var url = Uri.parse(
-                                          "${DotEnv.env['DATABASE_URL']}/api/comment/delete/$commentId");
-                                      var response =
-                                          await http.delete(url, headers: {
-                                        "Content-Type": "application/json",
-                                        "Accept": "application/json",
-                                        "Authorization": "Bearer " + token
-                                      });
-
-                                      if (response.statusCode == 200) {
-                                        var parsedJson =
-                                            json.decode(response.body);
-
-                                        showToast(
-                                          parsedJson['message'],
-                                          context: context,
-                                          animation: StyledToastAnimation.scale,
-                                          reverseAnimation:
-                                              StyledToastAnimation.fade,
-                                          position: StyledToastPosition.bottom,
-                                          animDuration: Duration(seconds: 1),
-                                          duration: Duration(seconds: 4),
-                                          curve: Curves.elasticOut,
-                                          reverseCurve: Curves.linear,
-                                        );
-
-                                        if (parsedJson['success']) {
-                                          Navigator.of(context)
-                                            ..pop()
-                                            ..pop()
-                                            ..pushNamed('/photos',
-                                                arguments: widget.arrayData);
-                                          fetchComment(
-                                              content["id"].toString());
-                                          displayFullScreenImage(content);
-                                        }
-                                      } else {
-                                        showToast(
-                                          "Une erreur est survenue",
-                                          context: context,
-                                          animation: StyledToastAnimation.scale,
-                                          reverseAnimation:
-                                              StyledToastAnimation.fade,
-                                          position: StyledToastPosition.bottom,
-                                          animDuration: Duration(seconds: 1),
-                                          duration: Duration(seconds: 4),
-                                          curve: Curves.elasticOut,
-                                          reverseCurve: Curves.linear,
-                                        );
-                                      }
-                                    },
+                                    onLongPress: () async {},
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -309,9 +238,6 @@ class _PhotosState extends State<Photos> {
                                             ..pop()
                                             ..pushNamed('/photos',
                                                 arguments: widget.arrayData);
-                                          fetchComment(
-                                              content["id"].toString());
-                                          displayFullScreenImage(content);
                                         }
                                       } else {
                                         showToast(
@@ -339,6 +265,7 @@ class _PhotosState extends State<Photos> {
               ],
             )));
   }
+
 
   Future deleteSingleImageDialog(photoId) {
     var token = storage.getItem('SimpGalleryToken');
