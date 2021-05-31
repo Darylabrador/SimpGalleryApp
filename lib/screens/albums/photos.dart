@@ -23,6 +23,7 @@ class Photos extends StatefulWidget {
 class _PhotosState extends State<Photos> {
   final LocalStorage storage = new LocalStorage('sharePhoto');
   var _albumData = [];
+
   var _imageCoverUpdate;
   var imageCoverPicker;
 
@@ -130,7 +131,30 @@ class _PhotosState extends State<Photos> {
     );
   }
 
-  Future displayFullScreenImage(contend) {
+  Future displayFullScreenImage(content) {
+    final LocalStorage storage = new LocalStorage('sharePhoto');
+    var token = storage.getItem('SimpGalleryToken');
+    var _commentList = content["comments"];
+
+    Future fetchComment(photoId) async {
+      final LocalStorage storage = new LocalStorage('sharePhoto');
+      var token = storage.getItem('SimpGalleryToken');
+
+      var url =
+          Uri.parse("${DotEnv.env['DATABASE_URL']}/api/comment/list/$photoId");
+      var getAlbums = await http.get(url, headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer " + token
+      });
+
+      if (getAlbums.statusCode == 200) {
+        var parsedJson = json.decode(getAlbums.body);
+        setState(() {
+          _commentList = parsedJson['data'];
+        });
+      }
+    }
+
     return showGeneralDialog(
         context: context,
         pageBuilder: (context, animation, secondaryAnimation) => Scaffold(
@@ -141,7 +165,7 @@ class _PhotosState extends State<Photos> {
                   height: 360,
                   width: 500,
                   child: Image.network(
-                      "${DotEnv.env['DATABASE_URL']}/img/" + contend['label'],
+                      "${DotEnv.env['DATABASE_URL']}/img/" + content['label'],
                       height: 400,
                       width: 500,
                       fit: BoxFit.cover),
@@ -150,21 +174,92 @@ class _PhotosState extends State<Photos> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        height: 180,
+                        height: 152,
                         width: 500,
                         decoration: BoxDecoration(color: Colors.white),
-                        child: null,
+                        child: content["comments"].length != 0
+                            ? ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                padding: const EdgeInsets.all(8),
+                                itemCount: _commentList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return GestureDetector(
+                                    onLongPress: () async {
+                                      var commentId = _commentList[index]['id'];
+                                      var url = Uri.parse(
+                                          "${DotEnv.env['DATABASE_URL']}/api/comment/delete/$commentId");
+                                      var response =
+                                          await http.delete(url, headers: {
+                                        "Content-Type": "application/json",
+                                        "Accept": "application/json",
+                                        "Authorization": "Bearer " + token
+                                      });
+
+                                      if (response.statusCode == 200) {
+                                        var parsedJson =
+                                            json.decode(response.body);
+
+                                        showToast(
+                                          parsedJson['message'],
+                                          context: context,
+                                          animation: StyledToastAnimation.scale,
+                                          reverseAnimation:
+                                              StyledToastAnimation.fade,
+                                          position: StyledToastPosition.bottom,
+                                          animDuration: Duration(seconds: 1),
+                                          duration: Duration(seconds: 4),
+                                          curve: Curves.elasticOut,
+                                          reverseCurve: Curves.linear,
+                                        );
+
+                                        if (parsedJson['success']) {
+                                          Navigator.of(context)
+                                            ..pop()
+                                            ..pop()
+                                            ..pushNamed('/photos',
+                                                arguments: widget.arrayData);
+                                          fetchComment(
+                                              content["id"].toString());
+                                          displayFullScreenImage(content);
+                                        }
+                                      } else {
+                                        showToast(
+                                          "Une erreur est survenue",
+                                          context: context,
+                                          animation: StyledToastAnimation.scale,
+                                          reverseAnimation:
+                                              StyledToastAnimation.fade,
+                                          position: StyledToastPosition.bottom,
+                                          animDuration: Duration(seconds: 1),
+                                          duration: Duration(seconds: 4),
+                                          curve: Curves.elasticOut,
+                                          reverseCurve: Curves.linear,
+                                        );
+                                      }
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(_commentList[index]['comment']
+                                            .toString()),
+                                        Divider(),
+                                      ],
+                                    ),
+                                  );
+                                })
+                            : null,
                       ),
                       Divider(),
                       Container(
                           height: 50,
                           width: 500,
+                          padding: EdgeInsets.only(left: 3.0),
                           child: Row(
                             children: [
                               Container(
                                 height: 50,
                                 width: 280,
-                                padding: EdgeInsets.only(left: 3.0),
                                 child: TextFormField(
                                     expands: true,
                                     minLines: null,
@@ -176,17 +271,65 @@ class _PhotosState extends State<Photos> {
                               ),
                               Container(
                                   padding: EdgeInsets.only(right: 5.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      print("message envoyer");
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      var url = Uri.parse(
+                                          "${DotEnv.env['DATABASE_URL']}/api/comment/create");
+                                      var response = await http.post(url,
+                                          body: json.encode({
+                                            'photoId': content["id"].toString(),
+                                            'comment': comments,
+                                          }),
+                                          headers: {
+                                            "Content-Type": "application/json",
+                                            "Accept": "application/json",
+                                            "Authorization": "Bearer " + token
+                                          });
+
+                                      if (response.statusCode == 200) {
+                                        var parsedJson =
+                                            json.decode(response.body);
+
+                                        showToast(
+                                          parsedJson['message'],
+                                          context: context,
+                                          animation: StyledToastAnimation.scale,
+                                          reverseAnimation:
+                                              StyledToastAnimation.fade,
+                                          position: StyledToastPosition.bottom,
+                                          animDuration: Duration(seconds: 1),
+                                          duration: Duration(seconds: 4),
+                                          curve: Curves.elasticOut,
+                                          reverseCurve: Curves.linear,
+                                        );
+
+                                        if (parsedJson['success']) {
+                                          Navigator.of(context)
+                                            ..pop()
+                                            ..pop()
+                                            ..pushNamed('/photos',
+                                                arguments: widget.arrayData);
+                                          fetchComment(
+                                              content["id"].toString());
+                                          displayFullScreenImage(content);
+                                        }
+                                      } else {
+                                        showToast(
+                                          "Une erreur est survenue",
+                                          context: context,
+                                          animation: StyledToastAnimation.scale,
+                                          reverseAnimation:
+                                              StyledToastAnimation.fade,
+                                          position: StyledToastPosition.bottom,
+                                          animDuration: Duration(seconds: 1),
+                                          duration: Duration(seconds: 4),
+                                          curve: Curves.elasticOut,
+                                          reverseCurve: Curves.linear,
+                                        );
+                                      }
                                     },
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        print("message envoyer");
-                                      },
-                                      child:
-                                          Icon(Icons.send, color: Colors.white),
-                                    ),
+                                    child:
+                                        Icon(Icons.send, color: Colors.white),
                                   )),
                             ],
                           ))
