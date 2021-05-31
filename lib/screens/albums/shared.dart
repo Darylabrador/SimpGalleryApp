@@ -23,6 +23,7 @@ class Shared extends StatefulWidget {
 class _SharedState extends State<Shared> {
   final LocalStorage storage = new LocalStorage('sharePhoto');
   var _albumData = [];
+  String comments = "";
 
   @override
   void initState() {
@@ -76,23 +77,37 @@ class _SharedState extends State<Shared> {
                       ),
                       Divider(),
                       Container(
-                          height: 70,
+                          height: 50,
                           width: 500,
+                          padding: EdgeInsets.only(left: 3.0),
                           child: Row(
                             children: [
                               Container(
-                                height: 70,
-                                width: 300,
+                                height: 50,
+                                width: 280,
                                 child: TextFormField(
-                                  expands: true,
-                                  minLines: null,
-                                  maxLines: null,
-                                ),
+                                    expands: true,
+                                    minLines: null,
+                                    maxLines: null,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Ecrivez votre commentaire'),
+                                    onChanged: (val) => comments = val),
                               ),
                               Container(
-                                padding: EdgeInsets.only(right: 5.0),
-                                child: Icon(Icons.send, color: Colors.blue),
-                              ),
+                                  padding: EdgeInsets.only(right: 5.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      print("message envoyer");
+                                    },
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        print("message envoyer");
+                                      },
+                                      child:
+                                          Icon(Icons.send, color: Colors.white),
+                                    ),
+                                  )),
                             ],
                           ))
                     ],

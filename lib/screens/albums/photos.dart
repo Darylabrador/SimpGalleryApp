@@ -26,6 +26,8 @@ class _PhotosState extends State<Photos> {
   var _imageCoverUpdate;
   var imageCoverPicker;
 
+  String comments = "";
+
   @override
   void initState() {
     super.initState();
@@ -133,10 +135,10 @@ class _PhotosState extends State<Photos> {
         context: context,
         pageBuilder: (context, animation, secondaryAnimation) => Scaffold(
             backgroundColor: Colors.black87,
-            body: Column(
+            body: ListView(
               children: [
                 Container(
-                  height: 400,
+                  height: 360,
                   width: 500,
                   child: Image.network(
                       "${DotEnv.env['DATABASE_URL']}/img/" + contend['label'],
@@ -144,11 +146,53 @@ class _PhotosState extends State<Photos> {
                       width: 500,
                       fit: BoxFit.cover),
                 ),
-                Container(
-                  child: Image.network(
-                      "${DotEnv.env['DATABASE_URL']}/img/" + contend['label'],
-                      fit: BoxFit.cover),
-                ),
+                Card(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        height: 180,
+                        width: 500,
+                        decoration: BoxDecoration(color: Colors.white),
+                        child: null,
+                      ),
+                      Divider(),
+                      Container(
+                          height: 50,
+                          width: 500,
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 50,
+                                width: 280,
+                                padding: EdgeInsets.only(left: 3.0),
+                                child: TextFormField(
+                                    expands: true,
+                                    minLines: null,
+                                    maxLines: null,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Ecrivez votre commentaire'),
+                                    onChanged: (val) => comments = val),
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(right: 5.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      print("message envoyer");
+                                    },
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        print("message envoyer");
+                                      },
+                                      child:
+                                          Icon(Icons.send, color: Colors.white),
+                                    ),
+                                  )),
+                            ],
+                          ))
+                    ],
+                  ),
+                )
               ],
             )));
   }
