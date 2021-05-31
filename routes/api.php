@@ -70,9 +70,13 @@ Route::get('/email/liste/{value}', [AlbumController::class, "autocomplete"])->na
 
 Route::middleware(['auth:api'])->prefix('/album')->group(function() {
     Route::post('/create', [AlbumController::class, 'create'])->name('api.create.album');
-    Route::delete('/delete/{id}', [AlbumController::class, 'destroy'])->name('api.delete.album');
     Route::post('/cover', [AlbumController::class, 'editCover'])->name('api.editcover.album');
     Route::get('/list', [AlbumController::class, 'myAlbumList'])->name('api.list.album');
+    Route::delete('/delete/{id}', [AlbumController::class, 'destroy'])->name('api.delete.album');
+
+    Route::get('/trash/list', [AlbumController::class, 'getTrash'])->name('api.list.album.trash');
+    Route::put('{id}/trash/restore', [AlbumController::class, 'restoreTrash'])->name('api.photo.album.restore');
+    Route::delete('{id}/delete/confirm', [AlbumController::class, 'confirmDelete'])->name('api.delete.album.confirm');
 
     Route::post('/share', [AlbumController::class, 'share'])->name('api.share.album');    
     Route::get('/share/list', [AlbumController::class, 'shareAlbumList'])->name('api.share.list.album');
@@ -93,9 +97,13 @@ Route::middleware(['auth:api'])->prefix('/album')->group(function() {
 
 Route::middleware(['auth:api'])->prefix('/photo')->group(function(){
     Route::post('/create', [PhotoController::class, 'create'])->name('api.create.photo');
-    Route::delete('/delete/{id}', [PhotoController::class, 'destroy'])->name('api.delete.photo');
     Route::get('/list/{albumId}', [PhotoController::class, 'photoList'])->name('api.list.photo');
     Route::get('/show/{photoId}', [AlbumController::class, 'showOne'])->name('api.show.photo');
+
+    Route::get('/trash/list', [PhotoController::class, 'getTrash'])->name('api.list.photo.trash');
+    Route::put('{id}/trash/restore', [PhotoController::class, 'restoreTrash'])->name('api.photo.trash.restore');
+    Route::delete('/delete/{id}', [PhotoController::class, 'destroy'])->name('api.delete.photo');
+    Route::delete('{id}/delete/confirm', [PhotoController::class, 'confirmDelete'])->name('api.delete.photo.confirm');
 });
 
 /*

@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Models\Access;
 use App\Http\Resources\AlbumResource;
 use App\Mail\CreationCompteMail;
+use App\Models\Comment;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -61,6 +63,17 @@ class AlbumController extends Controller
         ->get();
 
         return AccessResource::collection($accesses);
+    }
+
+
+    /**
+     * get trashed pics
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getTrash() {
+        $albums = Album::onlyTrashed()->all();
+        return AlbumResource::collection($albums);
     }
 
 
@@ -427,7 +440,7 @@ class AlbumController extends Controller
 
 
     /**
-     * Destroy an Album 
+     * Destroy an Album (softdelete)
      *
      * @return \Illuminate\Http\Response
      */
@@ -443,6 +456,56 @@ class AlbumController extends Controller
         return response()->json([
             'success' => true,
             'message' => "Album supprimé"
+        ]);
+    }
+
+
+    /**
+     * Destroy an Album (hard delete)
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function confirmDelete($id) {
+        $album  = Album::onlyTrashed()->where('id',$id)->first();
+        $photos = Photo::onlyTrashed()->where('album_id', $album->id)->get();
+
+        foreach ($photos as $photo) {
+            $comments = Comment::onlyTrashed()->where('photo_id', $photo->id)->get();
+            foreach ($comments as $comment) {
+                $comment->forceDelete();
+            }
+            $photo->forceDelete();
+        }
+        $album->forceDelete();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Album supprimer"
+        ]);
+    }
+
+
+    /**
+     * Restore trash
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function restoreTrash($id) {
+        $album  = Album::onlyTrashed()->where('id',$id)->first();
+        $photos = Photo::onlyTrashed()->where('album_id', $album->id)->get();
+
+        foreach ($photos as $photo) {
+            $comments = Comment::onlyTrashed()->where('photo_id', $photo->id)->get();
+            foreach ($comments as $comment) {
+                $comment->restore();
+            }
+            $photo->restore();
+        }
+        $album->restore();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Album restaurer"
         ]);
     }
 }
