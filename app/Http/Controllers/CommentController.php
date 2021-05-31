@@ -57,7 +57,7 @@ class CommentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function list($photoId){
-        $comments = Comment::where('photo_id', $photoId)->get();
+        $comments = Comment::orderBy("id", "desc")->where('photo_id', $photoId)->get();
         return CommentResource::collection($comments);
     }
 
