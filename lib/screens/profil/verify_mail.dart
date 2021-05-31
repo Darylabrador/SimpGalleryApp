@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyMail extends StatefulWidget {
   @override
@@ -29,18 +30,18 @@ class _VerifyMailState extends State<VerifyMail> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mon profil'),
-         actions: <Widget>[
+        actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'deconnexion',
             onPressed: () async {
-              url = Uri.parse(
-                  "${DotEnv.env['DATABASE_URL']}/api/deconnexion");
-              await http.get(url,
-                  headers: {
-                    "Accept": "application/json",
-                    "Authorization" : "Bearer " + token
-                  });
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.remove("tok");
+              url = Uri.parse("${DotEnv.env['DATABASE_URL']}/api/deconnexion");
+              await http.get(url, headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token
+              });
               await storage.clear();
               await Navigator.pushNamed(context, '/logging');
             },
@@ -63,8 +64,8 @@ class _VerifyMailState extends State<VerifyMail> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image:
-                                  NetworkImage("${DotEnv.env['DATABASE_URL']}/img/$avatar"),
+                              image: NetworkImage(
+                                  "${DotEnv.env['DATABASE_URL']}/img/$avatar"),
                               fit: BoxFit.fill),
                         ),
                         width: 100,
@@ -112,35 +113,41 @@ class _VerifyMailState extends State<VerifyMail> {
                                 if (_formKey.currentState!.validate()) {
                                   url = Uri.parse(
                                       "${DotEnv.env['DATABASE_URL']}/api/email/verification");
-                                  response = await http.post(url,
-                                      body: {'verifyToken': validationCode},
-                                      headers: {
-                                        "Accept": "application/json",
-                                        "Authorization" : "Bearer " + token
-                                      });
+                                  response = await http.post(url, body: {
+                                    'verifyToken': validationCode
+                                  }, headers: {
+                                    "Accept": "application/json",
+                                    "Authorization": "Bearer " + token
+                                  });
 
                                   if (response.statusCode == 200) {
                                     var parsedJson = json.decode(response.body);
-                                    if(parsedJson['success']) {
+                                    if (parsedJson['success']) {
                                       showToast(
                                         parsedJson['message'],
                                         context: context,
                                         animation: StyledToastAnimation.scale,
-                                        reverseAnimation: StyledToastAnimation.fade,
+                                        reverseAnimation:
+                                            StyledToastAnimation.fade,
                                         position: StyledToastPosition.bottom,
                                         animDuration: Duration(seconds: 1),
                                         duration: Duration(seconds: 4),
                                         curve: Curves.elasticOut,
                                         reverseCurve: Curves.linear,
                                       );
-                                      storage.setItem("SimpGalleryMailVerify", false);
-                                      Navigator.of(context)..pop()..pop()..pushNamed('/profil');
+                                      storage.setItem(
+                                          "SimpGalleryMailVerify", false);
+                                      Navigator.of(context)
+                                        ..pop()
+                                        ..pop()
+                                        ..pushNamed('/profil');
                                     } else {
                                       showToast(
                                         parsedJson['message'],
                                         context: context,
                                         animation: StyledToastAnimation.scale,
-                                        reverseAnimation: StyledToastAnimation.fade,
+                                        reverseAnimation:
+                                            StyledToastAnimation.fade,
                                         position: StyledToastPosition.bottom,
                                         animDuration: Duration(seconds: 1),
                                         duration: Duration(seconds: 4),
@@ -153,7 +160,8 @@ class _VerifyMailState extends State<VerifyMail> {
                                       "Une erreur est survenue",
                                       context: context,
                                       animation: StyledToastAnimation.scale,
-                                      reverseAnimation: StyledToastAnimation.fade,
+                                      reverseAnimation:
+                                          StyledToastAnimation.fade,
                                       position: StyledToastPosition.bottom,
                                       animDuration: Duration(seconds: 1),
                                       duration: Duration(seconds: 4),
@@ -166,9 +174,7 @@ class _VerifyMailState extends State<VerifyMail> {
                               style: ElevatedButton.styleFrom(
                                   primary: Colors.blueAccent),
                               child: Text('Valider'),
-                            )
-                        )
-                    ),
+                            ))),
                   ],
                 ),
               ],

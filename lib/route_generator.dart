@@ -5,9 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'main.dart';
 
-import 'package:client/screens/albums/photos.dart';
-import 'package:client/screens/albums/shared.dart';
-import 'package:client/screens/auth/login.dart';
+import 'package:simpgalleryapp/screens/albums/photos.dart';
+import 'package:simpgalleryapp/screens/albums/shared.dart';
+import 'package:simpgalleryapp/screens/auth/login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 import 'screens/home/home.dart';

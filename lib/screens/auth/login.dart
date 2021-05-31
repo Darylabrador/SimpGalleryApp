@@ -71,11 +71,13 @@ class _LoginState extends State<Login> {
                       }, headers: {
                         "Accept": "application/json"
                       });
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
 
                       if (response.statusCode == 200) {
                           var parsedJson = json.decode(response.body);
 
                           if(parsedJson['success']) {
+                            prefs.setString("tok", parsedJson['token']);
                             storage.setItem("SimpGalleryToken", parsedJson['token']);
                             storage.setItem("SimpGalleryPseudo", parsedJson['pseudo']);
                             storage.setItem("SimpGalleryIdentity", parsedJson['info']);

@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/dialog/DialogImage.dart';
 import '../../components/dialog/DialogShareAlbum.dart';
@@ -131,7 +132,7 @@ class _PhotosState extends State<Photos> {
     );
   }
 
- Future displayFullScreenImage(content) {
+  Future displayFullScreenImage(content) {
     final LocalStorage storage = new LocalStorage('sharePhoto');
     var token = storage.getItem('SimpGalleryToken');
     var _commentList = content["comments"];
@@ -266,7 +267,6 @@ class _PhotosState extends State<Photos> {
             )));
   }
 
-
   Future deleteSingleImageDialog(photoId) {
     var token = storage.getItem('SimpGalleryToken');
     return showDialog<String>(
@@ -372,6 +372,8 @@ class _PhotosState extends State<Photos> {
               icon: const Icon(Icons.logout),
               tooltip: 'deconnexion',
               onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.remove("tok");
                 url =
                     Uri.parse("${DotEnv.env['DATABASE_URL']}/api/deconnexion");
                 await http.get(url, headers: {

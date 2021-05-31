@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/dialog/DialogImage.dart';
 
@@ -292,6 +293,8 @@ class _SharedState extends State<Shared> {
               icon: const Icon(Icons.logout),
               tooltip: 'deconnexion',
               onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.remove("tok");
                 url =
                     Uri.parse("${DotEnv.env['DATABASE_URL']}/api/deconnexion");
                 await http.get(url, headers: {

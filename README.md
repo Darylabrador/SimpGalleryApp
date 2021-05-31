@@ -32,6 +32,11 @@ Dans un second terminal lancer la commande suivante pour tenir compte des change
 - flutter pub run build_runner build
 - flutter pub run build_runner watch *(si besoin seulement)*
 
+
+## Pour générer l'APK :
+
+ - flutter build apk --no-sound-null-safety
+
 ## Spécificité .env
 
 Pour que le .env soit pris en compte sans avoir d'erreur, on utilise flutter_dotenv. Nous avons deux possibilités d'ignorer l'erreur "safety" :

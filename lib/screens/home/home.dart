@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Widgets
 import './albums_widget.dart';
 import './shared_widget.dart';
 
 // Models
-import 'package:client/models/album.dart';
+import 'package:simpgalleryapp/models/album.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class Home extends StatefulWidget {
@@ -204,6 +205,8 @@ class _HomeState extends State<Home> {
               icon: const Icon(Icons.logout),
               tooltip: 'deconnexion',
               onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.remove("tok");
                 url =
                     Uri.parse("${DotEnv.env['DATABASE_URL']}/api/deconnexion");
                 await http.get(url, headers: {

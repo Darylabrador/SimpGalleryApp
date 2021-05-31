@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:client/models/user.dart';
+import 'package:simpgalleryapp/models/user.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
