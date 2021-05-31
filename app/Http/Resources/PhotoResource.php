@@ -17,6 +17,7 @@ class PhotoResource extends JsonResource
         return[ 
             "id"            => $this->id,
             "label"         => $this->label,
+            "comments"      => CommentResource::collection($this->comments)
             // "reaction"      => ReactionResource::collection($this->reaction),
         ];
     }

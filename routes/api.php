@@ -4,6 +4,7 @@ use App\Http\Controllers\AccessController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PhotoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -105,6 +106,6 @@ Route::middleware(['auth:api'])->prefix('/photo')->group(function(){
 
 Route::middleware(['auth:api'])->prefix('/comment')->group(function(){
     Route::post('/create', [CommentController::class, 'create'])->name('api.create.comment');
-    Route::delete('/delete/{photoId}', [CommentController::class, 'delete'])->name('api.delete.comment');
+    Route::delete('/delete/{commentId}', [CommentController::class, 'delete'])->name('api.delete.comment');
     Route::get('/list/{photoId}', [CommentController::class, 'list'])->name('api.list.comment');
 });

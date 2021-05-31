@@ -14,7 +14,7 @@ class CommentController extends Controller
      * Add a comment to a pic
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, $albumId){
+    public function create(Request $request){
         $validator = Validator::make(
             $request->all(),
             [   
@@ -49,30 +49,31 @@ class CommentController extends Controller
         ]);
         
     }
+
+
     /**
-     * Comment list for a pic
+     * list comments for 1 picture
      *
      * @return \Illuminate\Http\Response
      */
-    public function list($photoId)
-    {
+    public function list($photoId){
         $comments = Comment::where('photo_id', $photoId)->get();
         return CommentResource::collection($comments);
     }
 
     /**
-     * Delete all comment from a pic 
+     * Delete comment from a pic 
      *
      * @return \Illuminate\Http\Response
      */
-    public function delete($photoId)
+    public function delete($commentId)
     {
-        $comments = Comment::where('photo_id', $photoId)->get();
+        $comments = Comment::where('id', $commentId)->first();
         $comments->delete();
 
         return response()->json([
             'success' => true,
-            'message' => "Commentaires supprimés"
+            'message' => "Commentaire supprimé"
         ]);
     }
     
