@@ -26,6 +26,8 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
 
+    final LocalStorage storage = new LocalStorage('sharePhoto');
+
     switch (settings.name) {
       case '/logging':
         return MaterialPageRoute(builder: (_) => Login());
@@ -61,7 +63,9 @@ class RouteGenerator {
       case '/profil/verify':
         return MaterialPageRoute(builder: (_) => VerifyMail());
       default:
-        return MaterialPageRoute(builder: (_) => ErrorPage());
+        return storage.getItem("SimpGalleryToken") == null
+            ? MaterialPageRoute(builder: (_) => Login())
+            : MaterialPageRoute(builder: (_) => Home(title: "Accueil"));
     }
   }
 }

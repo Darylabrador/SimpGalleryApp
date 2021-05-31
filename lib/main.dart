@@ -5,23 +5,18 @@ import 'package:localstorage/localstorage.dart';
 import './route_generator.dart';
 
 void main() async {
-  await DotEnv.load();
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   final LocalStorage storage = new LocalStorage('sharePhoto');
-  @override
-  Widget build(BuildContext context) {
-
-    return MaterialApp(
-        title: 'SimpGallery',
-        theme: ThemeData(
-          primarySwatch: Colors.deepOrange,
-        ),
-        initialRoute: '/logging',
-        onGenerateRoute: RouteGenerator.generateRoute,
-    );
-  }
+  await DotEnv.load();
+  storage.ready.then((_) => {
+        runApp(MaterialApp(
+          title: 'SimpGallery',
+          theme: ThemeData(
+            primarySwatch: Colors.deepOrange,
+          ),
+          initialRoute: storage.getItem("SimpGalleryToken") == null
+              ? '/logging'
+              : '/home',
+          onGenerateRoute: RouteGenerator.generateRoute,
+        ))
+      });
 }
