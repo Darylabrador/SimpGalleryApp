@@ -11,7 +11,6 @@ import 'package:simpgalleryapp/screens/auth/login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 import 'screens/home/home.dart';
-import 'screens/home/share_settings.dart';
 import 'screens/auth/login.dart';
 import 'screens/auth/registration.dart';
 import 'screens/auth/ask_forgotten_pwd.dart';
@@ -49,9 +48,6 @@ class RouteGenerator {
         } else {
           return MaterialPageRoute(builder: (_) => ErrorPage());
         }
-      case '/shared/settings':
-        return MaterialPageRoute(
-            builder: (_) => ShareSettings(title: "Options"));
       case '/verify/mail':
         return MaterialPageRoute(builder: (_) => VerifyMail());
       case '/forgotten/ask':
