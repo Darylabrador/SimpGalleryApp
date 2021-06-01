@@ -10,6 +10,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
         <link href="{{asset ('css/app.css')}}" rel="stylesheet" />
         <link href="{{asset ('css/welcome.css')}}" rel="stylesheet" />
+        <link href="{{asset ('css/style.css')}}" rel="stylesheet" />
 
     </head>
     <body>
@@ -19,13 +20,13 @@
                     <h1>SimpGalleryApp</h1>
                 </div>
                 <div class="col-3">
-                    <a href="/"><input class="telecharger" type="button" value="Télecharger"></a>
+                    <a href="{{asset ('apk/app-release.apk')}}"><input class="telecharger" type="button" value="Télecharger"></a>
                 </div>
             </div>
 
             <div class="container row d1 my-5">
                 <div class="col-md telephone">
-                    <img src="images/1.png" alt="SimpGalleryApp" >
+                    <img src="images/image1.PNG" alt="SimpGalleryApp" >
                 </div>
                 <div class="col-md text text-center text-sm-left d-flex flex-column justify-content-center">
                     <h1>
@@ -46,7 +47,7 @@
 
                 <div class="container row d1 my-5">
                     <div class="col-md telephone">
-                        <img src="images/3.png" alt="partage photo" class=" img-thumbnail">
+                        <img src="images/image2.PNG" alt="partage photo" class=" img-thumbnail">
                     </div>
                     <div class="col-md text text-center text-sm-center d-flex flex-column justify-content-center">
                         <p>
@@ -58,17 +59,17 @@
                 <div class="container row d1 my-5">
                     <div class="col-md text text-center text-sm-center d-flex flex-column justify-content-center">
                         <p>
-                            Vous pouvez aussi donner votre avis sur leur photo et même liké leur photo. 
+                            Vous pouvez aussi donner votre avis sur leur photo. 
                         </p>
                     </div>
                     <div class="col-md telephone">
-                        <img src="images/3.png" alt="partage photo" class=" img-thumbnail">
+                        <img src="images/image3.PNG" alt="partage photo" class=" img-thumbnail">
                     </div>
                 </div>
 
                 <div class="container row d1 my-5">
                     <div class="col-md telephone">
-                        <img src="images/3.png" alt="partage photo" class=" img-thumbnail">
+                        <img src="images/image4.PNG" alt="partage photo" class=" img-thumbnail">
                     </div>
                     <div class="col-md text text-center text-sm-center d-flex flex-column justify-content-center">
                         <p>
@@ -81,7 +82,7 @@
 
             <div class="elem3">
                 <div class=" container D3 p-3 d-flex justify-content-center ">
-                    <a href="/"><input class="telecharge" type="button" value="Télecharger"></a>
+                    <a href="{{asset('apk/app-release.apk')}}"><input class="telecharge" type="button" value="Télecharger"></a>
                 </div>
             </div>
 
