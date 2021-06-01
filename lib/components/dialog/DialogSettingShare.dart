@@ -152,7 +152,7 @@ class _DialogSettingShare extends State<DialogSettingShare> {
             ),
             OutlinedButton(
               child: Text(
-                'Valider',
+                'Supprimer',
                 style: TextStyle(color: Colors.redAccent),
               ),
               onPressed: () async {
