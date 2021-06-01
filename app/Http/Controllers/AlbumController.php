@@ -474,8 +474,14 @@ class AlbumController extends Controller
             foreach ($comments as $comment) {
                 $comment->forceDelete();
             }
+
+            $photoPath = public_path('img') . '/' . $photo->label;
+            unlink($photoPath);
             $photo->forceDelete();
         }
+
+        $coverPath = public_path('img') . '/' . $album->cover;
+        unlink($coverPath);
         $album->forceDelete();
 
         return response()->json([

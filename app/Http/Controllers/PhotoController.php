@@ -126,6 +126,10 @@ class PhotoController extends Controller
         foreach ($comments as $comment) {
             $comment->forceDelete();
         }
+
+        $photoPath = public_path('img') . '/' . $photo->label;
+        unlink($photoPath);
+
         $photo->forceDelete();
         return response()->json([
             'success' => true,
