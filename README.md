@@ -32,11 +32,6 @@ Dans un second terminal lancer la commande suivante pour tenir compte des change
 - flutter pub run build_runner build
 - flutter pub run build_runner watch *(si besoin seulement)*
 
-
-## Pour générer l'APK :
-
- - flutter build apk --no-sound-null-safety
-
 ## Spécificité .env
 
 Pour que le .env soit pris en compte sans avoir d'erreur, on utilise flutter_dotenv. Nous avons deux possibilités d'ignorer l'erreur "safety" :
@@ -48,9 +43,15 @@ Contenu du .env
 
 - DATABASE_URL=
 
-### V1
+## Pour générer l'APK :
 
-Dans la version actuelle il faut modifier le lien vers l'API laravel dans "lib/screens/auth/registration.dart" pour pouvoir faire le test de l'inscription
+Il faut utiliser la commande suivante pour générer l'APK :
+
+ - flutter build apk --no-sound-null-safety
+
+## Fonctionnalités de l'application :
+
+Retrouver toutes les fonctionnalités dans les vidéos de démonstration <a href="https://github.com/Darylabrador/SimpGalleryApp/tree/ressource">ici</a>
 
 ## Liens utiles
 

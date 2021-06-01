@@ -8,9 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../components/dialog/DialogAvatar.dart';
-import '../../components/dialog/DialogDeleteAccount.dart';
+import 'package:simpgalleryapp/components/dialog/DialogAvatar.dart';
+import 'package:simpgalleryapp/components/dialog/DialogDeleteAccount.dart';
 
 class Profil extends StatefulWidget {
   @override

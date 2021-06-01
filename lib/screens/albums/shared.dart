@@ -9,7 +9,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simpgalleryapp/components/dialog/DialogImage.dart';
-import 'package:simpgalleryapp/screens/albums/photoTrash.dart';
 
 class Shared extends StatefulWidget {
   final arrayData;

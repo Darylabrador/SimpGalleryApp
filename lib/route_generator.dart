@@ -1,33 +1,35 @@
+import 'package:flutter/material.dart';
+
+import 'main.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 
-import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+
 import 'package:simpgalleryapp/screens/albums/albumTrash.dart';
 import 'package:simpgalleryapp/screens/albums/photoTrash.dart';
-import 'main.dart';
 
 import 'package:simpgalleryapp/screens/albums/photos.dart';
 import 'package:simpgalleryapp/screens/albums/shared.dart';
 import 'package:simpgalleryapp/screens/auth/login.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
-import 'screens/home/home.dart';
 import 'screens/auth/login.dart';
 import 'screens/auth/registration.dart';
-import 'screens/auth/ask_forgotten_pwd.dart';
-import 'screens/auth/reset_forgotten_pwd.dart';
-import 'screens/profil/verify_mail.dart';
-import 'screens/albums/create_album.dart';
+import 'screens/home/home.dart';
 import 'screens/profil/profil.dart';
+import 'screens/albums/create_album.dart';
+import 'screens/auth/ask_forgotten_pwd.dart';
 import 'screens/profil/verify_mail.dart';
-import 'package:localstorage/localstorage.dart';
+import 'screens/auth/reset_forgotten_pwd.dart';
 
+
+// Route generator handler
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final args = settings.arguments;
-
     final LocalStorage storage = new LocalStorage('sharePhoto');
+    final args = settings.arguments;
 
     switch (settings.name) {
       case '/logging':
@@ -76,6 +78,9 @@ class RouteGenerator {
   }
 }
 
+
+
+// Error widget
 class ErrorPage extends StatelessWidget {
   final LocalStorage storage = new LocalStorage('sharePhoto');
   @override
