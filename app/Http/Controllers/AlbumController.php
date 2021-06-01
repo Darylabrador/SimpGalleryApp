@@ -72,7 +72,7 @@ class AlbumController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getTrash() {
-        $albums = Album::onlyTrashed()->get();
+        $albums = Album::onlyTrashed()->where("user_id", Auth::id())->get();
         return AlbumResource::collection($albums);
     }
 
