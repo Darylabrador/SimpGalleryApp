@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:simpgalleryapp/screens/albums/albumTrash.dart';
+import 'package:simpgalleryapp/screens/albums/photoTrash.dart';
 import 'main.dart';
 
 import 'package:simpgalleryapp/screens/albums/photos.dart';
@@ -58,6 +60,14 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Profil());
       case '/profil/verify':
         return MaterialPageRoute(builder: (_) => VerifyMail());
+      case '/trash/photos':
+        if (args != null) {
+          return MaterialPageRoute(builder: (_) => PhotoTrash(argsData: args));
+        } else {
+          return MaterialPageRoute(builder: (_) => ErrorPage());
+        }
+      case '/trash/albums':
+        return MaterialPageRoute(builder: (_) => AlbumTrash());
       default:
         return storage.getItem("SimpGalleryToken") == null
             ? MaterialPageRoute(builder: (_) => Login())

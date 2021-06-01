@@ -8,10 +8,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../components/dialog/DialogImage.dart';
-import '../../components/dialog/DialogShareAlbum.dart';
-import '../../components/dialog/DialogSettingShare.dart';
+import 'package:simpgalleryapp/components/dialog/DialogImage.dart';
+import 'package:simpgalleryapp/components/dialog/DialogShareAlbum.dart';
+import 'package:simpgalleryapp/components/dialog/DialogSettingShare.dart';
 
 class Photos extends StatefulWidget {
   final arrayData;
@@ -476,6 +475,20 @@ class _PhotosState extends State<Photos> {
               child: userConnected == widget.arrayData["owner"]["id"]
                   ? DialogShareAlbum(allData: widget.arrayData)
                   : Text("")),
+          Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/trash/photos', arguments: {
+                  "arrayData" : widget.arrayData,
+                  "isShare": false
+                });
+              },
+              heroTag: "trash_photo",
+              child: Icon(Icons.delete),
+              backgroundColor: Colors.deepOrange,
+            ),
+          ),
           Container(
             child: DialogImage(
                 albumId: widget.arrayData['id'],

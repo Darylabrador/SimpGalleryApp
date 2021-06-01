@@ -8,8 +8,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Widgets
-import './albums_widget.dart';
-import './shared_widget.dart';
+import 'package:simpgalleryapp/screens/home/albums_widget.dart';
+import 'package:simpgalleryapp/screens/home/shared_widget.dart';
 
 // Models
 import 'package:simpgalleryapp/models/album.dart';
@@ -237,6 +237,17 @@ class _HomeState extends State<Home> {
                     child: Icon(Icons.people),
                     backgroundColor: Colors.deepOrange,
                   ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/trash/albums');
+              },
+              heroTag: "trash_album",
+              child: Icon(Icons.delete),
+              backgroundColor: Colors.deepOrange,
+            ),
           ),
           FloatingActionButton(
             onPressed: () {
