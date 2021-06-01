@@ -100,7 +100,7 @@ Route::middleware(['auth:api'])->prefix('/photo')->group(function(){
     Route::get('/list/{albumId}', [PhotoController::class, 'photoList'])->name('api.list.photo');
     Route::get('/show/{photoId}', [AlbumController::class, 'showOne'])->name('api.show.photo');
 
-    Route::get('/trash/list', [PhotoController::class, 'getTrash'])->name('api.list.photo.trash');
+    Route::get('/album/{id}/trash/list', [PhotoController::class, 'getTrash'])->name('api.list.photo.trash');
     Route::put('{id}/trash/restore', [PhotoController::class, 'restoreTrash'])->name('api.photo.trash.restore');
     Route::delete('/delete/{id}', [PhotoController::class, 'destroy'])->name('api.delete.photo');
     Route::delete('{id}/delete/confirm', [PhotoController::class, 'confirmDelete'])->name('api.delete.photo.confirm');

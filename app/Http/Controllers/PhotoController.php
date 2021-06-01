@@ -87,8 +87,8 @@ class PhotoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getTrash() {
-        $photos = Photo::onlyTrashed()->all();
+    public function getTrash($id) {
+        $photos = Photo::onlyTrashed()->where(["album_id" => $id])->get();
         return PhotoResource::collection($photos);
     }
 

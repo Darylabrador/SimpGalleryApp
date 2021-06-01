@@ -72,7 +72,7 @@ class AlbumController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getTrash() {
-        $albums = Album::onlyTrashed()->all();
+        $albums = Album::onlyTrashed()->get();
         return AlbumResource::collection($albums);
     }
 
