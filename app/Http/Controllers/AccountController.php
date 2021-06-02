@@ -15,6 +15,8 @@ use Illuminate\Support\Str;
 use App\Mail\DeleteAccountMail;
 use App\Mail\ForgottenPassword;
 use App\Mail\ChangePassword;
+use App\Models\Album;
+use App\Models\Photo;
 use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
@@ -316,6 +318,21 @@ class AccountController extends Controller
         Auth::user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
+
+        $albums = Album::where("user_id", Auth::id())->get();
+
+        foreach ($albums as $album) {
+            
+            $photos = Photo::where('album_id', $album->id)->get();
+
+            foreach ($photos as $photo) {
+                $photoPath = public_path('img') . '/' . $photo->label;
+                unlink($photoPath);
+            }
+
+            $coverPath = public_path('img') . '/' . $album->cover;
+            unlink($coverPath);
+        }
 
         User::destroy(Auth::id());
 
