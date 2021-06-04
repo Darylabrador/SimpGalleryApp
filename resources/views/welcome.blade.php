@@ -1,100 +1,123 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/owl.carousel.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/owl.theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/nivo-lightbox/nivo-lightbox.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/nivo-lightbox/nivo-lightbox-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <script src="js/modernizr.custom.js"></script>
+    <title>SimpGalleryApp</title>
+</head>
 
-        <title>SimpGalleryApp</title>
+<body>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-        <link href="{{asset ('css/app.css')}}" rel="stylesheet" />
-        <link href="{{asset ('css/welcome.css')}}" rel="stylesheet" />
-        <link href="{{asset ('css/style.css')}}" rel="stylesheet" />
-
-    </head>
-    <body>
-        <div class="container col-md-8">
-            <div class="row d-flex justify-content-between mt-2 col-md">
-                <div class="col-4">
-                    <h1>SimpGalleryApp</h1>
-                </div>
-                <div class="col-3">
-                    <a href="{{asset ('apk/app-release.apk')}}"><input class="telecharger" type="button" value="Télecharger"></a>
+    <a href="#header" id="back-to-top" class="top"><i class="fa fa-chevron-up"></i></a>
+    <section id="header" class="header">
+        <div class="top-bar">
+            <div class="container">
+                <div class="navigation" id="navigation-scroll">
+                        <div class="row">
+                            <div class="col-md-11 col-xs-10">
+                                <a href="index.html"><span id="logo">SimpGalleryApp</a>
+                            </div>
+                            <div class="col-md-1 col-xs-2">
+                                <p class="nav-button">
+                                    <button id="trigger-overlay" type="button">
+           
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="container row d1 my-5">
-                <div class="col-md telephone">
-                    <img src="images/image1.PNG" alt="SimpGalleryApp" >
-                </div>
-                <div class="col-md text text-center text-sm-left d-flex flex-column justify-content-center">
-                    <h1>
-                        Une application de partage photo !
-                    </h1>
-                    <p>
-                        partager vos meilleurs moment avec vos amies grâce à l'application SimpGalleryApp,
-                        Vous pourrais aimer, commenter leur plus belle photo !
-                        Ne perdez plus de vue vos amies.
-                    </p>
+        <div class="container">
+            <div class="starting">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="{{ asset('images/mobile_intro.png') }}" alt="LUCY" class="wow flipInY animated animated">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="banner-text">
+                             <h2 class="animation-box wow bounceIn animated"><strong class="strong">Une application de  partage photo !</strong><br>
+                            </h2>
+                            <p>
+                                Partagez vos meilleurs moment avec vos amies grâce à l'application SimpGalleryApp, Vous pourrais aimer, commenter leur plus belle photo ! Ne perdez plus de vue vos amies.                             </p>
+                            <a href="{{ asset('apk/app-release.apk') }}" class="btn btn-download wow animated fadeInLeft">
+                            <i class="fa fa-android pull-left"></i>
+                            <strong>Télécharger</strong>
+                            <br/>Maintenant </a> 
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            
-
-            <div class=" container D2 text-center">
-                <h1 class="text-center">L'application en detail</h1>
-
-                <div class="container row d1 my-5">
-                    <div class="col-md telephone">
-                        <img src="images/image2.PNG" alt="partage photo" class=" img-thumbnail">
-                    </div>
-                    <div class="col-md text text-center text-sm-center d-flex flex-column justify-content-center">
-                        <p>
-                            Avec SimpGalleryApp vous pouvez partager vos photos avec les amies que vous choisissez.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="container row d1 my-5">
-                    <div class="col-md text text-center text-sm-center d-flex flex-column justify-content-center">
-                        <p>
-                            Vous pouvez aussi donner votre avis sur leur photo. 
-                        </p>
-                    </div>
-                    <div class="col-md telephone">
-                        <img src="images/image3.PNG" alt="partage photo" class=" img-thumbnail">
-                    </div>
-                </div>
-
-                <div class="container row d1 my-5">
-                    <div class="col-md telephone">
-                        <img src="images/image4.PNG" alt="partage photo" class=" img-thumbnail">
-                    </div>
-                    <div class="col-md text text-center text-sm-center d-flex flex-column justify-content-center">
-                        <p>
-                            Grâce à SimpGalleryApp vous pouvez créé autant d'album que vous voulez pour ne plus égarer vos photos.
-                        </p>
-                    </div>
-                    
-                </div>
-            </div> </br>
-
-            <div class="elem3">
-                <div class=" container D3 p-3 d-flex justify-content-center ">
-                    <a href="{{asset('apk/app-release.apk')}}"><input class="telecharge" type="button" value="Télecharger"></a>
-                </div>
-            </div>
-
         </div>
+    </section>
 
+    <script src="{{ asset('js/jquery-1.11.2.min.js') }}"></script>
+    <script src="{{ asset('js/wow.min.js') }}"></script>
+    <script src="{{ asset('js/owl-carousel.js') }}"></script>
+    <script src="{{ asset('js/nivo-lightbox.min.js') }}"></script>
+    <script src="{{ asset('js/smoothscroll.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/classie.js') }}"></script>
+    <script src="{{ asset('js/script.js') }}"></script>
+    <script>
+        new WOW().init();
+    </script>
+    <script>
+        $(document).ready(function(){
+            $(".hideit").click(function(){
+                $(".overlay").hide();
+            });
+            $("#trigger-overlay").click(function(){
+                $(".overlay").show();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
 
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
-   
-    </body>
-    <footer class="w-100  h-100 text-center bg-dark">
-        <p>© SimpGalleryApp</p>
-    </footer>
+          var kawa = $('.top-bar');
+          var back = $('#back-to-top');
+          function scroll() {
+             if ($(window).scrollTop() > 700) {
+                kawa.addClass('fixed');
+                back.addClass('show-top');
+
+             } else {
+                kawa.removeClass('fixed');
+                back.removeClass('show-top');
+             }
+          }
+
+          document.onscroll = scroll;
+        });
+    </script>
+    <!--HHHHHHHHHHHH        Smooth Scrooling     HHHHHHHHHHHHHHHH-->
+    <script>
+        $(function() {
+          $('a[href*=#]:not([href=#])').click(function() {
+            if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+              var target = $(this.hash);
+              target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+              if (target.length) {
+                $('html,body').animate({
+                  scrollTop: target.offset().top
+                }, 1000);
+                return false;
+              }
+            }
+          });
+        });
+    </script>
+</body>
 </html>
