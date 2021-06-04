@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/nivo-lightbox/nivo-lightbox-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <script src="js/modernizr.custom.js"></script>
+    <script src="{{ asset('js/modernizr.custom.js') }}"></script>
     <title>SimpGalleryApp</title>
 </head>
 
