@@ -62,6 +62,10 @@
         </div>
     </section>
 
+    <div class="overlay overlay-hugeinc">
+        <button type="button" class="overlay-close">Close</button>
+    </div>
+
     <script src="{{ asset('js/jquery-1.11.2.min.js') }}"></script>
     <script src="{{ asset('js/wow.min.js') }}"></script>
     <script src="{{ asset('js/owl-carousel.js') }}"></script>
